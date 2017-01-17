@@ -3,6 +3,7 @@ import scipy.misc
 import traceback
 
 from base import Base
+from fun import Fun
 
 class Generator:
 
@@ -10,7 +11,7 @@ class Generator:
     imgHeight = 0
     imgWidth = 0
 
-    functionList = ["help", "exit", "printvalues", "create [width] [height]", "save [name]"]
+    functionList = ["help", "exit", "print", "create [width] [height]", "save [name]"]
     #commands = []
     commands = {}
 
@@ -24,8 +25,10 @@ class Generator:
         self.commands["create"] = self.create
         self.commands["save"] = self.save
         self.commands["help"] = self.help
-        self.commands["printvalues"] = self.printvalues
-        self.base = Base(self)
+        self.commands["print"] = self.printValues
+        #self.base = Base(self)
+        Base(self)
+        Fun(self)
         replRunning = True
 
         self.runCommand("help")
@@ -38,7 +41,7 @@ class Generator:
         self.imgArray = np.zeros((self.imgWidth, self.imgHeight, 4), dtype=np.uint8)
         print("Image of size " + str(width) + "x" + str(height) + " initialized...")
 
-    def printvalues(self):
+    def printValues(self):
         print(str(self.imgArray))
 
     def save(self, name):
