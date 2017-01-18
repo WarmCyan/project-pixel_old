@@ -4,6 +4,7 @@ import traceback
 
 from base import Base
 from fun import Fun
+from flame_test import FlameTest
 
 class Generator:
 
@@ -27,12 +28,14 @@ class Generator:
         self.commands["help"] = self.help
         self.commands["print"] = self.printValues
         #self.base = Base(self)
-        Base(self)
+        self.base = Base(self)
         Fun(self)
+        FlameTest(self)
         replRunning = True
 
         self.runCommand("help")
         self.runCommand("create 500 500")
+        self.runCommand("setall 0 0 0 255")
 
     def create(self, width, height):
         self.imgHeight = int(height)
