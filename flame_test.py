@@ -15,8 +15,8 @@ class FlameTest:
         self.gen.commands["solve"] = self.solve
 
         self.functions.append(self.f0)
-        self.functions.append(self.f1)
-        self.functions.append(self.f2)
+        #self.functions.append(self.f1)
+        #self.functions.append(self.f2)
 
     def f0(self, x, y):
         return x/2, y/2
@@ -38,12 +38,12 @@ class FlameTest:
             x, y = self.functions[i](x, y)
             if index > 20: 
                 pixels = self.determinePixel(x, y)
-                print("Plotting (" + str(pixels[0]) + "," + str(pixels[1]) + ")...")
+                print("Plotting (" + str(pixels[0]) + "," + str(pixels[1]) + ")...") # DEBUG
                 self.gen.imgArray[pixels[1]][pixels[0]] = np.array([255,255,255,255])
         
     def determinePixel(self, x, y):
         #xpixel = int(x*(self.gen.imgWidth/2)) + (self.gen.imgWidth/2)
         #ypixel = int(y*(self.gen.imgHeight/2)) + (self.gen.imgHeight/2)
-        xpixel = int(x*(self.gen.imgWidth))
-        ypixel = int(y*(self.gen.imgHeight))
+        xpixel = int(x*(self.gen.imgWidth - 1))
+        ypixel = int(y*(self.gen.imgHeight - 1))
         return xpixel, ypixel
