@@ -5,6 +5,7 @@ import traceback
 from base import Base
 from fun import Fun
 from flame_test import FlameTest
+from flame_fractal import FlameFractal
 
 class Generator:
 
@@ -31,6 +32,7 @@ class Generator:
         self.base = Base(self)
         Fun(self)
         FlameTest(self)
+        FlameFractal(self)
         replRunning = True
 
         self.runCommand("help")
