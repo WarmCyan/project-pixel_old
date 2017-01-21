@@ -9,17 +9,22 @@ class Function:
 
     #matrixCoefficients = {"a":0., "b":0., "c":0., "d":0., "e":0., "f":0.}
     # matrix coefficients 
-    a = 0.
-    b = 0.
-    c = 0.
-    d = 0.
-    e = 0.
-    f = 0.
 
-    variations = []
-    v = [] # variation coefficients
+    #variations = []
+    #v = [] # variation coefficients
 
     def __init__(self):
+
+        self.variations = []
+        self.v = []
+
+        self.a = 0.
+        self.b = 0.
+        self.c = 0.
+        self.d = 0.
+        self.e = 0.
+        self.f = 0.
+        
         self.variations.append(self.linear)
         self.variations.append(self.sinusoidal)
         self.variations.append(self.spherical)
@@ -35,17 +40,17 @@ class Function:
         resultx = 0
         resulty = 0
         for i in range(0, len(self.variations)):
-            print("Running variation " + str(i)) # DEBUG
+            #print("Running variation " + str(i)) # DEBUG
             tempx, tempy = self.variations[i](self.a*x + self.b*y + self.c, self.d*x + self.e*y + self.f)
             #print("Variation outputs: (" + str(tempx) + "," + str(tempy) + ")") # DEBUG
             tempx *= self.v[i]
             tempy *= self.v[i]
-            print("Coeff applied: (" + str(tempx) + "," + str(tempy) + ")") # DEBUG
+            #print("Coeff applied: (" + str(tempx) + "," + str(tempy) + ")") # DEBUG
             
             resultx += tempx
             resulty += tempy
 
-        print("Function result: (" + str(x) + "," + str(y) + ")") # DEBUG
+        #print("Function result: (" + str(resultx) + "," + str(resulty) + ")") # DEBUG
         return resultx, resulty
             
 
@@ -124,7 +129,7 @@ class FlameFractal:
         #self.functions.append(f2)
 
     def finalTransform(self, x, y):
-        return x*50, y*50
+        return x*500, y*500
 
     def solve(self, iterations):
         # choose random starting point within our coordinate system's range of [-1,1]
@@ -139,12 +144,12 @@ class FlameFractal:
             i = random.randint(0, len(self.functions) - 1)
             #print("Running function " + str(i)) # DEBUG
             x, y = self.functions[i].run(x, y)
-            x, y = self.finalTransform(x, y)
+            xf, yf = self.finalTransform(x, y)
             
             # ignore the first 20 iterations to allow it time to converge to below size of a pixel
             if index > 20: 
-                pixels = self.determinePixel(x, y)
-                print("Plotting (" + str(pixels[0]) + "," + str(pixels[1]) + ")...") # DEBUG
+                pixels = self.determinePixel(xf, yf)
+                #print("Plotting (" + str(pixels[0]) + "," + str(pixels[1]) + ")...") # DEBUG
                 if pixels[0] < 0 or pixels[0] > self.gen.imgWidth - 1 or pixels[1] < 0 or pixels[1] > self.gen.imgHeight - 1:
                     continue
                 self.gen.imgArray[pixels[1]][pixels[0]] = np.array([255,255,255,255])
