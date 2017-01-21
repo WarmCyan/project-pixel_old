@@ -90,17 +90,19 @@ class FlameFractal:
         self.gen = generator
         self.gen.functionList.append("ff.solve")
         self.gen.commands["ff.solve"] = self.solve
+        self.gen.functionList.append("ff.gasket")
+        self.gen.commands["ff.gasket"] = self.setGasketFunctions
 
         self.createTestingFunction()
 
-    def createTestingFunction(self):
+    def setGasketFunctions(self):
+        self.functions = []
+        
         f = Function()
         f.a = .5
         f.e = .5
 
         f.v[0] = 1.
-        #f.v[2] = 1.
-        #f.v[3] = 1.
         
         self.functions.append(f)
 
@@ -115,6 +117,37 @@ class FlameFractal:
         f3.e = .5
         f3.f = .5
         f3.v[0] = 1.
+
+        self.functions.append(f2)
+        self.functions.append(f3)
+        print("Flame fractal functions set to Sierpinski's Gaskget")
+
+
+    def createTestingFunction(self):
+        f = Function()
+        f.a = .9
+        f.e = .9
+
+        f.v[0] = .1
+        f.v[2] = 1.
+        #f.v[3] = 1.
+        
+        self.functions.append(f)
+
+        f2 = Function()
+        f2.a = .5
+        f2.c = .5
+        f2.e = .5
+        f2.v[1] = .6
+        f.v[3] = .3
+
+        f3 = Function()
+        f3.a = .5
+        f3.e = .5
+        f3.f = .5
+        f3.v[1] = .5
+        f3.v[2] = .3
+        f3.v[3] = .1
 
         self.functions.append(f2)
         self.functions.append(f3)
@@ -153,6 +186,8 @@ class FlameFractal:
                 if pixels[0] < 0 or pixels[0] > self.gen.imgWidth - 1 or pixels[1] < 0 or pixels[1] > self.gen.imgHeight - 1:
                     continue
                 self.gen.imgArray[pixels[1]][pixels[0]] = np.array([255,255,255,255])
+
+        print("Flame fractal set solution plotted!")
     
     def determinePixel(self, x, y):
         #xpixel = int(x*(self.gen.imgWidth/2)) + (self.gen.imgWidth/2)
