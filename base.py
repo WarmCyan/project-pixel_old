@@ -27,8 +27,8 @@ class Base:
         
         print("setting all pixels to " + str(colorVector) + "...") # DEBUG
         
-        for x in range(0, self.gen.imgHeight):
-            for y in range(0, self.gen.imgWidth):
+        for y in range(0, self.gen.imgHeight):
+            for x in range(0, self.gen.imgWidth):
                 self.gen.imgArray[y][x] = colorVector
     
     def set(self, x, y, r, g, b, a, verbose=True):

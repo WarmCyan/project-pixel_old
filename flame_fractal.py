@@ -169,12 +169,15 @@ class FlameFractal:
                     b *= scalar*75
                     #alpha = int(math.log(count) * 75)
 
+                    # cap it, cause it does weird things if you don't....(I
+                    # assume it was overflowing)
                     r = int(min(255, r))
                     g = int(min(255, g))
                     b = int(min(255, b))
                     
+                    # this is what's known as an ERROR. This shouldn't occur....
                     if r > g or g > b or r > b or r > 255 or g > 255 or b > 255:
-                        print(str(r) + " " + str(g) + " " + str(b))
+                        print("WARNING - " + str(r) + " " + str(g) + " " + str(b))
                     
                     #print(str(count))
                     #value = int(math.log(count)*75)
@@ -185,10 +188,7 @@ class FlameFractal:
         averageDensity = float(totalPoints / avgSpots)
         print("Average point density: " + str(averageDensity))
                 
-            
         print("Render complete!")
-        #print(self.points)
-            
 
     def setGasketFunctions(self):
         self.functions = []
@@ -263,7 +263,7 @@ class FlameFractal:
 
     def finalTransform(self, x, y):
         #return x*500, y*500
-        return x*1000, y*1000
+        return x*2500, y*2500
 
     def finalColorTransform(self, c):
         return c
