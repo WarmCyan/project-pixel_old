@@ -81,6 +81,8 @@ class FlameFractal:
 
     functions = []
 
+    points = []
+
     # NOTE: use ff. prefix to all functions added to generator commands (for
     # flame fractal) since there will probably be a lot with all the variations
     # and stuff
@@ -94,6 +96,24 @@ class FlameFractal:
         self.gen.commands["ff.gasket"] = self.setGasketFunctions
 
         self.createTestingFunction()
+
+    def plot(self, x, y):
+        # check if already exists
+        for point in self.points:
+            if x == point[0] and y == point[1]:
+                point[2] += 1
+                return
+        # if not already in the points array
+        self.points.append([x, y, 1])
+
+    def render(self):
+        for point in self.points:
+            value = int(math.log(point[2])*200)
+            #self.gen.imgArray[point[1]][point[0]] = np.array([255,255,255,255])
+            self.gen.imgArray[point[1]][point[0]] = np.array([value,value,value,255])
+        print("Render complete!")
+        #print(self.points)
+            
 
     def setGasketFunctions(self):
         self.functions = []
@@ -185,9 +205,11 @@ class FlameFractal:
                 #print("Plotting (" + str(pixels[0]) + "," + str(pixels[1]) + ")...") # DEBUG
                 if pixels[0] < 0 or pixels[0] > self.gen.imgWidth - 1 or pixels[1] < 0 or pixels[1] > self.gen.imgHeight - 1:
                     continue
-                self.gen.imgArray[pixels[1]][pixels[0]] = np.array([255,255,255,255])
+                #self.gen.imgArray[pixels[1]][pixels[0]] = np.array([255,255,255,255])
+                self.plot(pixels[0], pixels[1])
 
         print("Flame fractal set solution plotted!")
+        self.render()
     
     def determinePixel(self, x, y):
         #xpixel = int(x*(self.gen.imgWidth/2)) + (self.gen.imgWidth/2)
