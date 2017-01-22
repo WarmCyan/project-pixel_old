@@ -43,7 +43,7 @@ class Generator:
         self.imgHeight = int(height)
         self.imgWidth = int(width)
 
-        self.imgArray = np.zeros((self.imgWidth, self.imgHeight, 4), dtype=np.uint8)
+        self.imgArray = np.zeros((self.imgHeight, self.imgWidth, 4), dtype=np.uint8)
         print("Image of size " + str(width) + "x" + str(height) + " initialized...")
 
     def printValues(self):
