@@ -20,6 +20,8 @@ class Function:
 
         self.color = 0.
 
+        self.weight = 1.
+
         self.a = 0.
         self.b = 0.
         self.c = 0.
@@ -98,6 +100,8 @@ class FlameFractal:
         self.gen.commands["ff.solve"] = self.solve
         self.gen.functionList.append("ff.gasket")
         self.gen.commands["ff.gasket"] = self.setGasketFunctions
+        self.gen.functionList.append("ff.render")
+        self.gen.commands["ff.render"] = self.render
 
         self.createTestingFunction()
         
@@ -137,13 +141,14 @@ class FlameFractal:
         # if not already in the points array
         #self.points.append([x, y, 1])
         color = self.colorMap(c)
-        #print(str(color))
+        #print(str(color)) # DEBUG
         self.points[y][x][0] += color[0]
         self.points[y][x][1] += color[1]
         self.points[y][x][2] += color[2]
         self.points[y][x][3] += 1
 
-    def render(self):
+    def render(self, gamma=1.0):
+        print("Rendering... (gamma = " + str(gamma) + ")") 
         #for point in self.points:
             #value = int(math.log(point[2])*200)
             #self.gen.imgArray[point[1]][point[0]] = np.array([255,255,255,255])
@@ -164,9 +169,15 @@ class FlameFractal:
                     avgSpots += 1
 
                     scalar = math.log(count) / count
-                    r *= scalar*75
-                    g *= scalar*75
-                    b *= scalar*75
+
+                    # gamma correction
+                    scalar_c = scalar**(1/float(gamma))
+                    #print(str(scalar_c))
+
+                    
+                    r *= scalar_c*75
+                    g *= scalar_c*75
+                    b *= scalar_c*75
                     #alpha = int(math.log(count) * 75)
 
                     # cap it, cause it does weird things if you don't....(I
@@ -185,8 +196,8 @@ class FlameFractal:
                     self.gen.imgArray[y][x] = np.array([r, g, b, 255])
                 #value = int(math.log(self.points[x][y] * 
         
-        averageDensity = float(totalPoints / avgSpots)
-        print("Average point density: " + str(averageDensity))
+        #averageDensity = float(totalPoints / avgSpots)
+        #print("Average point density: " + str(averageDensity))
                 
         print("Render complete!")
 
@@ -252,6 +263,21 @@ class FlameFractal:
         self.functions.append(f2)
         self.functions.append(f3)
 
+        f4 = Function()
+        f4.a = -1 # cos 180
+        f4.b = 0 # sin 180
+        f4.d = 0 # - sin 180
+        f4.e = -1 # cos 180
+
+        f4.v[1] = .2
+        f4.v[0] = .5
+        f4.v[3] = .3
+        f4.color = .7
+        f4.weight = 3
+        
+        self.functions.append(f4)
+        
+
         #f2 = Function()
         #f2.a = .1
         #f2.e = .1
@@ -263,7 +289,10 @@ class FlameFractal:
 
     def finalTransform(self, x, y):
         #return x*500, y*500
-        return x*2500, y*2500
+        #return (x*500)+350, y*500
+        #return x*3200, y*3200
+        #return (x*3200)+2240, y*3200
+        return (x*1800)+1260, y*1800
 
     def finalColorTransform(self, c):
         return c
@@ -282,12 +311,34 @@ class FlameFractal:
 
         displaystep = int(int(iterations) / float(100))
 
+        functionWeights = []
+        functionWeightsTotal = 0.0
+
+        # first pass for total weight
+        for i in range(0, len(self.functions)):
+            functionWeightsTotal += self.functions[i].weight
+
+        # second pass for finding each individual adjusted weight
+        sumSoFar = 0
+        for i in range(0, len(self.functions)):
+            thisWeight = float(self.functions[i].weight / functionWeightsTotal)
+            sumSoFar += thisWeight
+            functionWeights.append(sumSoFar)
+
+        print("Function weights: " + str(functionWeights)) # DEBUG
+
         for index in range(0, int(iterations) + 1):
             #print("On iteration " + str(index)) # DEBUG
             #print("x: " + str(x) + " y: " + str(y)) # DEBUG
 
             # get a random function and apply it TODO: add weighting
-            i = random.randint(0, len(self.functions) - 1)
+            #i = random.randint(0, len(self.functions) - 1)
+            roll = random.random()
+
+            # randomly choose function, based on weights
+            i = 0
+            while roll > functionWeights[i]: i += 1
+            
             #print("Running function " + str(i)) # DEBUG
             x, y = self.functions[i].run(x, y)
             xf, yf = self.finalTransform(x, y)
@@ -308,6 +359,7 @@ class FlameFractal:
             if index % displaystep == 0: print("Completed iteration " + str(index))
 
         print("Flame fractal set solution plotted!")
+        #self.render(2.2)
         self.render()
     
     def determinePixel(self, x, y):
