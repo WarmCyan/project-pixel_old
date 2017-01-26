@@ -22,6 +22,8 @@ class Function:
 
         self.weight = 1.
 
+        self.isSymmetry = False
+
         self.a = 0.
         self.b = 0.
         self.c = 0.
@@ -147,14 +149,31 @@ class FlameFractal:
         self.points[y][x][2] += color[2]
         self.points[y][x][3] += 1
 
-    def render(self, gamma=1.0):
+    def render(self, gamma=1.0, brightness=1.0):
         print("Rendering... (gamma = " + str(gamma) + ")") 
         #for point in self.points:
             #value = int(math.log(point[2])*200)
             #self.gen.imgArray[point[1]][point[0]] = np.array([255,255,255,255])
             #self.gen.imgArray[point[1]][point[0]] = np.array([value,value,value,255])
+        print("First pass...")
         totalPoints = 0
         avgSpots = 0
+        
+        for y in range(0, len(self.points)):
+            for x in range(0, len(self.points[y])):
+                count = self.points[y][x][3]
+                if count > 1:
+                    totalPoints += count
+                    avgSpots += 1
+                    
+        averageDensity = float(totalPoints / avgSpots)
+        print("Average point density: " + str(averageDensity))
+        
+        brightnessScalar = float(255 / averageDensity)*float(brightness)
+        print("Brightness scalar: " + str(brightnessScalar))
+
+        print("Second pass...")
+        
         for y in range(0, len(self.points)):
             for x in range(0, len(self.points[y])):
                 count = self.points[y][x][3]
@@ -165,8 +184,8 @@ class FlameFractal:
                 
                 #print(str(x) + "," + str(y) + " - " + str(count))
                 if count > 1: 
-                    totalPoints += count
-                    avgSpots += 1
+                    #totalPoints += count
+                    #avgSpots += 1
 
                     scalar = math.log(count) / count
 
@@ -175,9 +194,12 @@ class FlameFractal:
                     #print(str(scalar_c))
 
                     
-                    r *= scalar_c*75
-                    g *= scalar_c*75
-                    b *= scalar_c*75
+                    #r *= scalar_c*75
+                    #g *= scalar_c*75
+                    #b *= scalar_c*75
+                    r *= scalar_c*brightnessScalar
+                    g *= scalar_c*brightnessScalar
+                    b *= scalar_c*brightnessScalar
                     #alpha = int(math.log(count) * 75)
 
                     # cap it, cause it does weird things if you don't....(I
@@ -196,8 +218,6 @@ class FlameFractal:
                     self.gen.imgArray[y][x] = np.array([r, g, b, 255])
                 #value = int(math.log(self.points[x][y] * 
         
-        #averageDensity = float(totalPoints / avgSpots)
-        #print("Average point density: " + str(averageDensity))
                 
         print("Render complete!")
 
@@ -236,7 +256,8 @@ class FlameFractal:
 
         f.v[0] = .1
         f.v[2] = .7
-        f.v[3] = 1.
+        f.v[3] = .1
+        f.v[1] = .1
 
         f.color = 1
         f.weight = 1
@@ -273,16 +294,38 @@ class FlameFractal:
         f4.b = 0 # sin 180
         f4.d = 0 # - sin 180
         f4.e = 1 # cos 180
-
-        #f4.v[1] = .2
+        
         f4.v[0] = 1.
-        #f4.v[0] = .5
-        #f4.v[2] = .5
-        #f4.v[3] = .3
         f4.color = .7
         f4.weight = 3
+        f4.isSymmetry = True
+
+        #self.functions.append(f4)
+
+        # 3-way symmetry
+        f5 = Function()
+        f5.a = -.5 # cos 120
+        f5.b = .866025 # sin 120
+        f5.d = -.866025 # - sin 120
+        f5.e = -.5 # cos 120
         
-        self.functions.append(f4)
+        f5.v[0] = 1.
+        f5.color = .7
+        f5.weight = 3
+        f5.isSymmetry = True
+        self.functions.append(f5)
+        
+        f6 = Function()
+        f6.a = -.5 # cos 240
+        f6.b = .866025 # sin 240
+        f6.d = -.866025 # - sin 240
+        f6.e = -.5 # cos 240
+        
+        f6.v[0] = 1.
+        f6.color = .7
+        f6.weight = 3
+        f6.isSymmetry = True
+        self.functions.append(f6)
 
         #f2 = Function()
         #f2.a = .1
@@ -313,8 +356,7 @@ class FlameFractal:
         y = random.random() * 2 - 1
 
         c = random.random()
-        #cg = random.random()
-        #cg = random.random()
+        cf = c # just to avoid bugs with symmetric functions?
 
         displaystep = int(int(iterations) / float(100))
 
@@ -354,8 +396,9 @@ class FlameFractal:
             x, y = self.functions[i].run(x, y)
             xf, yf = self.finalTransform(x, y)
             
-            c = (c + self.functions[i].color) / 2
-            cf = (c + self.finalColorTransform(c)) / 2
+            if not self.functions[i].isSymmetry:
+                c = (c + self.functions[i].color) / 2
+                cf = (c + self.finalColorTransform(c)) / 2
             
             
             # ignore the first 20 iterations to allow it time to converge to below size of a pixel
