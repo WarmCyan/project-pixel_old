@@ -235,8 +235,8 @@ class FlameFractal:
         f.e = .9
 
         f.v[0] = .1
-        #f.v[2] = .7
-        #f.v[3] = 1.
+        f.v[2] = .7
+        f.v[3] = 1.
 
         f.color = 1
         f.weight = 1
@@ -248,7 +248,7 @@ class FlameFractal:
         f2.c = .5
         f2.e = .5
         f2.v[1] = .6
-        #f2.v[0] = .4
+        f2.v[0] = .4
         f.v[3] = .2
         f2.color = .5
         f2.weight = 1
@@ -266,6 +266,8 @@ class FlameFractal:
         self.functions.append(f2)
         self.functions.append(f3)
 
+        # NOTE: THIS is how you make symmetry work!!! Only include the linear
+        # variation in it with a weight of 1!!!
         f4 = Function()
         f4.a = -1 # cos 180
         f4.b = 0 # sin 180
@@ -273,15 +275,14 @@ class FlameFractal:
         f4.e = 1 # cos 180
 
         #f4.v[1] = .2
-        #f4.v[0] = .95
+        f4.v[0] = 1.
         #f4.v[0] = .5
-        f4.v[2] = .5
-        f4.v[3] = .3
+        #f4.v[2] = .5
+        #f4.v[3] = .3
         f4.color = .7
         f4.weight = 3
         
         self.functions.append(f4)
-        
 
         #f2 = Function()
         #f2.a = .1
