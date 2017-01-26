@@ -59,7 +59,6 @@ class Function:
 
         #print("Function result: (" + str(resultx) + "," + str(resulty) + ")") # DEBUG
         return resultx, resulty
-            
 
     def calc_r(self, x, y):
         return math.sqrt(x**2 + y**2)
@@ -127,9 +126,16 @@ class FlameFractal:
         #g = 1 - value
         #b = value
 
+        # AWESOME BLUE MAP
         r = 1. - value
         g = 1. - (value/2)
         b = 1.
+        
+        
+        #r = 1. - value
+        #r = 0.
+        #g = value
+        #b = 1. - value
 
         #return r*255, g*255, b*255
         return r, g, b
@@ -209,8 +215,8 @@ class FlameFractal:
                     b = int(min(255, b))
                     
                     # this is what's known as an ERROR. This shouldn't occur....
-                    if r > g or g > b or r > b or r > 255 or g > 255 or b > 255:
-                        print("WARNING - " + str(r) + " " + str(g) + " " + str(b))
+                    #if r > g or g > b or r > b or r > 255 or g > 255 or b > 255:
+                    #    print("WARNING - " + str(r) + " " + str(g) + " " + str(b))
                     
                     #print(str(count))
                     #value = int(math.log(count)*75)
@@ -338,11 +344,15 @@ class FlameFractal:
 
     def finalTransform(self, x, y):
         #return x*500, y*500
+        
         return x*200 + 250, y*200 + 250
+    
         #return (x*500)+350, y*500
         #return x*3200, y*3200
         #return (x*3200)+2240, y*3200
         #return (x*1800)+1260, y*1800
+
+        #return x*400 + 500, y*400 + 500
 
     def finalColorTransform(self, c):
         return c
