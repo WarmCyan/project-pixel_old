@@ -235,10 +235,11 @@ class FlameFractal:
         f.e = .9
 
         f.v[0] = .1
-        f.v[2] = .7
+        #f.v[2] = .7
         #f.v[3] = 1.
 
         f.color = 1
+        f.weight = 1
         
         self.functions.append(f)
 
@@ -247,9 +248,10 @@ class FlameFractal:
         f2.c = .5
         f2.e = .5
         f2.v[1] = .6
-        f2.v[0] = .4
+        #f2.v[0] = .4
         f.v[3] = .2
         f2.color = .5
+        f2.weight = 1
 
         f3 = Function()
         f3.a = .5
@@ -259,6 +261,7 @@ class FlameFractal:
         f3.v[2] = .3
         f3.v[3] = .1
         f3.color = 0
+        f3.weight = 1
 
         self.functions.append(f2)
         self.functions.append(f3)
@@ -267,10 +270,12 @@ class FlameFractal:
         f4.a = -1 # cos 180
         f4.b = 0 # sin 180
         f4.d = 0 # - sin 180
-        f4.e = -1 # cos 180
+        f4.e = 1 # cos 180
 
-        f4.v[1] = .2
-        f4.v[0] = .5
+        #f4.v[1] = .2
+        #f4.v[0] = .95
+        #f4.v[0] = .5
+        f4.v[2] = .5
         f4.v[3] = .3
         f4.color = .7
         f4.weight = 3
@@ -289,10 +294,11 @@ class FlameFractal:
 
     def finalTransform(self, x, y):
         #return x*500, y*500
+        return x*200 + 250, y*200 + 250
         #return (x*500)+350, y*500
         #return x*3200, y*3200
         #return (x*3200)+2240, y*3200
-        return (x*1800)+1260, y*1800
+        #return (x*1800)+1260, y*1800
 
     def finalColorTransform(self, c):
         return c
@@ -314,6 +320,8 @@ class FlameFractal:
         functionWeights = []
         functionWeightsTotal = 0.0
 
+        functionCounts = []
+
         # first pass for total weight
         for i in range(0, len(self.functions)):
             functionWeightsTotal += self.functions[i].weight
@@ -324,6 +332,7 @@ class FlameFractal:
             thisWeight = float(self.functions[i].weight / functionWeightsTotal)
             sumSoFar += thisWeight
             functionWeights.append(sumSoFar)
+            functionCounts.append(0)
 
         print("Function weights: " + str(functionWeights)) # DEBUG
 
@@ -338,6 +347,7 @@ class FlameFractal:
             # randomly choose function, based on weights
             i = 0
             while roll > functionWeights[i]: i += 1
+            functionCounts[i] += 1
             
             #print("Running function " + str(i)) # DEBUG
             x, y = self.functions[i].run(x, y)
@@ -359,6 +369,10 @@ class FlameFractal:
             if index % displaystep == 0: print("Completed iteration " + str(index))
 
         print("Flame fractal set solution plotted!")
+
+        for c in range(0, len(functionCounts)):
+            print(str(c) + " - " + str(functionCounts[c]))
+        
         #self.render(2.2)
         self.render()
     
