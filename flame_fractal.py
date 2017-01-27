@@ -305,7 +305,6 @@ class FlameFractal:
         f4.color = .7
         f4.weight = 3
         f4.isSymmetry = True
-
         #self.functions.append(f4)
 
         # 3-way symmetry
@@ -332,6 +331,32 @@ class FlameFractal:
         f6.weight = 3
         f6.isSymmetry = True
         self.functions.append(f6)
+
+
+        # 4-way symmetry
+        f7 = Function()
+        f7.a = 0 # cos 90
+        f7.b = 1 # sin 90
+        f7.d = -1 # - sin 90
+        f7.e = 0 # cos 90
+        
+        f7.v[0] = 1.
+        f7.color = .7
+        f7.weight = 3
+        f7.isSymmetry = True
+        #self.functions.append(f7)       
+
+        f8 = Function()
+        f8.a = 0 # cos 270
+        f8.b = -1 # sin 270
+        f8.d = 1 # - sin 270
+        f8.e = 0 # cos 270
+        
+        f8.v[0] = 1.
+        f8.color = .7
+        f8.weight = 3
+        f8.isSymmetry = True
+        #self.functions.append(f8)       
 
         #f2 = Function()
         #f2.a = .1
