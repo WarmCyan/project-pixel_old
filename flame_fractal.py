@@ -89,6 +89,7 @@ class FlameFractal:
     #functionColors = [[0,120,255],[0, 255, 120], [255,120,0]]
 
     points = []
+    adjustedpoints = []
 
     # NOTE: use ff. prefix to all functions added to generator commands (for
     # flame fractal) since there will probably be a lot with all the variations
@@ -155,6 +156,16 @@ class FlameFractal:
         self.points[y][x][2] += color[2]
         self.points[y][x][3] += 1
 
+    def adjustpoint(self, x, y, r, g, b, factor):
+        if y < len(self.adjustedpoints) and y >= 0 and x < len(self.adjustedpoints[y]) and x >= 0:
+            self.adjustedpoints[y][x][0] += r*factor
+            self.adjustedpoints[y][x][1] += g*factor
+            self.adjustedpoints[y][x][2] += b*factor
+
+    # maps points onto adjustedpoints
+    def filterpoint(self, x, y):
+        pass
+
     def render(self, gamma=1.0, brightness=1.0):
         print("Rendering... (gamma = " + str(gamma) + ")") 
         #for point in self.points:
@@ -180,12 +191,42 @@ class FlameFractal:
 
         print("Second pass...")
         
+
+        self.adjustedpoints = self.points[:]
         for y in range(0, len(self.points)):
             for x in range(0, len(self.points[y])):
                 count = self.points[y][x][3]
                 r = self.points[y][x][0]
                 g = self.points[y][x][1]
                 b = self.points[y][x][2]
+
+                self.adjustpoint(x, y - 2, r, g, b, .1)
+                self.adjustpoint(x, y + 2, r, g, b, .1)
+                self.adjustpoint(x + 2, y, r, g, b, .1)
+                self.adjustpoint(x - 2, y, r, g, b, .1)
+                self.adjustpoint(x, y - 1, r, g, b, .2)
+                self.adjustpoint(x, y + 1, r, g, b, .2)
+                self.adjustpoint(x + 1, y, r, g, b, .2)
+                self.adjustpoint(x - 1, y, r, g, b, .2)
+                #self.adjustpoint(x, y, r, g, b, .7)
+
+                self.adjustedpoints[y][x][0] *= .7
+                self.adjustedpoints[y][x][1] *= .7
+                self.adjustedpoints[y][x][2] *= .7
+
+        print("Third pass...")
+                
+        
+        for y in range(0, len(self.points)):
+            for x in range(0, len(self.points[y])):
+                count = self.points[y][x][3]
+                #r = self.points[y][x][0]
+                #g = self.points[y][x][1]
+                #b = self.points[y][x][2]
+                
+                r = self.adjustedpoints[y][x][0]
+                g = self.adjustedpoints[y][x][1]
+                b = self.adjustedpoints[y][x][2]
 
                 
                 #print(str(x) + "," + str(y) + " - " + str(count))
