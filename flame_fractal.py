@@ -88,6 +88,8 @@ class FlameFractal:
     functions = []
     #functionColors = [[0,120,255],[0, 255, 120], [255,120,0]]
 
+    solutionSet = [] # verbatim points that chaos game returns
+
     points = []
     adjustedpoints = []
 
@@ -532,7 +534,9 @@ class FlameFractal:
         return c
 
     def solve(self, iterations):
-        self.preparePlot()
+        #self.preparePlot()
+
+        self.solutionSet = []
         
         print("Solving...")
         # choose random starting point within our coordinate system's range of [-1,1]
@@ -587,6 +591,9 @@ class FlameFractal:
             
             # ignore the first 20 iterations to allow it time to converge to below size of a pixel
             if index > 20: 
+
+                #self.solutionSet.append([xf, yf, cf])
+                
                 pixels = self.determinePixel(xf, yf)
                 #print("Plotting (" + str(pixels[0]) + "," + str(pixels[1]) + ")...") # DEBUG
                 if pixels[0] < 0 or pixels[0] > self.gen.imgWidth - 1 or pixels[1] < 0 or pixels[1] > self.gen.imgHeight - 1:
