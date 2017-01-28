@@ -156,16 +156,68 @@ class FlameFractal:
         self.points[y][x][2] += color[2]
         self.points[y][x][3] += 1
 
+    def calculateKernelScalars(self, stdev):
+        self.kernelScalar = 1/(2*math.pi*(stdev**2))
+        self.kernelExpDenom = 2*(stdev**2)
+
+    # https://en.wikipedia.org/wiki/Gaussian_blur 
+    # NOTE: x and y are distance from origin
+    def calculateConvlutionForDistance(self, x, y):
+        return self.kernelScalar*math.exp(-((x**2 + y**2)/self.kernelExpDenom))
+    
+    # size is "radius"    
+    def calculateConvolutionMatrix(self, size, stdev):
+        self.calculateKernelScalars(stdev)
+        
+        matrix = []
+        for y in range(-size, size):
+            matrix.append([])
+            for x in range(-size, size):
+                matrix[y].append(self.calculateConvlutionForDistance(x, y))
+
+        return matrix
+                
+
+
+    def getPointFactor(self, x, y, factor):
+        r = 0
+        g = 0
+        b = 0
+        
+        if y < len(self.points) and y >= 0 and x < len(self.points[y]) and x >= 0:
+            r = self.points[y][x][0]*factor
+            g = self.points[y][x][1]*factor
+            b = self.points[y][x][2]*factor
+
+        return r, g, b
+
+
+    # maps points onto adjustedpoints
+    # NOTE: eventually don't pass in matrix, cause dynamic?
+    def filterpoint(self, x, y, matrix):
+        r = 0
+        g = 0
+        b = 0
+
+        for ly in range(0, len(matrix)):
+            for lx in range(0, len(matrix[ly])):
+                coloradjust = self.getPointFactor(x, y)
+                r += coloradjust[0]
+                g += coloradjust[1]
+                b += coloradjust[2]
+
+        self.adjustedpoints[y][x][0] = r
+        self.adjustedpoints[y][x][1] = g
+        self.adjustedpoints[y][x][2] = b
+        
+
     def adjustpoint(self, x, y, r, g, b, factor):
         if y < len(self.adjustedpoints) and y >= 0 and x < len(self.adjustedpoints[y]) and x >= 0:
             self.adjustedpoints[y][x][0] += r*factor
             self.adjustedpoints[y][x][1] += g*factor
             self.adjustedpoints[y][x][2] += b*factor
 
-    # maps points onto adjustedpoints
-    def filterpoint(self, x, y):
-        pass
-
+            
     def render(self, gamma=1.0, brightness=1.0):
         print("Rendering... (gamma = " + str(gamma) + ")") 
         #for point in self.points:
@@ -193,26 +245,31 @@ class FlameFractal:
         
 
         self.adjustedpoints = self.points[:]
+        matrix = self.calculateConvolutionMatrix(2,3)
         for y in range(0, len(self.points)):
             for x in range(0, len(self.points[y])):
-                count = self.points[y][x][3]
-                r = self.points[y][x][0]
-                g = self.points[y][x][1]
-                b = self.points[y][x][2]
+                #count = self.points[y][x][3]
+                #r = self.points[y][x][0]
+                #g = self.points[y][x][1]
+                #b = self.points[y][x][2]
 
-                self.adjustpoint(x, y - 2, r, g, b, .1)
-                self.adjustpoint(x, y + 2, r, g, b, .1)
-                self.adjustpoint(x + 2, y, r, g, b, .1)
-                self.adjustpoint(x - 2, y, r, g, b, .1)
-                self.adjustpoint(x, y - 1, r, g, b, .2)
-                self.adjustpoint(x, y + 1, r, g, b, .2)
-                self.adjustpoint(x + 1, y, r, g, b, .2)
-                self.adjustpoint(x - 1, y, r, g, b, .2)
-                #self.adjustpoint(x, y, r, g, b, .7)
+                self.filterPoint(x, y, matrix)
 
-                self.adjustedpoints[y][x][0] *= .7
-                self.adjustedpoints[y][x][1] *= .7
-                self.adjustedpoints[y][x][2] *= .7
+                
+
+                #self.adjustpoint(x, y - 2, r, g, b, .1)
+                #self.adjustpoint(x, y + 2, r, g, b, .1)
+                #self.adjustpoint(x + 2, y, r, g, b, .1)
+                #self.adjustpoint(x - 2, y, r, g, b, .1)
+                #self.adjustpoint(x, y - 1, r, g, b, .2)
+                #self.adjustpoint(x, y + 1, r, g, b, .2)
+                #self.adjustpoint(x + 1, y, r, g, b, .2)
+                #self.adjustpoint(x - 1, y, r, g, b, .2)
+                ##self.adjustpoint(x, y, r, g, b, .7)
+
+                #self.adjustedpoints[y][x][0] *= .7
+                #self.adjustedpoints[y][x][1] *= .7
+                #self.adjustedpoints[y][x][2] *= .7
 
         print("Third pass...")
                 
