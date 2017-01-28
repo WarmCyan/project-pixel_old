@@ -169,11 +169,11 @@ class FlameFractal:
     def calculateConvolutionMatrix(self, size, stdev):
         self.calculateKernelScalars(stdev)
         
-        matrix = []
+        matrix = {}
         for y in range(-size, size):
-            matrix.append([])
+            matrix[str(y)] = {}
             for x in range(-size, size):
-                matrix[y].append(self.calculateConvlutionForDistance(x, y))
+                matrix[str(y)][str(x)] = self.calculateConvlutionForDistance(x, y)
 
         return matrix
                 
@@ -194,21 +194,43 @@ class FlameFractal:
 
     # maps points onto adjustedpoints
     # NOTE: eventually don't pass in matrix, cause dynamic?
-    def filterpoint(self, x, y, matrix):
+    def filterPoint(self, x, y, matrix):
         r = 0
         g = 0
         b = 0
 
-        for ly in range(0, len(matrix)):
-            for lx in range(0, len(matrix[ly])):
-                coloradjust = self.getPointFactor(x, y)
-                r += coloradjust[0]
-                g += coloradjust[1]
-                b += coloradjust[2]
+        for ly in matrix:
+            #print("ly: " + str(ly)) # DEBUG
+            for lx in matrix[ly]:
+                #print("lx: " + str(lx)) # DEBUG
+                #coloradjust = self.getPointFactor(int(lx), int(ly), matrix[ly][lx])
+                #nr,ng,nb = self.getPointFactor(int(lx), int(ly), matrix[ly][lx])
+                nr,ng,nb = self.getPointFactor(x + int(lx), y + int(ly), matrix[ly][lx])
+                #print("adjust: " + str(coloradjust)) # DEBUG
+                #r += coloradjust[0]
+                #g += coloradjust[1]
+                #b += coloradjust[2]
+                r += nr
+                g += ng
+                b += nb
+                #str(r)
+                #str(g)
+                #str(b)
+                #print(str(r) + " " + str(g) + " " + str(b)) # DEBUG
+
+        #r = min(1., r)
+        #g = min(1., g)
+        #b = min(1., b)
 
         self.adjustedpoints[y][x][0] = r
         self.adjustedpoints[y][x][1] = g
         self.adjustedpoints[y][x][2] = b
+
+        if self.adjustedpoints[y][x][2] != self.points[y][x][2]:
+            print("Was a change at (" + str(x) + "," + str(y) + ")")
+
+        #if r > 0 or g > 0 or b > 0:
+            #print("setting (" + str(x) + "," + str(y) + ") to " + str(r) + " " + str(g) + " " + str(b)) # DEBUG
         
 
     def adjustpoint(self, x, y, r, g, b, factor):
@@ -245,7 +267,9 @@ class FlameFractal:
         
 
         self.adjustedpoints = self.points[:]
-        matrix = self.calculateConvolutionMatrix(2,3)
+        matrix = self.calculateConvolutionMatrix(4,3)
+        #matrix = self.calculateConvolutionMatrix(2,.1)
+        print(str(matrix)) # DEBUG
         for y in range(0, len(self.points)):
             for x in range(0, len(self.points[y])):
                 #count = self.points[y][x][3]
