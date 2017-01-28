@@ -89,8 +89,12 @@ class FlameFractal:
     #functionColors = [[0,120,255],[0, 255, 120], [255,120,0]]
 
     solutionSet = [] # verbatim points that chaos game returns
-
     points = []
+
+    image = []
+    filteredImage = []
+    #finalImage = []
+    
     adjustedpoints = []
 
     # NOTE: use ff. prefix to all functions added to generator commands (for
@@ -143,7 +147,35 @@ class FlameFractal:
         #return r*255, g*255, b*255
         return r, g, b
 
-    def plot(self, x, y, c):
+    def plot(self):
+        self.preparePlot()
+        print("Plotting solution...")
+
+        for point in self.solutionSet:
+            x = int(point[0])
+            y = int(point[1])
+            
+            if x < 0 or x > self.gen.imgWidth - 1 or y < 0 or y > self.gen.imgHeight - 1: continue
+            
+            self.plotPoint(int(point[0]), int(point[1]), point[2])
+
+    def solutionSetTransform(self):
+        #f = Function()
+        #f.a = 200
+        #f.d = 200
+        #f.v[0] = 1.
+
+        print("Transforming solution...")
+        for i in range(0, len(self.solutionSet)):
+            #x, y = f.run(self.solutionSet[i][0], self.solutionSet[i][1])
+            x = self.solutionSet[i][0] * 200 + 250
+            y = self.solutionSet[i][1] * 200 + 250
+            self.solutionSet[i][0] = x
+            self.solutionSet[i][1] = y
+
+        print("Affine transformation complete!")
+
+    def plotPoint(self, x, y, c):
         # check if already exists
         #for point in self.points:
             #if x == point[0] and y == point[1]:
@@ -153,6 +185,7 @@ class FlameFractal:
         #self.points.append([x, y, 1])
         color = self.colorMap(c)
         #print(str(color)) # DEBUG
+        #print("Plotting (" + str(x) + "," + str(y) + ")") # DEBUG
         self.points[y][x][0] += color[0]
         self.points[y][x][1] += color[1]
         self.points[y][x][2] += color[2]
@@ -186,10 +219,10 @@ class FlameFractal:
         g = 0
         b = 0
         
-        if y < len(self.points) and y >= 0 and x < len(self.points[y]) and x >= 0:
-            r = self.points[y][x][0]*factor
-            g = self.points[y][x][1]*factor
-            b = self.points[y][x][2]*factor
+        if y < len(self.image) and y >= 0 and x < len(self.image[y]) and x >= 0:
+            r = self.image[y][x][0]*factor
+            g = self.image[y][x][1]*factor
+            b = self.image[y][x][2]*factor
 
         return r, g, b
 
@@ -203,7 +236,7 @@ class FlameFractal:
 
         #print("original: " + str(self.points[y][x][2]))
 
-        original = [self.points[y][x][0], self.points[y][x][1], self.points[y][x][2]]
+        #original = [self.points[y][x][0], self.points[y][x][1], self.points[y][x][2]]
         #print("original: " + str(original))
 
         
@@ -230,12 +263,13 @@ class FlameFractal:
         #g = min(1., g)
         #b = min(1., b)
         
+        return r, g, b
 
-        self.adjustedpoints[y][x][0] = r
-        self.adjustedpoints[y][x][1] = g
-        self.adjustedpoints[y][x][2] = b
+        #self.adjustedpoints[y][x][0] = r
+        #self.adjustedpoints[y][x][1] = g
+        #self.adjustedpoints[y][x][2] = b
         
-        nonoriginal = [self.points[y][x][0], self.points[y][x][1], self.points[y][x][2]]
+        #nonoriginal = [self.points[y][x][0], self.points[y][x][1], self.points[y][x][2]]
         #print("points now: " + str(nonoriginal))
 
         #print("original: " + str(self.points[y][x][2]) + "adjusted: " + str(self.adjustedpoints[y][x][2]))
@@ -243,8 +277,8 @@ class FlameFractal:
         #if self.adjustedpoints[y][x][2] != self.points[y][x][2]:
             #print("Was a change at (" + str(x) + "," + str(y) + ")")
 
-        if self.adjustedpoints[y][x][2] == 0 and self.points[y][x][3] != 0:
-            print("WARNING - something was zeroed...")
+        #if self.adjustedpoints[y][x][2] == 0 and self.points[y][x][3] != 0:
+            #print("WARNING - something was zeroed...")
 
         #if r > 0 or g > 0 or b > 0:
             #print("setting (" + str(x) + "," + str(y) + ") to " + str(r) + " " + str(g) + " " + str(b)) # DEBUG
@@ -256,6 +290,15 @@ class FlameFractal:
             self.adjustedpoints[y][x][1] += g*factor
             self.adjustedpoints[y][x][2] += b*factor
 
+    def copy3DArray(self, array):
+        copy = []
+        for y in range(0, len(array)):
+            copy.append([])
+            for x in range(0, len(array[y])):
+                copy[y].append([])
+                for val in array[y][x]:
+                    copy[y][x].append(val)
+        return copy 
             
     def render(self, gamma=1.0, brightness=1.0):
         print("Rendering... (gamma = " + str(gamma) + ")") 
@@ -267,14 +310,14 @@ class FlameFractal:
         totalPoints = 0
         avgSpots = 0
 
-        self.adjustedpoints = []
+        #self.adjustedpoints = []
         
         for y in range(0, len(self.points)):
-            self.adjustedpoints.append([])
+            #self.adjustedpoints.append([])
             for x in range(0, len(self.points[y])):
-                self.adjustedpoints[y].append([])
-                for val in self.points[y][x]:
-                    self.adjustedpoints[y][x].append(val)
+                #self.adjustedpoints[y].append([])
+                #for val in self.points[y][x]:
+                    #self.adjustedpoints[y][x].append(val)
                 
                 count = self.points[y][x][3]
                 if count > 1:
@@ -288,55 +331,19 @@ class FlameFractal:
         print("Brightness scalar: " + str(brightnessScalar))
 
         print("Second pass...")
-        
 
-        #self.adjustedpoints = self.points[:]
-        #self.adjustedpoints = list(self.points)
-
-
-
-        
-        #matrix = self.calculateConvolutionMatrix(4,3)
-        matrix = self.calculateConvolutionMatrix(2,.84)
-        print(str(matrix)) # DEBUG
-        for y in range(0, len(self.points)):
-            for x in range(0, len(self.points[y])):
-                #count = self.points[y][x][3]
-                #r = self.points[y][x][0]
-                #g = self.points[y][x][1]
-                #b = self.points[y][x][2]
-
-                self.filterPoint(x, y, matrix)
-
-                
-
-                #self.adjustpoint(x, y - 2, r, g, b, .1)
-                #self.adjustpoint(x, y + 2, r, g, b, .1)
-                #self.adjustpoint(x + 2, y, r, g, b, .1)
-                #self.adjustpoint(x - 2, y, r, g, b, .1)
-                #self.adjustpoint(x, y - 1, r, g, b, .2)
-                #self.adjustpoint(x, y + 1, r, g, b, .2)
-                #self.adjustpoint(x + 1, y, r, g, b, .2)
-                #self.adjustpoint(x - 1, y, r, g, b, .2)
-                ##self.adjustpoint(x, y, r, g, b, .7)
-
-                #self.adjustedpoints[y][x][0] *= .7
-                #self.adjustedpoints[y][x][1] *= .7
-                #self.adjustedpoints[y][x][2] *= .7
-
-        print("Third pass...")
-                
+        self.image = self.copy3DArray(self.points)
         
         for y in range(0, len(self.points)):
             for x in range(0, len(self.points[y])):
                 count = self.points[y][x][3]
-                #r = self.points[y][x][0]
-                #g = self.points[y][x][1]
-                #b = self.points[y][x][2]
+                r = self.points[y][x][0]
+                g = self.points[y][x][1]
+                b = self.points[y][x][2]
                 
-                r = self.adjustedpoints[y][x][0]
-                g = self.adjustedpoints[y][x][1]
-                b = self.adjustedpoints[y][x][2]
+                #r = self.adjustedpoints[y][x][0]
+                #g = self.adjustedpoints[y][x][1]
+                #b = self.adjustedpoints[y][x][2]
 
                 
                 #print(str(x) + "," + str(y) + " - " + str(count))
@@ -372,8 +379,67 @@ class FlameFractal:
                     #print(str(count))
                     #value = int(math.log(count)*75)
                     #value = 255
-                    self.gen.imgArray[y][x] = np.array([r, g, b, 255])
+                    #self.gen.imgArray[y][x] = np.array([r, g, b, 255])
+                    self.image[y][x] = [r, g, b, 255]
+
+                    
                 #value = int(math.log(self.points[x][y] * 
+
+
+
+        print("Third pass...")
+
+        self.filteredImage = self.copy3DArray(self.image)
+
+        
+
+        #self.adjustedpoints = self.points[:]
+        #self.adjustedpoints = list(self.points)
+
+
+
+        
+        #matrix = self.calculateConvolutionMatrix(4,3)
+        #matrix = self.calculateConvolutionMatrix(2,.84)
+        matrix = self.calculateConvolutionMatrix(8,3)
+        print(str(matrix)) # DEBUG
+        for y in range(0, len(self.image)):
+            for x in range(0, len(self.image[y])):
+                #count = self.points[y][x][3]
+                #r = self.points[y][x][0]
+                #g = self.points[y][x][1]
+                #b = self.points[y][x][2]
+
+                r, g, b = self.filterPoint(x, y, matrix)
+
+                self.filteredImage[y][x][0] = r
+                self.filteredImage[y][x][1] = g
+                self.filteredImage[y][x][2] = b
+                
+
+                #self.adjustpoint(x, y - 2, r, g, b, .1)
+                #self.adjustpoint(x, y + 2, r, g, b, .1)
+                #self.adjustpoint(x + 2, y, r, g, b, .1)
+                #self.adjustpoint(x - 2, y, r, g, b, .1)
+                #self.adjustpoint(x, y - 1, r, g, b, .2)
+                #self.adjustpoint(x, y + 1, r, g, b, .2)
+                #self.adjustpoint(x + 1, y, r, g, b, .2)
+                #self.adjustpoint(x - 1, y, r, g, b, .2)
+                ##self.adjustpoint(x, y, r, g, b, .7)
+
+                #self.adjustedpoints[y][x][0] *= .7
+                #self.adjustedpoints[y][x][1] *= .7
+                #self.adjustedpoints[y][x][2] *= .7
+
+        print("Fourth pass...")
+                
+        for y in range(0, len(self.points)):
+            for x in range(0, len(self.points[y])):
+                r = self.filteredImage[y][x][0]
+                g = self.filteredImage[y][x][1]
+                b = self.filteredImage[y][x][2]
+
+                self.gen.imgArray[y][x] = np.array([r, g, b, 255])
         
                 
         print("Render complete!")
@@ -521,7 +587,11 @@ class FlameFractal:
     def finalTransform(self, x, y):
         #return x*500, y*500
         
-        return x*200 + 250, y*200 + 250
+        #return x*200 + 250, y*200 + 250
+
+        #return x + .5, y + .5
+        #return x + 1, y + 1
+        return x, y
     
         #return (x*500)+350, y*500
         #return x*3200, y*3200
@@ -592,22 +662,24 @@ class FlameFractal:
             # ignore the first 20 iterations to allow it time to converge to below size of a pixel
             if index > 20: 
 
-                #self.solutionSet.append([xf, yf, cf])
+                self.solutionSet.append([xf, yf, cf])
                 
-                pixels = self.determinePixel(xf, yf)
-                #print("Plotting (" + str(pixels[0]) + "," + str(pixels[1]) + ")...") # DEBUG
-                if pixels[0] < 0 or pixels[0] > self.gen.imgWidth - 1 or pixels[1] < 0 or pixels[1] > self.gen.imgHeight - 1:
-                    continue
-                #self.gen.imgArray[pixels[1]][pixels[0]] = np.array([255,255,255,255])
-                self.plot(pixels[0], pixels[1], cf)
+                #pixels = self.determinePixel(xf, yf)
+                ##print("Plotting (" + str(pixels[0]) + "," + str(pixels[1]) + ")...") # DEBUG
+                #if pixels[0] < 0 or pixels[0] > self.gen.imgWidth - 1 or pixels[1] < 0 or pixels[1] > self.gen.imgHeight - 1:
+                    #continue
+                ##self.gen.imgArray[pixels[1]][pixels[0]] = np.array([255,255,255,255])
+                #self.plot(pixels[0], pixels[1], cf)
 
             if index % displaystep == 0: print("Completed iteration " + str(index))
 
-        print("Flame fractal set solution plotted!")
+        print("Flame fractal set solution obtained!")
 
         for c in range(0, len(functionCounts)):
             print(str(c) + " - " + str(functionCounts[c]))
         
+        self.solutionSetTransform()
+        self.plot()
         self.render(2.2)
         #self.render()
     
