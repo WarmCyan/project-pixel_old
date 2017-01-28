@@ -38,7 +38,7 @@ class Generator:
         self.runCommand("help")
         self.runCommand("create 500 500")
         self.runCommand("setall 0 0 0 255")
-        self.runCommand("ff.solve 1000000")
+        #self.runCommand("ff.solve 1000000")
 
     def create(self, width, height):
         self.imgHeight = int(height)
