@@ -168,8 +168,10 @@ class FlameFractal:
         print("Transforming solution...")
         for i in range(0, len(self.solutionSet)):
             #x, y = f.run(self.solutionSet[i][0], self.solutionSet[i][1])
-            x = self.solutionSet[i][0] * 200 + 250
-            y = self.solutionSet[i][1] * 200 + 250
+            #x = self.solutionSet[i][0] * 200 + 250
+            #y = self.solutionSet[i][1] * 200 + 250
+            x = self.solutionSet[i][0] * 400 + 500
+            y = self.solutionSet[i][1] * 400 + 500
             self.solutionSet[i][0] = x
             self.solutionSet[i][1] = y
 
@@ -197,7 +199,7 @@ class FlameFractal:
 
     # https://en.wikipedia.org/wiki/Gaussian_blur 
     # NOTE: x and y are distance from origin
-    def calculateConvlutionForDistance(self, x, y):
+    def calculateConvolutionForDistance(self, x, y):
         return self.kernelScalar*math.exp(-((x**2 + y**2)/self.kernelExpDenom))
     
     # size is "radius"    
@@ -205,10 +207,21 @@ class FlameFractal:
         self.calculateKernelScalars(stdev)
         
         matrix = {}
+        totalSum = 0
         for y in range(-size, size):
             matrix[str(y)] = {}
             for x in range(-size, size):
-                matrix[str(y)][str(x)] = self.calculateConvlutionForDistance(x, y)
+                convolutionValue = self.calculateConvolutionForDistance(x, y)
+                matrix[str(y)][str(x)] = convolutionValue
+                totalSum += convolutionValue
+
+        #print("original matrix: " + str(matrix)) # DEBUG
+
+        for y in matrix.keys():
+            for x in matrix[y].keys():
+                matrix[y][x] /= totalSum
+                
+        #print("adjusted matrix: " + str(matrix)) # DEBUG
 
         return matrix
                 
@@ -309,6 +322,7 @@ class FlameFractal:
         print("First pass...")
         totalPoints = 0
         avgSpots = 0
+        maxDensity = 0
 
         #self.adjustedpoints = []
         
@@ -321,11 +335,14 @@ class FlameFractal:
                 
                 count = self.points[y][x][3]
                 if count > 1:
+                    if count > maxDensity: maxDensity = count
                     totalPoints += count
                     avgSpots += 1
                     
         averageDensity = float(totalPoints / avgSpots)
         print("Average point density: " + str(averageDensity))
+
+        print("Highest density: " + str(maxDensity))
         
         brightnessScalar = float(255 / averageDensity)*float(brightness)
         print("Brightness scalar: " + str(brightnessScalar))
@@ -401,20 +418,68 @@ class FlameFractal:
         
         #matrix = self.calculateConvolutionMatrix(4,3)
         #matrix = self.calculateConvolutionMatrix(2,.84)
-        matrix = self.calculateConvolutionMatrix(8,3)
-        print(str(matrix)) # DEBUG
+        #matrix = self.calculateConvolutionMatrix(8,3)
+
+        #lowDensity = self.calculateConvolutionMatrix(4, 2)
+        #midDensity = self.calculateConvolutionMatrix(2, .84)
+        #highDensity = self.calculateConvolutionMatrix(2, .1)
+
+        matrixCounts = [0,0,0]
+        
+        #print(str(matrix)) # DEBUG
         for y in range(0, len(self.image)):
+            print("row " + str(y))
             for x in range(0, len(self.image[y])):
                 #count = self.points[y][x][3]
                 #r = self.points[y][x][0]
                 #g = self.points[y][x][1]
                 #b = self.points[y][x][2]
 
-                r, g, b = self.filterPoint(x, y, matrix)
+                r = self.image[y][x][0]
+                g = self.image[y][x][1]
+                b = self.image[y][x][2]
+
+
+                #if self.points[y][x][3] < averageDensity:
+                    #matrixCounts[0] += 1
+                    #r, g, b = self.filterPoint(x, y, lowDensity)
+                #elif self.points[y][x][3] < averageDensity * 1.5:
+                    #matrixCounts[1] += 1
+                    #r, g, b = self.filterPoint(x, y, midDensity)
+                #elif self.points[y][x][3] < averageDensity * 2:
+                    #matrixCounts[2] += 1
+                    #r, g, b = self.filterPoint(x, y, highDensity)
+
+                count = self.points[y][x][3]
+                n = count
+                if n == 0: n = 1
+                #matrix = self.calculateConvolutionMatrix(4, 2*math.sqrt(1/n))
+
+                sd = 5*(1/n)
+                size = 2
+                
+                if (sd > 1): size = 3
+                if (sd > 2): size = 4
+                if (sd > 3): size = 5
+                
+                if sd > .01:
+                    matrix = self.calculateConvolutionMatrix(size, sd)
+                    r, g, b = self.filterPoint(x, y, matrix)
+                
 
                 self.filteredImage[y][x][0] = r
                 self.filteredImage[y][x][1] = g
                 self.filteredImage[y][x][2] = b
+
+                if self.filteredImage[y][x][2] == 0 and self.image[y][x][2] != 0:
+                    print("WARNING - zeroed")
+                
+                #r, g, b = self.filterPoint(x, y, matrix)
+
+                #if self.points[y][x][3] < averageDensity:
+                    #self.filteredImage[y][x][0] = r
+                    #self.filteredImage[y][x][1] = g
+                    #self.filteredImage[y][x][2] = b
                 
 
                 #self.adjustpoint(x, y - 2, r, g, b, .1)
@@ -431,15 +496,27 @@ class FlameFractal:
                 #self.adjustedpoints[y][x][1] *= .7
                 #self.adjustedpoints[y][x][2] *= .7
 
+        #print(str(matrixCounts))
+
         print("Fourth pass...")
                 
-        for y in range(0, len(self.points)):
-            for x in range(0, len(self.points[y])):
+        for y in range(0, len(self.filteredImage)):
+            for x in range(0, len(self.filteredImage[y])):
                 r = self.filteredImage[y][x][0]
                 g = self.filteredImage[y][x][1]
                 b = self.filteredImage[y][x][2]
+                
+                # cap
+                r = int(min(255, r))
+                g = int(min(255, g))
+                b = int(min(255, b))
 
-                self.gen.imgArray[y][x] = np.array([r, g, b, 255])
+                # apply!
+                try:
+                    self.gen.imgArray[y][x] = np.array([r, g, b, 255])
+                except: 
+                    print("Error in 4th pass")
+                    pass
         
                 
         print("Render complete!")
@@ -591,22 +668,22 @@ class FlameFractal:
 
         #return x + .5, y + .5
         #return x + 1, y + 1
-        return x, y
+        #return x, y
     
         #return (x*500)+350, y*500
         #return x*3200, y*3200
         #return (x*3200)+2240, y*3200
         #return (x*1800)+1260, y*1800
 
-        #return x*400 + 500, y*400 + 500
+        return x*400 + 500, y*400 + 500
 
     def finalColorTransform(self, c):
         return c
 
     def solve(self, iterations):
-        #self.preparePlot()
+        self.preparePlot()
 
-        self.solutionSet = []
+        #self.solutionSet = []
         
         print("Solving...")
         # choose random starting point within our coordinate system's range of [-1,1]
@@ -662,14 +739,14 @@ class FlameFractal:
             # ignore the first 20 iterations to allow it time to converge to below size of a pixel
             if index > 20: 
 
-                self.solutionSet.append([xf, yf, cf])
+                #self.solutionSet.append([xf, yf, cf])
                 
                 #pixels = self.determinePixel(xf, yf)
                 ##print("Plotting (" + str(pixels[0]) + "," + str(pixels[1]) + ")...") # DEBUG
-                #if pixels[0] < 0 or pixels[0] > self.gen.imgWidth - 1 or pixels[1] < 0 or pixels[1] > self.gen.imgHeight - 1:
-                    #continue
+                if xf < 0 or xf > self.gen.imgWidth - 1 or yf < 0 or yf > self.gen.imgHeight - 1:
+                    continue
                 ##self.gen.imgArray[pixels[1]][pixels[0]] = np.array([255,255,255,255])
-                #self.plot(pixels[0], pixels[1], cf)
+                self.plotPoint(int(xf), int(yf), cf)
 
             if index % displaystep == 0: print("Completed iteration " + str(index))
 
@@ -678,8 +755,8 @@ class FlameFractal:
         for c in range(0, len(functionCounts)):
             print(str(c) + " - " + str(functionCounts[c]))
         
-        self.solutionSetTransform()
-        self.plot()
+        #self.solutionSetTransform()
+        #self.plot()
         self.render(2.2)
         #self.render()
     
