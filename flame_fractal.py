@@ -199,6 +199,12 @@ class FlameFractal:
         g = 0
         b = 0
 
+        #print("original: " + str(self.points[y][x][2]))
+
+        original = [self.points[y][x][0], self.points[y][x][1], self.points[y][x][2]]
+        #print("original: " + str(original))
+
+        
         for ly in matrix:
             #print("ly: " + str(ly)) # DEBUG
             for lx in matrix[ly]:
@@ -221,13 +227,22 @@ class FlameFractal:
         #r = min(1., r)
         #g = min(1., g)
         #b = min(1., b)
+        
 
         self.adjustedpoints[y][x][0] = r
         self.adjustedpoints[y][x][1] = g
         self.adjustedpoints[y][x][2] = b
+        
+        nonoriginal = [self.points[y][x][0], self.points[y][x][1], self.points[y][x][2]]
+        #print("points now: " + str(nonoriginal))
 
-        if self.adjustedpoints[y][x][2] != self.points[y][x][2]:
-            print("Was a change at (" + str(x) + "," + str(y) + ")")
+        #print("original: " + str(self.points[y][x][2]) + "adjusted: " + str(self.adjustedpoints[y][x][2]))
+        #print("adjusted: " + str(self.adjustedpoints[y][x][2]))
+        #if self.adjustedpoints[y][x][2] != self.points[y][x][2]:
+            #print("Was a change at (" + str(x) + "," + str(y) + ")")
+
+        if self.adjustedpoints[y][x][2] == 0 and self.points[y][x][3] != 0:
+            print("WARNING - something was zeroed...")
 
         #if r > 0 or g > 0 or b > 0:
             #print("setting (" + str(x) + "," + str(y) + ") to " + str(r) + " " + str(g) + " " + str(b)) # DEBUG
@@ -249,9 +264,16 @@ class FlameFractal:
         print("First pass...")
         totalPoints = 0
         avgSpots = 0
+
+        self.adjustedpoints = []
         
         for y in range(0, len(self.points)):
+            self.adjustedpoints.append([])
             for x in range(0, len(self.points[y])):
+                self.adjustedpoints[y].append([])
+                for val in self.points[y][x]:
+                    self.adjustedpoints[y][x].append(val)
+                
                 count = self.points[y][x][3]
                 if count > 1:
                     totalPoints += count
@@ -266,9 +288,14 @@ class FlameFractal:
         print("Second pass...")
         
 
-        self.adjustedpoints = self.points[:]
-        matrix = self.calculateConvolutionMatrix(4,3)
-        #matrix = self.calculateConvolutionMatrix(2,.1)
+        #self.adjustedpoints = self.points[:]
+        #self.adjustedpoints = list(self.points)
+
+
+
+        
+        #matrix = self.calculateConvolutionMatrix(4,3)
+        matrix = self.calculateConvolutionMatrix(2,.84)
         print(str(matrix)) # DEBUG
         for y in range(0, len(self.points)):
             for x in range(0, len(self.points[y])):
@@ -574,8 +601,8 @@ class FlameFractal:
         for c in range(0, len(functionCounts)):
             print(str(c) + " - " + str(functionCounts[c]))
         
-        #self.render(2.2)
-        self.render()
+        self.render(2.2)
+        #self.render()
     
     def determinePixel(self, x, y):
         #xpixel = int(x*(self.gen.imgWidth/2)) + (self.gen.imgWidth/2)
