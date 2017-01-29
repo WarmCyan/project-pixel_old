@@ -130,6 +130,13 @@ namespace dwl
 		m_fTempX = (fX * fsinRSquared) - (fY * fcosRSquared);
 		m_fTempY = (fX * fcosRSquared) + (fY * fsinRSquared);
 	}
+
+
+
+	string FFFunction::FunctionInfo()
+	{
+		return "This is a function...";
+	}
 }
 
 #endif // FF_FUNCTION_CPP

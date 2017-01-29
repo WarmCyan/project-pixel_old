@@ -11,10 +11,14 @@
 #include <iostream>
 
 #include <random>
+#include <cmath>
 //#include <cstdlib>
 //#include <ctime>
 
 #include "Function.h"
+#include "FlameFractal.h"
+
+#define PI 3.14159265
 
 using namespace std;
 using namespace dwl;
@@ -24,12 +28,63 @@ int main()
 {
 	cout << "hello world!" << endl;
 
+	// set up functions
+	FFFunction f0 = FFFunction();
+	f0.SetMatrixCoefficients({ 0.9f, 0.0f, 0.0f, 0.0f, 0.9f, 0.0f });
+	f0.SetVariationWeight(FFFunction::VAR_LINEAR, 0.1f);
+	f0.SetVariationWeight(FFFunction::VAR_SINUSOIDAL, 0.1f);
+	f0.SetVariationWeight(FFFunction::VAR_SPHERICAL, 0.7f);
+	f0.SetVariationWeight(FFFunction::VAR_SWIRL, 0.1f);
+	f0.SetColor(1.0f);
+	f0.SetWeight(1.0f);
 	
-	random_device rd;
+	FFFunction f1 = FFFunction();
+	f1.SetMatrixCoefficients({ 0.5f, 0.0f, 0.5f, 0.0f, 0.5f, 0.0f });
+	f1.SetVariationWeight(FFFunction::VAR_LINEAR, 0.4f);
+	f1.SetVariationWeight(FFFunction::VAR_SINUSOIDAL, 0.6f);
+	f1.SetVariationWeight(FFFunction::VAR_SWIRL, 0.2f);
+	f1.SetColor(0.5f);
+	f1.SetWeight(1.0f);
+
+	FFFunction f2 = FFFunction();
+	f2.SetMatrixCoefficients({ 0.5f, 0.0f, 0.5f, 0.0f, 0.5f, 0.0f });
+	f2.SetVariationWeight(FFFunction::VAR_SINUSOIDAL, 0.5f);
+	f2.SetVariationWeight(FFFunction::VAR_SPHERICAL, 0.3f);
+	f2.SetVariationWeight(FFFunction::VAR_SWIRL, 0.1f);
+	f2.SetColor(0.0f);
+	f2.SetWeight(1.0f);
+
+	FFFunction f3 = FFFunction();
+	f3.SetMatrixCoefficients({ (float)cos(120*PI/180), (float)sin(120*PI/180), 0.0f, -(float)sin(120*PI/180), (float)cos(120*PI/180), 0.0f });
+	f3.SetVariationWeight(FFFunction::VAR_LINEAR, 1.0f);
+	f3.SetColor(0.7f);
+	f3.SetWeight(3.0f);
+	f3.SetSymmetry(true);
+	
+	FFFunction f4 = FFFunction();
+	f4.SetMatrixCoefficients({ (float)cos(240*PI/180), (float)sin(240*PI/180), 0.0f, -(float)sin(240*PI/180), (float)cos(240*PI/180), 0.0f });
+	f4.SetVariationWeight(FFFunction::VAR_LINEAR, 1.0f);
+	f4.SetColor(0.7f);
+	f4.SetWeight(3.0f);
+	f4.SetSymmetry(true);
+
+
+	FlameFractal ff = FlameFractal(500, 500);
+	ff.AddFunction(f0);
+	ff.AddFunction(f1);
+	ff.AddFunction(f2);
+	ff.AddFunction(f3);
+	ff.AddFunction(f4);
+
+	
+	ff.Solve(1000000);
+	ff.Render(2.2, 1.0);
+	
+	/*random_device rd;
 	srand(rd());
 	float fRandom = ((float) rand()) / (float) RAND_MAX;
 
-	cout << "Random: " << fRandom << endl;
+	cout << "Random: " << fRandom << endl;*/
 
 
 	//FFFunction f = FFFunction();

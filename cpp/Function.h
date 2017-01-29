@@ -59,11 +59,17 @@ namespace dwl
 			void SetSymmetry(bool bIsSymmetry) { m_bIsSymmetry = bIsSymmetry; }
 			bool IsSymmetry() { return m_bIsSymmetry; }
 
+			float GetColor() { return m_fColor; }
+			void SetColor(float fColor) { m_fColor = fColor; }
+
 			vector<float> GetVariationWeights() { return m_vVariationWeights; }
 			void SetVariationWeights(vector<float> aVariationWeights) { m_vVariationWeights = aVariationWeights; }
 			void SetVariationWeight(int iVariation, float fWeight) { m_vVariationWeights[iVariation] = fWeight; }
 
 			void SetMatrixCoefficients(vector<float> aMatrixCoefficients) { m_vMatrixCoefficients = aMatrixCoefficients; }
+
+			float GetWeight() { return m_fWeight; }
+			void SetWeight(float fWeight) { m_fWeight = fWeight; }
 
 			float GetResultX() { return m_fResultX; }
 			float GetResultY() { return m_fResultY; }
