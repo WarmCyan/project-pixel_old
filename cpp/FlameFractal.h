@@ -12,6 +12,8 @@
 
 #include <iostream>
 #include <vector>
+#include <random>
+
 #include "Function.h"
 
 using namespace std;
@@ -31,6 +33,8 @@ namespace dwl
 			float m_fTempX;
 			float m_fTempY;
 
+			//float m_fTempC;
+
 			//vector<vector<float[3]> >* m_vPoints;
 			vector<vector<vector<float> > >* m_vPoints;
 			//int m_aImage[][][3];
@@ -49,6 +53,9 @@ namespace dwl
 			float FinalColorTransform(float cX);
 
 			void CopyArray(float** m_aInput, float** *m_aOutput);
+
+
+			float RandomFloat();
 			
 		public:
 
@@ -58,6 +65,8 @@ namespace dwl
 
 			void Solve(int iIterationCount);
 			void Render(float fGamma, float fBrightness);
+
+			vector<vector<vector<float> > >* GetImage() { return m_vPoints; }
 	};
 }
 
