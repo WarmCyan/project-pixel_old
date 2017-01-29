@@ -1,7 +1,7 @@
 //*************************************************************
 //  File: Function.h
 //  Date created: 1/28/2017
-//  Date edited: 1/28/2017
+//  Date edited: 1/29/2017
 //  Author: Nathan Martindale
 //  Copyright © 2017 Digital Warrior Labs
 //  Description: 
@@ -27,6 +27,12 @@ namespace dwl
 
 			bool m_bIsSymmetry;
 
+			float m_fTempX;
+			float m_fTempY;
+
+			float m_fResultX;
+			float m_fResultY;
+
 			vector<float> m_vMatrixCoefficients;
 			vector<float> m_vVariationWeights;
 			//float* m_vMatrixCoefficients;
@@ -35,10 +41,10 @@ namespace dwl
 			float Calc_R(float fX, float fY);
 			
 			// variation functions
-			vector<float> Var_Linear(float fX, float fY);
-			vector<float> Var_Sinusoidal(float fX, float fY);
-			vector<float> Var_Spherical(float fX, float fY);
-			vector<float> Var_Swirl(float fX, float fY);
+			void Var_Linear(float fX, float fY);
+			void Var_Sinusoidal(float fX, float fY);
+			void Var_Spherical(float fX, float fY);
+			void Var_Swirl(float fX, float fY);
 			
 		public:
 
@@ -48,7 +54,7 @@ namespace dwl
 			static const int VAR_SWIRL = 3;
 			
 			FFFunction();
-			vector<float> Run(float fX, float fY);
+			void Run(float fX, float fY);
 
 			void SetSymmetry(bool bIsSymmetry) { m_bIsSymmetry = bIsSymmetry; }
 			bool IsSymmetry() { return m_bIsSymmetry; }
@@ -58,6 +64,9 @@ namespace dwl
 			void SetVariationWeight(int iVariation, float fWeight) { m_vVariationWeights[iVariation] = fWeight; }
 
 			void SetMatrixCoefficients(vector<float> aMatrixCoefficients) { m_vMatrixCoefficients = aMatrixCoefficients; }
+
+			float GetResultX() { return m_fResultX; }
+			float GetResultY() { return m_fResultY; }
 
 			string FunctionInfo();	 
 	};
