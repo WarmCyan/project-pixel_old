@@ -260,6 +260,11 @@ class FlameFractal:
                 #coloradjust = self.getPointFactor(int(lx), int(ly), matrix[ly][lx])
                 #nr,ng,nb = self.getPointFactor(int(lx), int(ly), matrix[ly][lx])
                 nr,ng,nb = self.getPointFactor(x + int(lx), y + int(ly), matrix[ly][lx])
+
+                #if debug: print("factor: " + str(matrix[ly][lx]))
+                #if debug: print(str(nr) + " " + str(ng) + " " + str(nb))
+                
+                
                 #print("adjust: " + str(coloradjust)) # DEBUG
                 #r += coloradjust[0]
                 #g += coloradjust[1]
@@ -270,7 +275,7 @@ class FlameFractal:
                 #str(r)
                 #str(g)
                 #str(b)
-                #print(str(r) + " " + str(g) + " " + str(b)) # DEBUG
+                #if debug: print("rgb: " + str(r) + " " + str(g) + " " + str(b)) # DEBUG
 
         #r = min(1., r)
         #g = min(1., g)
@@ -452,15 +457,20 @@ class FlameFractal:
 
                 count = self.points[y][x][3]
                 n = count
-                if n == 0: n = 1
+                if n == 0: n = 1 # TODO: PUT THIS BACK IN!
                 #matrix = self.calculateConvolutionMatrix(4, 2*math.sqrt(1/n))
 
-                sd = 5*(1/n)
-                size = 2
+                #sd = 5*(1/n)
+                #sd = 5*(math.sqrt(1/n))
+                sd = 10*(2/(n+1))
+                #size = 2
+                size = max(min(int(sd)*3, 30), 1) # NOTE: needs to be at least 1!!!!!!!
+                #size = 5
                 
-                if (sd > 1): size = 3
-                if (sd > 2): size = 4
-                if (sd > 3): size = 5
+                #if (sd > 1): size = 3
+                #if (sd > 2): size = 4
+                #if (sd > 3): size = 5
+                
                 
                 if sd > .01:
                     matrix = self.calculateConvolutionMatrix(size, sd)
@@ -473,6 +483,9 @@ class FlameFractal:
 
                 if self.filteredImage[y][x][2] == 0 and self.image[y][x][2] != 0:
                     print("WARNING - zeroed")
+                    #matrix = self.calculateConvolutionMatrix(size, sd, True)
+                    #self.filterPoint(x, y, matrix, True)
+                    #return
                 
                 #r, g, b = self.filterPoint(x, y, matrix)
 
