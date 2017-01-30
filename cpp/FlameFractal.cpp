@@ -220,13 +220,15 @@ namespace dwl
 	{
 		return m_fKernelScalar * exp(-((pow(iX, 2) + pow(iY, 2)) / m_fKernelExpDenom));
 	}
-	vector<vector<float> >* FlameFractal::CalculateConvolutionMatrix(int iSize, float fStdDev)
+	vector<vector<float> >* FlameFractal::CalculateConvolutionMatrix(int iSize, float fStdDev, bool bDebug)
 	{
 		CalculateKernelScalars(fStdDev);
 
 		int iMatrixSize = iSize * 2 + 1;
 		float fMatrixSum = 0.0f; // used for normalization
 		vector<vector<float> >* vMatrix = new vector<vector<float > >(iMatrixSize, vector<float>(iMatrixSize, 0));
+
+		if (bDebug) { cout << "iSize: " << iSize << " MatrixSize: " << iMatrixSize << endl; }
 
 		//for (int y = -iSize; y < iSize + 1; y++) // TODO: shouldn't that be iSize + 1?
 		for (int y = 0; y < iMatrixSize; y++)
@@ -248,27 +250,31 @@ namespace dwl
 			for (int x = 0; x < iMatrixSize; x++)
 			{
 				(*vMatrix)[y][x] /= fMatrixSum;
-				//cout << "matrix value: " << (*vMatrix)[y][x] << endl;
+				if (bDebug) { cout << "matrix value: " << (*vMatrix)[y][x] << endl; }
 			}
 		}
 
 		return vMatrix;
 	}
 	
-	void FlameFractal::CalculatePointFactor(int iX, int iY, float fFactor)
+	void FlameFractal::CalculatePointFactor(int iX, int iY, float fFactor, bool bDebug)
 	{
 		m_fTempR = 0.0f;
 		m_fTempG = 0.0f;
 		m_fTempB = 0.0f;
+
+		if (bDebug) { cout << "on coord " << iX << "," << iY << endl; }
 
 		if (iX < m_iWidth && iX >= 0 && iY < m_iHeight && iY >= 0)
 		{
 			m_fTempR = (*m_vImage)[iY][iX][0] * fFactor;
 			m_fTempG = (*m_vImage)[iY][iX][1] * fFactor;
 			m_fTempB = (*m_vImage)[iY][iX][2] * fFactor;
+
+			if (bDebug) { cout << (*m_vPoints)[iY][iX][3] << endl; }
 		}
 	}
-	void FlameFractal::FilterPoint(int iX, int iY, vector<vector<float> >* vConvolutionMatrix)
+	void FlameFractal::FilterPoint(int iX, int iY, vector<vector<float> >* vConvolutionMatrix, bool bDebug)
 	{
 		float fR = 0.0f;
 		float fG = 0.0f;
@@ -277,16 +283,22 @@ namespace dwl
 		for (int ly = 0; ly < vConvolutionMatrix->size(); ly++)
 		{
 			int iYOffset = ly - floor(vConvolutionMatrix->size() / 2);
+			if (bDebug) { cout << "on y offset " << iYOffset << endl; }
 			for (int lx = 0; lx < (*vConvolutionMatrix)[ly].size(); lx++)
 			{
 				int iXOffset = lx - floor((*vConvolutionMatrix)[ly].size() / 2);
-				CalculatePointFactor(iX + iXOffset, iY + iYOffset, (*vConvolutionMatrix)[ly][lx]);
+				if (bDebug) { cout << "\ton x offset " << iXOffset << endl; }
+				if (bDebug) { cout << "\t\t" << (*vConvolutionMatrix)[ly][lx] << endl; }
+				CalculatePointFactor(iX + iXOffset, iY + iYOffset, (*vConvolutionMatrix)[ly][lx], bDebug);
+
+				if (bDebug) { cout << "\t\t" << m_fTempR << "," << m_fTempG << "," << m_fTempB << endl; }
 
 				fR += m_fTempR;
 				fG += m_fTempG;
 				fB += m_fTempB;
 			}
 		}
+		if (bDebug) { cout << fR << "," << fG << "," << fB << endl; }
 
 		m_fTempR = fR;
 		m_fTempG = fG;
@@ -405,23 +417,37 @@ namespace dwl
 				float fDensity = (*m_vPoints)[y][x][3];
 
 				float n = fDensity;
-				if (n == 0) { n = 1; }
+				if (n < 1) { n = 1; }
 
-				float fStdDev = 10 * (2 / (n + 1));
+				//float fStdDev = 10 * (2 / (n + 1));
+				float fStdDev = 5 * (1 / n);
+				//float fStdDev = 5;
 				int iSize = max(min((int)fStdDev * 3, 30), 1); // has to be at least 1!
 
+				//cout << fStdDev << endl; // DEBUG
 				if (fStdDev > .01)
 				{
-					vector<vector<float> >* vMatrix = CalculateConvolutionMatrix(iSize, fStdDev);
-					FilterPoint(y, x, vMatrix);
+					vector<vector<float> >* vMatrix = CalculateConvolutionMatrix(iSize, fStdDev, false);
+					FilterPoint(x, y, vMatrix, false);
 					fR = m_fTempR;
 					fG = m_fTempG;
 					fB = m_fTempB;
+
+					delete vMatrix;
 				}
 
 				(*m_vPostProcImage)[y][x][0] = fR;
 				(*m_vPostProcImage)[y][x][1] = fG;
 				(*m_vPostProcImage)[y][x][2] = fB;
+
+				if (fB == 0 && (*m_vImage)[y][x][2] != 0)
+				{
+					cout << "actual blue for " << x << "," << y << ": " << (*m_vImage)[y][x][2] << endl;
+					cout << "WARNING - zeroed" << endl;
+					vector<vector<float> >* vMatrix = CalculateConvolutionMatrix(iSize, fStdDev, true);
+					FilterPoint(x, y, vMatrix, true);
+					return;
+				}
 			}
 		}
 
