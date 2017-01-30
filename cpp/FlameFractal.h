@@ -18,6 +18,8 @@
 
 #include "Function.h"
 
+#define PI 3.14159265
+
 using namespace std;
 
 namespace dwl
@@ -35,16 +37,13 @@ namespace dwl
 			float m_fTempX;
 			float m_fTempY;
 
-			//float m_fTempC;
+			float m_fKernelScalar;
+			float m_fKernelExpDenom;
 
-			//vector<vector<float[3]> >* m_vPoints;
 			vector<vector<vector<float> > >* m_vPoints;
 			vector<vector<vector<float> > >* m_vImage;
 			vector<vector<vector<float> > >* m_vPostProcImage;
 			vector<vector<vector<int> > >* m_vFinalImage;
-			//int m_aImage[][][3];
-			//int m_aFilteredImage[][][3];
-			//float m_aFinalImage[1][1][3];
 			
 			vector<FFFunction> m_vFunctions;
 
@@ -59,6 +58,13 @@ namespace dwl
 
 			void CopyImage(vector<vector<vector<float> > >* m_vInput, vector<vector<vector<float> > >* m_vOutput);
 
+			// gaussian kernel blur stuff
+			void CalculateKernelScalars(float fStdDev);
+			float CalculateConvolutionForDistance(int iX, int iY);
+			vector<vector<float> >* CalculateConvolutionMatrix(int iSize, float fStdDev);
+
+			void CalculatePointFactor(int iX, int iY, float fFactor);
+			void FilterPoint(int iX, int iY, vector<vector<float> >* vConvolutionMatrix);
 
 			float RandomFloat();
 

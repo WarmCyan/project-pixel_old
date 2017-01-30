@@ -108,8 +108,8 @@ namespace dwl
 
 	void FlameFractal::FinalTransform(float fX, float fY)
 	{
-		m_fTempX = fX * 200 + 250;
-		m_fTempY = fY * 200 + 250;
+		m_fTempX = fX * 400 + 500;
+		m_fTempY = fY * 400 + 500;
 	}
 
 	float FlameFractal::FinalColorTransform(float fColor) { return fColor; }
@@ -211,6 +211,88 @@ namespace dwl
 		}
 	}
 
+	void FlameFractal::CalculateKernelScalars(float fStdDev)
+	{
+		m_fKernelScalar = 1 / (2 * PI * pow(fStdDev, 2));
+		m_fKernelExpDenom = 2 * pow(fStdDev, 2);
+	}
+	float FlameFractal::CalculateConvolutionForDistance(int iX, int iY)
+	{
+		return m_fKernelScalar * exp(-((pow(iX, 2) + pow(iY, 2)) / m_fKernelExpDenom));
+	}
+	vector<vector<float> >* FlameFractal::CalculateConvolutionMatrix(int iSize, float fStdDev)
+	{
+		CalculateKernelScalars(fStdDev);
+
+		int iMatrixSize = iSize * 2 + 1;
+		float fMatrixSum = 0.0f; // used for normalization
+		vector<vector<float> >* vMatrix = new vector<vector<float > >(iMatrixSize, vector<float>(iMatrixSize, 0));
+
+		//for (int y = -iSize; y < iSize + 1; y++) // TODO: shouldn't that be iSize + 1?
+		for (int y = 0; y < iMatrixSize; y++)
+		{
+			int iY = y - iSize;
+			for (int x = 0; x < iMatrixSize; x++)
+			{
+				int iX = x - iSize;
+
+				float fConvolutionValue = CalculateConvolutionForDistance(iX, iY);
+				(*vMatrix)[y][x] = fConvolutionValue;
+				fMatrixSum += fConvolutionValue;
+			}
+		}
+
+		// normalize
+		for (int y = 0; y < iMatrixSize; y++)
+		{
+			for (int x = 0; x < iMatrixSize; x++)
+			{
+				(*vMatrix)[y][x] /= fMatrixSum;
+				//cout << "matrix value: " << (*vMatrix)[y][x] << endl;
+			}
+		}
+
+		return vMatrix;
+	}
+	
+	void FlameFractal::CalculatePointFactor(int iX, int iY, float fFactor)
+	{
+		m_fTempR = 0.0f;
+		m_fTempG = 0.0f;
+		m_fTempB = 0.0f;
+
+		if (iX < m_iWidth && iX >= 0 && iY < m_iHeight && iY >= 0)
+		{
+			m_fTempR = (*m_vImage)[iY][iX][0] * fFactor;
+			m_fTempG = (*m_vImage)[iY][iX][1] * fFactor;
+			m_fTempB = (*m_vImage)[iY][iX][2] * fFactor;
+		}
+	}
+	void FlameFractal::FilterPoint(int iX, int iY, vector<vector<float> >* vConvolutionMatrix)
+	{
+		float fR = 0.0f;
+		float fG = 0.0f;
+		float fB = 0.0f;
+
+		for (int ly = 0; ly < vConvolutionMatrix->size(); ly++)
+		{
+			int iYOffset = ly - floor(vConvolutionMatrix->size() / 2);
+			for (int lx = 0; lx < (*vConvolutionMatrix)[ly].size(); lx++)
+			{
+				int iXOffset = lx - floor((*vConvolutionMatrix)[ly].size() / 2);
+				CalculatePointFactor(iX + iXOffset, iY + iYOffset, (*vConvolutionMatrix)[ly][lx]);
+
+				fR += m_fTempR;
+				fG += m_fTempG;
+				fB += m_fTempB;
+			}
+		}
+
+		m_fTempR = fR;
+		m_fTempG = fG;
+		m_fTempB = fB;
+	}
+
 	void FlameFractal::Render(float fGamma, float fBrightness)
 	{
 		cout << "Rendering... (gamma = " << fGamma << ", brightness = " << fBrightness << ")" << endl;
@@ -227,7 +309,7 @@ namespace dwl
 			for (int x = 0; x < (*m_vPoints)[y].size(); x++)
 			{
 				float fDensity = (*m_vPoints)[y][x][3];
-				if (fDensity > 0)
+				if (fDensity > 1) // NOTE: this is technically an error (should be > 0), but I prefer the brightness scalar that results from this
 				{
 					if (fDensity > fMaxDensity) { fMaxDensity = fDensity; }
 					fTotalDensity += fDensity;
@@ -248,7 +330,16 @@ namespace dwl
 		cout << "Second pass... (Resolving colors, applying gamma and brightness corrections)" << endl;
 
 		//CopyImage(m_vPoints, m_vImage);
-		m_vImage = m_vPoints;
+		for (int y = 0; y < m_vPoints->size(); y++)
+		{
+			for (int x = 0; x < (*m_vPoints)[y].size(); x++)
+			{
+				(*m_vImage)[y][x][0] = (*m_vPoints)[y][x][0];
+				(*m_vImage)[y][x][1] = (*m_vPoints)[y][x][1];
+				(*m_vImage)[y][x][2] = (*m_vPoints)[y][x][2];
+				(*m_vImage)[y][x][3] = (*m_vPoints)[y][x][3];
+			}
+		}			
 
 		for (int y = 0; y < m_vImage->size(); y++)
 		{
@@ -259,7 +350,7 @@ namespace dwl
 				float fG = (*m_vImage)[y][x][1];
 				float fB = (*m_vImage)[y][x][2];
 
-				if (fDensity > 1) // TODO: shouldn't this be > 0??
+				if (fDensity > 1) // NOTE: If this is > 0, get weird white spots. DON'T TOUCH!
 				{
 					// log-density brightness scalar
 					float fLogScalar = log(fDensity) / fDensity;
@@ -289,6 +380,50 @@ namespace dwl
 
 		// THIRD PASS
 		
+		cout << "Third pass... (Post processing/filtering)" << endl;
+
+		//m_vPostProcImage = m_vImage;
+		for (int y = 0; y < m_vImage->size(); y++)
+		{
+			for (int x = 0; x < (*m_vImage)[y].size(); x++)
+			{
+				(*m_vPostProcImage)[y][x][0] = (*m_vImage)[y][x][0];
+				(*m_vPostProcImage)[y][x][1] = (*m_vImage)[y][x][1];
+				(*m_vPostProcImage)[y][x][2] = (*m_vImage)[y][x][2];
+				(*m_vPostProcImage)[y][x][3] = (*m_vImage)[y][x][3];
+			}
+		}			
+		
+		for (int y = 0; y < m_vPostProcImage->size(); y++)
+		{
+			cout << "row " << y << endl;
+			for (int x = 0; x < (*m_vPostProcImage)[y].size(); x++)
+			{
+				float fR = (*m_vImage)[y][x][0];
+				float fG = (*m_vImage)[y][x][1];
+				float fB = (*m_vImage)[y][x][2];
+				float fDensity = (*m_vPoints)[y][x][3];
+
+				float n = fDensity;
+				if (n == 0) { n = 1; }
+
+				float fStdDev = 10 * (2 / (n + 1));
+				int iSize = max(min((int)fStdDev * 3, 30), 1); // has to be at least 1!
+
+				if (fStdDev > .01)
+				{
+					vector<vector<float> >* vMatrix = CalculateConvolutionMatrix(iSize, fStdDev);
+					FilterPoint(y, x, vMatrix);
+					fR = m_fTempR;
+					fG = m_fTempG;
+					fB = m_fTempB;
+				}
+
+				(*m_vPostProcImage)[y][x][0] = fR;
+				(*m_vPostProcImage)[y][x][1] = fG;
+				(*m_vPostProcImage)[y][x][2] = fB;
+			}
+		}
 
 
 		// FOURTH PASS
@@ -298,17 +433,23 @@ namespace dwl
 		{
 			for (int x = 0; x < (*m_vImage)[y].size(); x++)
 			{
-				(*m_vFinalImage)[y][x][0] = (int)((*m_vImage)[y][x][0]);
+				/*(*m_vFinalImage)[y][x][0] = (int)((*m_vImage)[y][x][0]);
 				(*m_vFinalImage)[y][x][1] = (int)((*m_vImage)[y][x][1]);
 				(*m_vFinalImage)[y][x][2] = (int)((*m_vImage)[y][x][2]);
-				(*m_vFinalImage)[y][x][3] = (int)((*m_vImage)[y][x][3]);
+				(*m_vFinalImage)[y][x][3] = (int)((*m_vImage)[y][x][3]);*/
+				
+				(*m_vFinalImage)[y][x][0] = (int)((*m_vPostProcImage)[y][x][0]);
+				(*m_vFinalImage)[y][x][1] = (int)((*m_vPostProcImage)[y][x][1]);
+				(*m_vFinalImage)[y][x][2] = (int)((*m_vPostProcImage)[y][x][2]);
+				(*m_vFinalImage)[y][x][3] = (int)((*m_vPostProcImage)[y][x][3]);
+			
 				
 				//if ((*m_vFinalImage)[y][x][3] != 255)
-				if ((*m_vImage)[y][x][3] != 255)
+				/*if ((*m_vImage)[y][x][3] != 255)
 				{
 					cout << (*m_vImage)[y][x][3] << endl;
 					cout << "WARNING - alpha isn't up" << endl;
-				}
+				}*/
 			}
 		}
 	}
