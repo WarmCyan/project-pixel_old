@@ -13,6 +13,8 @@
 #include <iostream>
 #include <vector>
 #include <random>
+#include <cmath>
+#include <algorithm>
 
 #include "Function.h"
 
@@ -37,6 +39,9 @@ namespace dwl
 
 			//vector<vector<float[3]> >* m_vPoints;
 			vector<vector<vector<float> > >* m_vPoints;
+			vector<vector<vector<float> > >* m_vImage;
+			vector<vector<vector<float> > >* m_vPostProcImage;
+			vector<vector<vector<int> > >* m_vFinalImage;
 			//int m_aImage[][][3];
 			//int m_aFilteredImage[][][3];
 			//float m_aFinalImage[1][1][3];
@@ -52,21 +57,26 @@ namespace dwl
 			void FinalTransform(float fX, float fY);
 			float FinalColorTransform(float cX);
 
-			void CopyArray(float** m_aInput, float** *m_aOutput);
+			void CopyImage(vector<vector<vector<float> > >* m_vInput, vector<vector<vector<float> > >* m_vOutput);
 
 
 			float RandomFloat();
+
+			void SetBaseImage(float fR, float fG, float fB, float fA);
 			
 		public:
 
 			FlameFractal(int iWidth, int iHeight);
+
+			int GetWidth() { return m_iWidth; }
+			int GetHeight() { return m_iHeight; }
 
 			void AddFunction(FFFunction pFunction) { m_vFunctions.push_back(pFunction); }
 
 			void Solve(int iIterationCount);
 			void Render(float fGamma, float fBrightness);
 
-			vector<vector<vector<float> > >* GetImage() { return m_vPoints; }
+			vector<vector<vector<int> > >* GetImage() { return m_vFinalImage; }
 	};
 }
 
