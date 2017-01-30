@@ -75,7 +75,8 @@ int main()
 	f4.SetSymmetry(true);
 
 
-	FlameFractal ff = FlameFractal(1000, 1000);
+	//FlameFractal ff = FlameFractal(1000, 1000);
+	FlameFractal ff = FlameFractal(500, 500);
 	ff.AddFunction(f0);
 	ff.AddFunction(f1);
 	ff.AddFunction(f2);
@@ -83,7 +84,7 @@ int main()
 	ff.AddFunction(f4);
 
 	
-	ff.Solve(1000000);
+	ff.Solve(100000000);
 	ff.Render(2.2, 1.0);
 
 	SaveImage("imgdata.json", &ff);

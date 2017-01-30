@@ -61,10 +61,10 @@ namespace dwl
 			// gaussian kernel blur stuff
 			void CalculateKernelScalars(float fStdDev);
 			float CalculateConvolutionForDistance(int iX, int iY);
-			vector<vector<float> >* CalculateConvolutionMatrix(int iSize, float fStdDev);
+			vector<vector<float> >* CalculateConvolutionMatrix(int iSize, float fStdDev, bool bDebug);
 
-			void CalculatePointFactor(int iX, int iY, float fFactor);
-			void FilterPoint(int iX, int iY, vector<vector<float> >* vConvolutionMatrix);
+			void CalculatePointFactor(int iX, int iY, float fFactor, bool bDebug);
+			void FilterPoint(int iX, int iY, vector<vector<float> >* vConvolutionMatrix, bool bDebug);
 
 			float RandomFloat();
 
