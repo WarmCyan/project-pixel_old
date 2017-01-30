@@ -48,6 +48,9 @@ namespace dwl
 		//m_aPoints = new float[m_iHeight][m_iWidth][3];
 		//m_vPoints = new vector<vector<float[3]> >(m_iHeight, vector<float[3]>(m_iWidth, 0));
 		m_vPoints = new vector<vector<vector<float> > >(m_iHeight, vector<vector<float> >(m_iWidth, vector<float>(3, 0)));
+		m_vImage = new vector<vector<vector<float> > >(m_iHeight, vector<vector<float> >(m_iWidth, vector<float>(3, 0)));
+		m_vPostProcImage = new vector<vector<vector<float> > >(m_iHeight, vector<vector<float> >(m_iWidth, vector<float>(3, 0)));
+		m_vFinalImage = new vector<vector<vector<int> > >(m_iHeight, vector<vector<int> >(m_iWidth, vector<int>(3, 0)));
 	
 		/*for (int y = 0; y < m_iHeight; y++)
 		{
@@ -65,14 +68,35 @@ namespace dwl
 		cout << "Plot prepared!" << endl;
 	}
 
+	void FlameFractal::SetBaseImage(float fR, float fG, float fB, float fA)
+	{
+		/*for (int y = 0; y < m_vImage->size(); y++)
+		{
+			for (int x = 0; x < (*m_vImage)[y].size(); x++)
+			{
+				float fDensity = (*m_vImage)[y][x][3];
+				float fR = (*m_vImage)[y][x][0];
+				float fG = (*m_vImage)[y][x][1];
+				float fB = (*m_vImage)[y][x][2];
+			}
+		}*/
+	}
+
 	void FlameFractal::PlotPoint(float fX, float fY, float fC)
 	{
 		ColorMap(fC);
 
-		(*m_vPoints)[(int) fY][(int) fX][0] = m_fTempR;
-		(*m_vPoints)[(int) fY][(int) fX][1] = m_fTempG;
-		(*m_vPoints)[(int) fY][(int) fX][2] = m_fTempB;
-		(*m_vPoints)[(int) fY][(int) fX][3] += 1.0f;
+		int iCoordX = (int) fX;
+		int iCoordY = (int) fY;
+
+		//cout << "plotting: " << iCoordX << "," << iCoordY << endl; // DEBUG
+
+		(*m_vPoints)[iCoordY][iCoordX][0] += m_fTempR;
+		(*m_vPoints)[iCoordY][iCoordX][1] += m_fTempG;
+		(*m_vPoints)[iCoordY][iCoordX][2] += m_fTempB;
+		(*m_vPoints)[iCoordY][iCoordX][3] += 1.0f;
+
+		// cout << "density: " << (*m_vPoints)[iCoordY][iCoordX][3] << endl; // DEBUG
 	}
 
 	void FlameFractal::ColorMap(float fColor)
@@ -155,6 +179,8 @@ namespace dwl
 			fX_f = m_fTempX;
 			fY_f = m_fTempY;
 
+			//cout << "Point: " << fX_f << "," << fY_f << endl; // DEBUG
+
 			// run color stuff if the running function isn't a symmetry function
 			if (!m_vFunctions[iSelectedFunction].IsSymmetry())
 			{
@@ -171,6 +197,17 @@ namespace dwl
 			}
 
 			if (iIteration % iDisplayStep == 0) { cout << "Completed iteration " << iIteration << endl; }
+		}
+	}
+
+	void FlameFractal::CopyImage(vector<vector<vector<float> > >* m_vInput, vector<vector<vector<float> > >* m_vOutput)
+	{
+		for (int y = 0; y < m_vInput->size(); y++)
+		{
+			for (int x = 0; x < (*m_vInput)[y].size(); x++)
+			{
+				(*m_vOutput)[y][x] = (*m_vInput)[y][x];
+			}
 		}
 	}
 
@@ -208,8 +245,72 @@ namespace dwl
 
 		
 		// SECOND PASS
+		cout << "Second pass... (Resolving colors, applying gamma and brightness corrections)" << endl;
+
+		//CopyImage(m_vPoints, m_vImage);
+		m_vImage = m_vPoints;
+
+		for (int y = 0; y < m_vImage->size(); y++)
+		{
+			for (int x = 0; x < (*m_vImage)[y].size(); x++)
+			{
+				float fDensity = (*m_vImage)[y][x][3];
+				float fR = (*m_vImage)[y][x][0];
+				float fG = (*m_vImage)[y][x][1];
+				float fB = (*m_vImage)[y][x][2];
+
+				if (fDensity > 1) // TODO: shouldn't this be > 0??
+				{
+					// log-density brightness scalar
+					float fLogScalar = log(fDensity) / fDensity;
+
+					// gamma correction
+					float fLogScalar_c = pow(fLogScalar, 1 / fGamma);
+
+					// resolve rgb colors and apply brightness scalars
+					fR *= fLogScalar_c * fBrightnessScalar;
+					fG *= fLogScalar_c * fBrightnessScalar;
+					fB *= fLogScalar_c * fBrightnessScalar;
+
+					// cap overflows
+					fR = min(255.0f, fR);
+					fG = min(255.0f, fG);
+					fB = min(255.0f, fB);
+
+					// reassign
+					(*m_vImage)[y][x] = { fR, fG, fB, 255.0f };
+
+				}
+				(*m_vImage)[y][x][3] = 255.0f;
+				//cout << fR << fG << fB << endl;
+				//cout << fDensity << endl;
+			}
+		}
+
+		// THIRD PASS
 		
-		
+
+
+		// FOURTH PASS
+		cout << "Fourth pass... (final transformations)" << endl;
+
+		for (int y = 0; y < m_vImage->size(); y++)
+		{
+			for (int x = 0; x < (*m_vImage)[y].size(); x++)
+			{
+				(*m_vFinalImage)[y][x][0] = (int)((*m_vImage)[y][x][0]);
+				(*m_vFinalImage)[y][x][1] = (int)((*m_vImage)[y][x][1]);
+				(*m_vFinalImage)[y][x][2] = (int)((*m_vImage)[y][x][2]);
+				(*m_vFinalImage)[y][x][3] = (int)((*m_vImage)[y][x][3]);
+				
+				//if ((*m_vFinalImage)[y][x][3] != 255)
+				if ((*m_vImage)[y][x][3] != 255)
+				{
+					cout << (*m_vImage)[y][x][3] << endl;
+					cout << "WARNING - alpha isn't up" << endl;
+				}
+			}
+		}
 	}
 }
 

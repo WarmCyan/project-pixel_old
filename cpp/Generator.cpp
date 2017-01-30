@@ -12,8 +12,12 @@
 
 #include <random>
 #include <cmath>
+#include <vector>
+#include <string>
 //#include <cstdlib>
 //#include <ctime>
+
+#include <fstream>
 
 #include "Function.h"
 #include "FlameFractal.h"
@@ -22,6 +26,8 @@
 
 using namespace std;
 using namespace dwl;
+
+void SaveImage(string sFileName, FlameFractal* pFractal);
 
 
 int main()
@@ -77,8 +83,11 @@ int main()
 	ff.AddFunction(f4);
 
 	
-	ff.Solve(1000000);
+	ff.Solve(5000000);
 	ff.Render(2.2, 1.0);
+
+	SaveImage("imgdata.json", &ff);
+	
 	
 	/*random_device rd;
 	srand(rd());
@@ -103,4 +112,44 @@ int main()
 
 	
 	return 0;
+}
+
+void SaveImage(string sFileName, FlameFractal* pFractal)
+{
+	vector<vector<vector<int> > >* vImage = pFractal->GetImage();
+	int iWidth = pFractal->GetWidth();
+	int iHeight = pFractal->GetHeight();
+	//cout << iWidth << endl;
+	
+	string sSaveData = "{\"width\": " + to_string(iWidth) + ", \"height\": " + to_string(iHeight) + ",";
+	sSaveData += "\"pixels\":[";
+	for (int y = 0; y < vImage->size(); y++)
+	{
+		sSaveData += "[";
+		for (int x = 0; x  < (*vImage)[y].size(); x++)
+		{
+			int r = (*vImage)[y][x][0];
+			int g = (*vImage)[y][x][1];
+			int b = (*vImage)[y][x][2];
+			int a = (*vImage)[y][x][3];
+			
+			//cout << r << endl;
+			
+			sSaveData += "[" + to_string(r) + "," + to_string(g) + "," + to_string(b) + "," + to_string(a) + "]";
+
+			if (x < (*vImage)[y].size() - 1) { sSaveData += ","; }
+		}
+		sSaveData += "]";
+		if (y < vImage->size() - 1) { sSaveData += ","; }
+	}
+	sSaveData += "]}";
+
+	cout << "Saving image data..." << endl;
+	ofstream fFile;
+	fFile.open(sFileName);
+	fFile << sSaveData;
+	fFile.close();
+	cout << "Saving complete!" << endl;
+	
+	//cout << sSaveData << endl;
 }
