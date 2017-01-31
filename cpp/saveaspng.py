@@ -11,7 +11,7 @@ imgdatafile.close();
 
 print("Image data loaded!")
 
-imgarray = np.zeros((imgdata["width"], imgdata["height"], 4), dtype=np.uint8)
+imgarray = np.zeros((imgdata["height"], imgdata["width"], 4), dtype=np.uint8)
 
 print("Copying into image structure...")
 for y in range(0, imgdata["height"]):

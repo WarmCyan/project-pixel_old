@@ -52,6 +52,7 @@ namespace dwl
 			static const int VAR_SINUSOIDAL = 1;
 			static const int VAR_SPHERICAL = 2;
 			static const int VAR_SWIRL = 3;
+			//static const int VAR_HORSESHOE
 			
 			FFFunction();
 			void Run(float fX, float fY);
