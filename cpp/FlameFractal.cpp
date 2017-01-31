@@ -305,7 +305,7 @@ namespace dwl
 		m_fTempB = fB;
 	}
 
-	void FlameFractal::Render(float fGamma, float fBrightness, bool bSkipFiltering)
+	void FlameFractal::Render(float fGamma, float fBrightness, int iFilterMethod)
 	{
 		cout << "Rendering... (gamma = " << fGamma << ", brightness = " << fBrightness << ")" << endl;
 
@@ -406,7 +406,7 @@ namespace dwl
 			}
 		}			
 		
-		if (!bSkipFiltering)
+		if (iFilterMethod > 0)
 		{
 			for (int y = 0; y < m_vPostProcImage->size(); y++)
 			{
@@ -421,13 +421,17 @@ namespace dwl
 					float n = fDensity;
 					if (n < 1) { n = 1; }
 
-					//float fStdDev = 10 * (2 / (n + 1));
-					float fStdDev = 5 * (1 / n);
+					
+					float fStdDev = 0.0f;
+					if (iFilterMethod == 1) { fStdDev = 5 * (1 / n); }
+					else if (iFilterMethod == 2) { float fStdDev = min(5.0f, fAverageDensity / n); }
+
+					
 					//float fStdDev = 5;
 					int iSize = max(min((int)fStdDev * 3, 30), 1); // has to be at least 1!
 
 					//cout << fStdDev << endl; // DEBUG
-					if (fStdDev > .01)
+					if (fStdDev > .1)
 					{
 						vector<vector<float> >* vMatrix = CalculateConvolutionMatrix(iSize, fStdDev, false);
 						FilterPoint(x, y, vMatrix, false);

@@ -84,7 +84,7 @@ int main()
 	ff.AddFunction(f4);
 
 	
-	ff.Solve(10000000);
+	ff.Solve(50000000);
 	ff.Render(2.2, 1.0, false);
 
 	SaveImage("imgdata.json", &ff);
