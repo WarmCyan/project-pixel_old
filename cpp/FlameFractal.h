@@ -80,7 +80,7 @@ namespace dwl
 			void AddFunction(FFFunction pFunction) { m_vFunctions.push_back(pFunction); }
 
 			void Solve(int iIterationCount);
-			void Render(float fGamma, float fBrightness, bool bSkipFiltering);
+			void Render(float fGamma, float fBrightness, int iFilterMethod);
 
 			vector<vector<vector<int> > >* GetImage() { return m_vFinalImage; }
 	};
