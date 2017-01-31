@@ -305,7 +305,7 @@ namespace dwl
 		m_fTempB = fB;
 	}
 
-	void FlameFractal::Render(float fGamma, float fBrightness)
+	void FlameFractal::Render(float fGamma, float fBrightness, bool bSkipFiltering)
 	{
 		cout << "Rendering... (gamma = " << fGamma << ", brightness = " << fBrightness << ")" << endl;
 
@@ -406,47 +406,50 @@ namespace dwl
 			}
 		}			
 		
-		for (int y = 0; y < m_vPostProcImage->size(); y++)
+		if (!bSkipFiltering)
 		{
-			cout << "row " << y << endl;
-			for (int x = 0; x < (*m_vPostProcImage)[y].size(); x++)
+			for (int y = 0; y < m_vPostProcImage->size(); y++)
 			{
-				float fR = (*m_vImage)[y][x][0];
-				float fG = (*m_vImage)[y][x][1];
-				float fB = (*m_vImage)[y][x][2];
-				float fDensity = (*m_vPoints)[y][x][3];
-
-				float n = fDensity;
-				if (n < 1) { n = 1; }
-
-				//float fStdDev = 10 * (2 / (n + 1));
-				float fStdDev = 5 * (1 / n);
-				//float fStdDev = 5;
-				int iSize = max(min((int)fStdDev * 3, 30), 1); // has to be at least 1!
-
-				//cout << fStdDev << endl; // DEBUG
-				if (fStdDev > .01)
+				cout << "row " << y << endl;
+				for (int x = 0; x < (*m_vPostProcImage)[y].size(); x++)
 				{
-					vector<vector<float> >* vMatrix = CalculateConvolutionMatrix(iSize, fStdDev, false);
-					FilterPoint(x, y, vMatrix, false);
-					fR = m_fTempR;
-					fG = m_fTempG;
-					fB = m_fTempB;
+					float fR = (*m_vImage)[y][x][0];
+					float fG = (*m_vImage)[y][x][1];
+					float fB = (*m_vImage)[y][x][2];
+					float fDensity = (*m_vPoints)[y][x][3];
 
-					delete vMatrix;
-				}
+					float n = fDensity;
+					if (n < 1) { n = 1; }
 
-				(*m_vPostProcImage)[y][x][0] = fR;
-				(*m_vPostProcImage)[y][x][1] = fG;
-				(*m_vPostProcImage)[y][x][2] = fB;
+					//float fStdDev = 10 * (2 / (n + 1));
+					float fStdDev = 5 * (1 / n);
+					//float fStdDev = 5;
+					int iSize = max(min((int)fStdDev * 3, 30), 1); // has to be at least 1!
 
-				if (fB == 0 && (*m_vImage)[y][x][2] != 0)
-				{
-					cout << "actual blue for " << x << "," << y << ": " << (*m_vImage)[y][x][2] << endl;
-					cout << "WARNING - zeroed" << endl;
-					vector<vector<float> >* vMatrix = CalculateConvolutionMatrix(iSize, fStdDev, true);
-					FilterPoint(x, y, vMatrix, true);
-					return;
+					//cout << fStdDev << endl; // DEBUG
+					if (fStdDev > .01)
+					{
+						vector<vector<float> >* vMatrix = CalculateConvolutionMatrix(iSize, fStdDev, false);
+						FilterPoint(x, y, vMatrix, false);
+						fR = m_fTempR;
+						fG = m_fTempG;
+						fB = m_fTempB;
+
+						delete vMatrix;
+					}
+
+					(*m_vPostProcImage)[y][x][0] = fR;
+					(*m_vPostProcImage)[y][x][1] = fG;
+					(*m_vPostProcImage)[y][x][2] = fB;
+
+					if (fB == 0 && (*m_vImage)[y][x][2] != 0)
+					{
+						cout << "actual blue for " << x << "," << y << ": " << (*m_vImage)[y][x][2] << endl;
+						cout << "WARNING - zeroed" << endl;
+						vector<vector<float> >* vMatrix = CalculateConvolutionMatrix(iSize, fStdDev, true);
+						FilterPoint(x, y, vMatrix, true);
+						return;
+					}
 				}
 			}
 		}
