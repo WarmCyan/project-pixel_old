@@ -108,8 +108,12 @@ namespace dwl
 
 	void FlameFractal::FinalTransform(float fX, float fY)
 	{
-		m_fTempX = fX * 400 + 500;
-		m_fTempY = fY * 400 + 500;
+		//m_fTempX = fX * 400 + 500;
+		//m_fTempY = fY * 400 + 500;
+		/*m_fTempX = fX * 1000;
+		m_fTempY = fY * 1000;*/
+		m_fTempX = fX * 640 + 1600;
+		m_fTempY = fY * 640 + 800;
 	}
 
 	float FlameFractal::FinalColorTransform(float fColor) { return fColor; }
