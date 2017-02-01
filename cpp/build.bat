@@ -9,4 +9,4 @@ del *.obj
 
 echo --------------- Program Run ---------------
 Driver.exe
-python3 .\saveaspng.py
+rem python3 .\saveaspng.py
