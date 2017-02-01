@@ -111,10 +111,11 @@ int main()
 	//ff.AddFunction(f4);
 
 	
-	ff.Solve(500000000);
+	ff.Solve(1000000);
 	ff.Render(2.2, 1.0, 0);
 
 	SaveImage("imgdata.json", &ff);
+	system("python3 ./saveaspng.py");
 	
 	
 	/*random_device rd;
