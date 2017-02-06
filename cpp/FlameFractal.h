@@ -1,7 +1,7 @@
 //*************************************************************
 //  File: FlameFractal.h
 //  Date created: 1/28/2017
-//  Date edited: 1/29/2017
+//  Date edited: 2/5/2017
 //  Author: Nathan Martindale
 //  Copyright © 2017 Digital Warrior Labs
 //  Description: 
@@ -18,9 +18,12 @@
 
 #include "Function.h"
 
+#include "lib/pugixml.hpp"
+
 #define PI 3.14159265
 
 using namespace std;
+using namespace pugi;
 
 namespace dwl
 {
@@ -39,6 +42,10 @@ namespace dwl
 
 			float m_fKernelScalar;
 			float m_fKernelExpDenom;
+
+			float m_fTraceX;
+			float m_fTraceY;
+			float m_fTraceC;
 
 			vector<vector<vector<float> > >* m_vPoints;
 			vector<vector<vector<float> > >* m_vImage;
@@ -69,6 +76,8 @@ namespace dwl
 			float RandomFloat();
 
 			void SetBaseImage(float fR, float fG, float fB, float fA);
+
+			string GetFunctionCode();
 			
 		public:
 
@@ -81,6 +90,14 @@ namespace dwl
 
 			void Solve(int iIterationCount);
 			void Render(float fGamma, float fBrightness, int iFilterMethod);
+
+			/*vector<vector<vector<int> > >* GetImageTrace() { return m_vPoints; }
+			float GetTraceX() { return m_fTraceX; }
+			float GetTraceY() { return m_fTraceY; }
+			float GetTraceC() { return m_fTraceC; }*/
+
+			// TODO: don't forget, store functions as well!
+			void SaveImageTrace(string sFileName);
 
 			vector<vector<vector<int> > >* GetImage() { return m_vFinalImage; }
 	};

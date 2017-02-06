@@ -1,7 +1,7 @@
 //*************************************************************
 //  File: FlameFractal.cpp
 //  Date created: 1/28/2017
-//  Date edited: 1/29/2017
+//  Date edited: 2/5/2017
 //  Author: Nathan Martindale
 //  Copyright © 2017 Digital Warrior Labs
 //  Description: 
@@ -191,6 +191,11 @@ namespace dwl
 				fC = (fC + m_vFunctions[iSelectedFunction].GetColor()) / 2.0f;
 				fC_f = (fC + FinalColorTransform(fC)) / 2.0f;
 			}
+
+			// store trace information
+			m_fTraceX = fX;
+			m_fTraceY = fY;
+			m_fTraceC = fC;
 
 			// ignore the first 20 iterations, (to allow convergence below size
 			// of pixel) then plot each point
@@ -489,6 +494,28 @@ namespace dwl
 				}*/
 			}
 		}
+	}
+
+	string FlameFractal::GetFunctionCode()
+	{
+		// XMLElement
+		
+		for (int i = 0; i < m_vFunctions.size(); i++)
+		{
+			cout << "Looking at function " << i << endl;
+			FFFunction pFunction = m_vFunctions[i];
+
+			xml_document* pDoc = pFunction.GetFunctionXML();
+			pDoc->print(std::cout);
+		}
+
+		return "";
+	}
+
+	void FlameFractal::SaveImageTrace(string sFileName)
+	{
+		cout << "Saving image trace..." << endl;
+		GetFunctionCode();
 	}
 }
 

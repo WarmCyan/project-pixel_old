@@ -1,7 +1,7 @@
 //*************************************************************
 //  File: Function.cpp
 //  Date created: 1/28/2017
-//  Date edited: 1/29/2017
+//  Date edited: 2/5/2017
 //  Author: Nathan Martindale
 //  Copyright © 2017 Digital Warrior Labs
 //  Description: 
@@ -136,6 +136,17 @@ namespace dwl
 	string FFFunction::FunctionInfo()
 	{
 		return "This is a function...";
+	}
+
+	xml_document* FFFunction::GetFunctionXML()
+	{
+		xml_document* doc = new xml_document();
+
+		xml_node node = doc->append_child("Function");
+		node.append_attribute("Weight") = m_fWeight;
+		
+		
+		return doc;
 	}
 }
 
