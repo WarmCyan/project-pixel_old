@@ -140,20 +140,31 @@ namespace dwl
 
 	xml_document* FFFunction::GetFunctionXML()
 	{
-		xml_document* doc = new xml_document();
+		xml_document* pFunctionDoc = new xml_document();
 
-		xml_node pFunctionNode = doc->append_child("Function");
+		xml_node pFunctionNode = pFunctionDoc->append_child("Function");
 		pFunctionNode.append_attribute("Weight") = m_fWeight;
 		pFunctionNode.append_attribute("Color") = m_fColor;
 
 		pFunctionNode.append_attribute("IsSymmetry") = m_bIsSymmetry;
 
-		xml_node pMatrixNode = pFunctionNode.append_child("MatrixCoefficients");
-		xml_node pMatrixA = pMatrixNode.append_child("MatrixCoefficient");
-		pMatrixA.append_attribute("Name") = "a";
-		pMatrixA.append_attribute("Value") = m_vMatrixCoefficients[0];
-		
-		return doc;
+		pFunctionNode.append_attribute("A") = m_vMatrixCoefficients[0];
+		pFunctionNode.append_attribute("B") = m_vMatrixCoefficients[1];
+		pFunctionNode.append_attribute("C") = m_vMatrixCoefficients[2];
+		pFunctionNode.append_attribute("D") = m_vMatrixCoefficients[3];
+		pFunctionNode.append_attribute("E") = m_vMatrixCoefficients[4];
+		pFunctionNode.append_attribute("F") = m_vMatrixCoefficients[5];
+
+		xml_node pVariationsNode = pFunctionNode.append_child("VariationWeights");
+
+		for (int i = 0; i < m_vVariationWeights.size(); i++)
+		{
+			xml_node pVariationNode = pVariationsNode.append_child("VariationWeight");
+			pVariationNode.append_attribute("Variation") = i;
+			pVariationNode.append_attribute("Value") = m_vVariationWeights[i];
+		}
+
+		return pFunctionDoc;
 	}
 }
 
