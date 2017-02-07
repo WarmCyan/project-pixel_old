@@ -81,6 +81,7 @@ namespace dwl
 			string FunctionInfo();	 
 
 			xml_document* GetFunctionXML();
+			void LoadFromXML(xml_node pNode);
 	};
 }
 #endif // FF_FUNCTION_H

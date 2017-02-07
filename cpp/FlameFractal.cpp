@@ -507,6 +507,8 @@ namespace dwl
 
 			xml_document* pDoc = pFunction.GetFunctionXML();
 			pDoc->print(std::cout);
+
+			pFunction.LoadFromXML(pDoc->document_element());
 		}
 
 		return "";

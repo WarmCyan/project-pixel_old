@@ -166,6 +166,30 @@ namespace dwl
 
 		return pFunctionDoc;
 	}
+
+	// assumes passing in literal <Function>
+	void FFFunction::LoadFromXML(xml_node pNode)
+	{
+		m_fWeight = pNode.attribute("Weight").as_float();
+		m_fColor = pNode.attribute("Color").as_float();
+
+		m_bIsSymmetry = pNode.attribute("IsSymmetry").as_bool();
+
+		// load matrix coefficients
+		m_vMatrixCoefficients[0] = pNode.attribute("A").as_float();
+		m_vMatrixCoefficients[1] = pNode.attribute("B").as_float();
+		m_vMatrixCoefficients[2] = pNode.attribute("C").as_float();
+		m_vMatrixCoefficients[3] = pNode.attribute("D").as_float();
+		m_vMatrixCoefficients[4] = pNode.attribute("E").as_float();
+		m_vMatrixCoefficients[5] = pNode.attribute("F").as_float();
+
+		int iIndex = 0;
+		for (xml_node pVariationNode = pNode.child("VariationWeights").child("VariationWeight"); pVariationNode; pVariationNode = pVariationNode.next_sibling("VariationWeight"))
+		{
+			m_vVariationWeights[pVariationNode.attribute("Variation").as_int()] = pVariationNode.attribute("Value").as_float();
+			iIndex++;
+		}
+	}
 }
 
 #endif // FF_FUNCTION_CPP
