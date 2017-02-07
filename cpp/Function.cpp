@@ -142,9 +142,16 @@ namespace dwl
 	{
 		xml_document* doc = new xml_document();
 
-		xml_node node = doc->append_child("Function");
-		node.append_attribute("Weight") = m_fWeight;
-		
+		xml_node pFunctionNode = doc->append_child("Function");
+		pFunctionNode.append_attribute("Weight") = m_fWeight;
+		pFunctionNode.append_attribute("Color") = m_fColor;
+
+		pFunctionNode.append_attribute("IsSymmetry") = m_bIsSymmetry;
+
+		xml_node pMatrixNode = pFunctionNode.append_child("MatrixCoefficients");
+		xml_node pMatrixA = pMatrixNode.append_child("MatrixCoefficient");
+		pMatrixA.append_attribute("Name") = "a";
+		pMatrixA.append_attribute("Value") = m_vMatrixCoefficients[0];
 		
 		return doc;
 	}
