@@ -1,7 +1,7 @@
 //*************************************************************
 //  File: Function.cpp
 //  Date created: 1/28/2017
-//  Date edited: 2/5/2017
+//  Date edited: 2/8/2017
 //  Author: Nathan Martindale
 //  Copyright © 2017 Digital Warrior Labs
 //  Description: 
@@ -140,6 +140,8 @@ namespace dwl
 
 	xml_document* FFFunction::GetFunctionXML()
 	{
+		cout << "Getting function xml..." << endl;
+			
 		xml_document* pFunctionDoc = new xml_document();
 
 		xml_node pFunctionNode = pFunctionDoc->append_child("Function");
@@ -170,6 +172,8 @@ namespace dwl
 	// assumes passing in literal <Function>
 	void FFFunction::LoadFromXML(xml_node pNode)
 	{
+		cout << "Loading function..." << endl;
+		
 		m_fWeight = pNode.attribute("Weight").as_float();
 		m_fColor = pNode.attribute("Color").as_float();
 

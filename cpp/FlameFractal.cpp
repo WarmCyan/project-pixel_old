@@ -498,36 +498,47 @@ namespace dwl
 
 	void FlameFractal::SaveFunctionCode(string sFileName)
 	{
-		// XMLElement
-
+		cout << "Saving function codes to " << sFileName << "_functions.xml..." << endl;
+			
+		// create the root node
 		xml_document* pDoc = new xml_document();
 		xml_node pFunctions = pDoc->append_child("Functions");
 		
+		// get the xml for each individual function
 		for (int i = 0; i < m_vFunctions.size(); i++)
 		{
 			FFFunction pFunction = m_vFunctions[i];
 
 			xml_document* pFunctionDoc = pFunction.GetFunctionXML();
 			pFunctions.append_copy(pFunctionDoc->document_element());
-			//pFunctionDoc->print(std::cout);
-
-			//pFunction.LoadFromXML(pDoc->document_element());
 		}
-
-		//pDoc->print(std::cout);
 		
+		// save it!
 		pDoc->save_file((sFileName + "_functions.xml").c_str());
+
+		cout << "Functions saved successfully!" << endl;
 	}
 
 	void FlameFractal::LoadFunctionCode(string sFileName)
 	{
+		cout << "Loading function code from " << sFileName << "_functions.xml..." << endl;
+		
+		// load xml from the file
 		xml_document pDoc;
 		pDoc.load_file((sFileName + "_functions.xml").c_str());
+
+		// reset list of functions
+		ClearFunctions();
 		
+		// load each individual function into this object
 		for (xml_node pFunctionNode = pDoc.document_element().child("Function"); pFunctionNode; pFunctionNode = pFunctionNode.next_sibling("Function"))
 		{
-			
+			FFFunction* pFunction = new FFFunction();
+			pFunction->LoadFromXML(pFunctionNode);
+			AddFunction(*pFunction);
 		}
+
+		cout << "Functions loaded successfully!" << endl;
 	}
 
 	void FlameFractal::SaveImageTrace(string sFileName)
