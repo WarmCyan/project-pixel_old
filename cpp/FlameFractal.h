@@ -1,7 +1,7 @@
 //*************************************************************
 //  File: FlameFractal.h
 //  Date created: 1/28/2017
-//  Date edited: 2/5/2017
+//  Date edited: 2/8/2017
 //  Author: Nathan Martindale
 //  Copyright © 2017 Digital Warrior Labs
 //  Description: 
@@ -77,7 +77,6 @@ namespace dwl
 
 			void SetBaseImage(float fR, float fG, float fB, float fA);
 
-			string GetFunctionCode();
 			
 		public:
 
@@ -87,6 +86,7 @@ namespace dwl
 			int GetHeight() { return m_iHeight; }
 
 			void AddFunction(FFFunction pFunction) { m_vFunctions.push_back(pFunction); }
+			void ClearFunctions() { m_vFunctions = vector<FFFunction>(); }
 
 			void Solve(int iIterationCount);
 			void Render(float fGamma, float fBrightness, int iFilterMethod);
@@ -97,7 +97,10 @@ namespace dwl
 			float GetTraceC() { return m_fTraceC; }*/
 
 			// TODO: don't forget, store functions as well!
+			void SaveFunctionCode(string sFileName);
 			void SaveImageTrace(string sFileName);
+
+			void LoadFunctionCode(string sFileName);
 
 			vector<vector<vector<int> > >* GetImage() { return m_vFinalImage; }
 	};
