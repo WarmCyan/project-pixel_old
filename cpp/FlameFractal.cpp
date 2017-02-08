@@ -45,41 +45,28 @@ namespace dwl
 	{
 		cout << "Preparing plot..." << endl;
 
-		//m_aPoints = new float[m_iHeight][m_iWidth][3];
-		//m_vPoints = new vector<vector<float[3]> >(m_iHeight, vector<float[3]>(m_iWidth, 0));
 		m_vPoints = new vector<vector<vector<float> > >(m_iHeight, vector<vector<float> >(m_iWidth, vector<float>(3, 0)));
 		m_vImage = new vector<vector<vector<float> > >(m_iHeight, vector<vector<float> >(m_iWidth, vector<float>(3, 0)));
 		m_vPostProcImage = new vector<vector<vector<float> > >(m_iHeight, vector<vector<float> >(m_iWidth, vector<float>(3, 0)));
 		m_vFinalImage = new vector<vector<vector<int> > >(m_iHeight, vector<vector<int> >(m_iWidth, vector<int>(3, 0)));
 	
-		/*for (int y = 0; y < m_iHeight; y++)
-		{
-			for (int x = 0; x < m_iWidth; x++)
-			{
-				m_vPoints[y][x][0] = 0.0f;
-				m_vPoints[y][x][1] = 0.0f;
-				m_vPoints[y][x][2] = 0.0f;
-				m_vPoints[y][x][3] = 0.0f;
-
-				//cout << (*m_vPoints)[y][x][0] << endl;
-			}
-		}*/
-
 		cout << "Plot prepared!" << endl;
 	}
 
 	void FlameFractal::SetBaseImage(float fR, float fG, float fB, float fA)
 	{
-		/*for (int y = 0; y < m_vImage->size(); y++)
+		cout << "Setting base color..." << endl;
+		for (int y = 0; y < m_vFinalImage->size(); y++)
 		{
-			for (int x = 0; x < (*m_vImage)[y].size(); x++)
+			for (int x = 0; x < (*m_vFinalImage)[y].size(); x++)
 			{
-				float fDensity = (*m_vImage)[y][x][3];
-				float fR = (*m_vImage)[y][x][0];
-				float fG = (*m_vImage)[y][x][1];
-				float fB = (*m_vImage)[y][x][2];
+				float fDensity = (*m_vFinalImage)[y][x][3];
+				float fR = (*m_vFinalImage)[y][x][0];
+				float fG = (*m_vFinalImage)[y][x][1];
+				float fB = (*m_vFinalImage)[y][x][2];
 			}
-		}*/
+		}
+		cout << "Base color set!" << endl;
 	}
 
 	void FlameFractal::PlotPoint(float fX, float fY, float fC)
@@ -120,7 +107,7 @@ namespace dwl
 
 	void FlameFractal::Solve(int iIterationCount)
 	{
-		PreparePlot();
+		//PreparePlot();
 
 		cout << "Solving..." << endl;
 
@@ -544,7 +531,36 @@ namespace dwl
 	void FlameFractal::SaveImageTrace(string sFileName)
 	{
 		cout << "Saving image trace..." << endl;
-		SaveFunctionCode(sFileName); // TODO: don't leave this here, leave it to caller to make sure functions are saved separately
+		//SaveFunctionCode(sFileName); // TODO: don't leave this here, leave it to caller to make sure functions are saved separately
+		
+		// store meta
+		string sSaveData = "";
+		sSaveData += to_string(m_iWidth) + "\n";
+		sSaveData += to_string(m_iHeight) + "\n";
+		sSaveData += to_string(m_fTraceX) + "\n";
+		sSaveData += to_string(m_fTraceY) + "\n";
+		sSaveData += to_string(m_fTraceC) + "\n";
+		
+		for (int y = 0; y < m_vPoints->size(); y++)
+		{
+			cout << y << endl;
+			for (int x = 0; x < (*m_vPoints)[y].size(); x++)
+			{
+				float fR = (*m_vPoints)[y][x][0];
+				float fG = (*m_vPoints)[y][x][1];
+				float fB = (*m_vPoints)[y][x][2];
+				float fA = (*m_vPoints)[y][x][3];
+
+				sSaveData += to_string(fR) + "," + to_string(fG) + "," + to_string(fB) + "," + to_string(fA) + "\n";
+			}
+		}
+
+		ofstream pFile;
+		pFile.open((sFileName + "_trace.dat").c_str());
+		pFile << sSaveData << endl;
+		pFile.close();
+
+		cout << "Trace saved successfully!" << endl;
 	}
 }
 
