@@ -112,7 +112,9 @@ int main()
 
 	
 	//ff.LoadFunctionCode("Test");
+	ff.PreparePlot();
 	ff.Solve(1000000);
+	//ff.SetBaseImage(100.0f, 0.0f, 0.0f, 255.0f);
 	//ff.Render(2.2, 1.0, 0);
 	ff.SaveImageTrace("Test");
 

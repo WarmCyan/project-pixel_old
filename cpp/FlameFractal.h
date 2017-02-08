@@ -15,6 +15,7 @@
 #include <random>
 #include <cmath>
 #include <algorithm>
+#include <fstream>
 
 #include "Function.h"
 
@@ -54,7 +55,6 @@ namespace dwl
 			
 			vector<FFFunction> m_vFunctions;
 
-			void PreparePlot();
 
 			void PlotPoint(float fX, float fY, float fC);
 
@@ -75,7 +75,6 @@ namespace dwl
 
 			float RandomFloat();
 
-			void SetBaseImage(float fR, float fG, float fB, float fA);
 
 			
 		public:
@@ -88,6 +87,8 @@ namespace dwl
 			void AddFunction(FFFunction pFunction) { m_vFunctions.push_back(pFunction); }
 			void ClearFunctions() { m_vFunctions = vector<FFFunction>(); }
 
+			void PreparePlot();
+			void SetBaseImage(float fR, float fG, float fB, float fA);
 			void Solve(int iIterationCount);
 			void Render(float fGamma, float fBrightness, int iFilterMethod);
 
