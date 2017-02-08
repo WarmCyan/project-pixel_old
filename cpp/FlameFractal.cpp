@@ -1,7 +1,7 @@
 //*************************************************************
 //  File: FlameFractal.cpp
 //  Date created: 1/28/2017
-//  Date edited: 2/5/2017
+//  Date edited: 2/8/2017
 //  Author: Nathan Martindale
 //  Copyright © 2017 Digital Warrior Labs
 //  Description: 
@@ -496,28 +496,44 @@ namespace dwl
 		}
 	}
 
-	string FlameFractal::GetFunctionCode()
+	void FlameFractal::SaveFunctionCode(string sFileName)
 	{
 		// XMLElement
+
+		xml_document* pDoc = new xml_document();
+		xml_node pFunctions = pDoc->append_child("Functions");
 		
 		for (int i = 0; i < m_vFunctions.size(); i++)
 		{
-			cout << "Looking at function " << i << endl;
 			FFFunction pFunction = m_vFunctions[i];
 
-			xml_document* pDoc = pFunction.GetFunctionXML();
-			pDoc->print(std::cout);
+			xml_document* pFunctionDoc = pFunction.GetFunctionXML();
+			pFunctions.append_copy(pFunctionDoc->document_element());
+			//pFunctionDoc->print(std::cout);
 
-			pFunction.LoadFromXML(pDoc->document_element());
+			//pFunction.LoadFromXML(pDoc->document_element());
 		}
 
-		return "";
+		//pDoc->print(std::cout);
+		
+		pDoc->save_file((sFileName + "_functions.xml").c_str());
+	}
+
+	void FlameFractal::LoadFunctionCode(string sFileName)
+	{
+		xml_document pDoc;
+		pDoc.load_file((sFileName + "_functions.xml").c_str());
+		
+		for (xml_node pFunctionNode = pDoc.document_element().child("Function"); pFunctionNode; pFunctionNode = pFunctionNode.next_sibling("Function"))
+		{
+			
+		}
 	}
 
 	void FlameFractal::SaveImageTrace(string sFileName)
 	{
 		cout << "Saving image trace..." << endl;
-		GetFunctionCode();
+		SaveFunctionCode(sFileName); // TODO: don't leave this here, leave it to caller to make sure functions are saved separately
 	}
 }
 
