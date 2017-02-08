@@ -111,6 +111,7 @@ int main()
 	//ff.AddFunction(f4);
 
 	
+	//ff.LoadFunctionCode("Test");
 	ff.Solve(1000000);
 	//ff.Render(2.2, 1.0, 0);
 	ff.SaveImageTrace("Test");
