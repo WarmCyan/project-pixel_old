@@ -1,7 +1,7 @@
 //*************************************************************
 //  File: FlameFractal.cpp
 //  Date created: 1/28/2017
-//  Date edited: 2/8/2017
+//  Date edited: 2/9/2017
 //  Author: Nathan Martindale
 //  Copyright © 2017 Digital Warrior Labs
 //  Description: 
@@ -45,10 +45,19 @@ namespace dwl
 	{
 		cout << "Preparing plot..." << endl;
 
+		ProgressBar pBar = ProgressBar(3, 50);
+
 		m_vPoints = new vector<vector<vector<float> > >(m_iHeight, vector<vector<float> >(m_iWidth, vector<float>(3, 0)));
+
+		pBar.Update(1);
+		
 		m_vImage = new vector<vector<vector<float> > >(m_iHeight, vector<vector<float> >(m_iWidth, vector<float>(3, 0)));
 		m_vPostProcImage = new vector<vector<vector<float> > >(m_iHeight, vector<vector<float> >(m_iWidth, vector<float>(3, 0)));
+		pBar.Update(2);
+		
 		m_vFinalImage = new vector<vector<vector<int> > >(m_iHeight, vector<vector<int> >(m_iWidth, vector<int>(3, 0)));
+
+		pBar.Update(3);
 	
 		cout << "Plot prepared!" << endl;
 	}
@@ -108,6 +117,7 @@ namespace dwl
 	void FlameFractal::Solve(int iIterationCount)
 	{
 		//PreparePlot();
+		ProgressBar pBar = ProgressBar(iIterationCount, 50);
 
 		cout << "Solving..." << endl;
 
@@ -192,7 +202,8 @@ namespace dwl
 				PlotPoint(fX_f, fY_f, fC_f);
 			}
 
-			if (iIteration % iDisplayStep == 0) { cout << "Completed iteration " << iIteration << endl; }
+			pBar.Update(iIteration);
+			//if (iIteration % iDisplayStep == 0) { cout << "Completed iteration " << iIteration << endl; } 
 		}
 	}
 

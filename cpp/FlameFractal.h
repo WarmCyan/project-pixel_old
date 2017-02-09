@@ -18,6 +18,7 @@
 #include <fstream>
 
 #include "Function.h"
+#include "ProgressBar.h"
 
 #include "lib/pugixml.hpp"
 
