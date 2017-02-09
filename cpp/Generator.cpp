@@ -1,7 +1,7 @@
 //*************************************************************
 //  File: Generator.cpp
 //  Date created: 1/28/2017
-//  Date edited: 1/29/2017
+//  Date edited: 2/8/2017
 //  Author: Nathan Martindale
 //  Copyright © 2017 Digital Warrior Labs
 //  Description: 
@@ -21,6 +21,7 @@
 
 #include "Function.h"
 #include "FlameFractal.h"
+#include "ProgressBar.h"
 
 #define PI 3.14159265
 
