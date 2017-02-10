@@ -1,7 +1,7 @@
 //*************************************************************
 //  File: FlameFractal.cpp
 //  Date created: 1/28/2017
-//  Date edited: 2/9/2017
+//  Date edited: 2/10/2017
 //  Author: Nathan Martindale
 //  Copyright © 2017 Digital Warrior Labs
 //  Description: 
@@ -117,7 +117,6 @@ namespace dwl
 	void FlameFractal::Solve(int iIterationCount)
 	{
 		//PreparePlot();
-		ProgressBar pBar = ProgressBar(iIterationCount, 50);
 
 		cout << "Solving..." << endl;
 
@@ -162,6 +161,7 @@ namespace dwl
 		cout << "]" << endl;
 
 		// run the chaos game!
+		ProgressBar pBar = ProgressBar(iIterationCount, 50);
 		for (int iIteration = 0; iIteration <= iIterationCount; iIteration++)
 		{
 			// choose a random function
@@ -551,10 +551,12 @@ namespace dwl
 		sSaveData += to_string(m_fTraceX) + "\n";
 		sSaveData += to_string(m_fTraceY) + "\n";
 		sSaveData += to_string(m_fTraceC) + "\n";
+
+		ProgressBar pBar = ProgressBar(m_vPoints->size(), 50);
 		
 		for (int y = 0; y < m_vPoints->size(); y++)
 		{
-			cout << y << endl;
+			pBar.Update(y);
 			for (int x = 0; x < (*m_vPoints)[y].size(); x++)
 			{
 				float fR = (*m_vPoints)[y][x][0];

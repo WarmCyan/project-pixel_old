@@ -1,7 +1,7 @@
 //*************************************************************
 //  File: Generator.cpp
 //  Date created: 1/28/2017
-//  Date edited: 2/8/2017
+//  Date edited: 2/10/2017
 //  Author: Nathan Martindale
 //  Copyright © 2017 Digital Warrior Labs
 //  Description: 
@@ -117,7 +117,7 @@ int main()
 	ff.Solve(1000000);
 	//ff.SetBaseImage(100.0f, 0.0f, 0.0f, 255.0f);
 	//ff.Render(2.2, 1.0, 0);
-	//ff.SaveImageTrace("Test");
+	ff.SaveImageTrace("Test");
 
 	//SaveImage("imgdata.json", &ff);
 	//system("python3 ./saveaspng.py");
