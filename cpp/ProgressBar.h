@@ -23,7 +23,7 @@ namespace dwl
 			//int m_iStep;
 			//int m_iPrevStep;
 			int m_iTicks;
-			int m_iStepSize;
+			float m_fStepSize;
 
 			int m_iSize;
 			int m_iTotal;

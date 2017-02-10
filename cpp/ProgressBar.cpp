@@ -22,16 +22,12 @@ namespace dwl
 		m_iTicks = 0;
 
 		// determine step size
-		if (m_iSize > m_iTotal) { m_iStepSize = (int)((float)m_iSize / (float)m_iTotal); }
-		else 
-		{
-			m_iStepSize = (int)((float)m_iTotal / (float)m_iSize);
-		}
+		m_fStepSize = (float)m_iSize / (float)m_iTotal;
 
 
-		m_iSize = m_iStepSize * iTotal;
+		m_iSize = m_fStepSize * iTotal;
 		
-		//cout << "Step size: " << m_iStepSize << endl; // DEBUG
+		//cout << "Step size: " << m_fStepSize << endl; // DEBUG
 		//cout << "Total: " << m_iTotal << endl; // DEBUG
 		//cout << "Size: " << m_iSize << endl; // DEBUG
 
@@ -43,7 +39,7 @@ namespace dwl
 
 	void ProgressBar::Update(int iCount)
 	{
-		int iTickCount = (int)iCount * m_iStepSize;
+		int iTickCount = (int)iCount * m_fStepSize;
 		//cout << "iTickCount: " << iTickCount << endl; // DEBUG
 		//cout << "m_iTicks: " << m_iTicks << endl; // DEBUG
 		while (m_iTicks < iTickCount)
@@ -51,7 +47,7 @@ namespace dwl
 			cout << "|";
 			m_iTicks++;
 		}
-		//if (m_iTicks == m_iSize) { cout << endl; }
+		if (m_iTicks == m_iSize) { cout << endl; }
 	}
 }
 
