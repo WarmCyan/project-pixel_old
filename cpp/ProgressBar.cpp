@@ -1,7 +1,7 @@
 //*************************************************************
 //  File: ProgressBar.cpp
 //  Date created: 2/9/2017
-//  Date edited: 2/9/2017
+//  Date edited: 2/11/2017
 //  Author: Nathan Martindale
 //  Copyright © 2017 Digital Warrior Labs
 //  Description: 
@@ -25,29 +25,42 @@ namespace dwl
 		m_fStepSize = (float)m_iSize / (float)m_iTotal;
 
 
-		m_iSize = m_fStepSize * iTotal;
+		m_iSize = ceil(m_fStepSize * iTotal);
 		
 		//cout << "Step size: " << m_fStepSize << endl; // DEBUG
 		//cout << "Total: " << m_iTotal << endl; // DEBUG
 		//cout << "Size: " << m_iSize << endl; // DEBUG
 
 		// set up the end points
-		cout << ".";
+		cout << m_cEndCharacter;
 		for (int i = 0; i < m_iSize - 2; i++) { cout << " "; }
-		cout << "." << endl;
+		cout << m_cEndCharacter << endl;
 	}
 
 	void ProgressBar::Update(int iCount)
 	{
-		int iTickCount = (int)iCount * m_fStepSize;
+		int iTickCount = (int)(ceil(iCount * m_fStepSize));
 		//cout << "iTickCount: " << iTickCount << endl; // DEBUG
 		//cout << "m_iTicks: " << m_iTicks << endl; // DEBUG
 		while (m_iTicks < iTickCount)
 		{
-			cout << "|";
+			cout << m_cTickCharacter;
 			m_iTicks++;
 		}
-		if (m_iTicks == m_iSize) { cout << endl; }
+		/*if (m_iTicks >= m_iSize) 
+		{ 
+			cout << iCount << " : " << m_iTotal;
+			cout << endl; 
+		}*/
+		/*if (iCount >= m_iTotal)
+		{
+			cout << endl;
+		}*/
+	}
+
+	void ProgressBar::Finish()
+	{
+		cout << endl;
 	}
 }
 
