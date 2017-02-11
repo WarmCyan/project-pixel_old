@@ -1,7 +1,7 @@
 //*************************************************************
 //  File: FlameFractal.h
 //  Date created: 1/28/2017
-//  Date edited: 2/8/2017
+//  Date edited: 2/11/2017
 //  Author: Nathan Martindale
 //  Copyright © 2017 Digital Warrior Labs
 //  Description: 
@@ -32,6 +32,8 @@ namespace dwl
 	class FlameFractal
 	{
 		private:
+			int m_iProgressBarSize = 80;
+			
 			int m_iWidth;
 			int m_iHeight;
 
@@ -93,18 +95,17 @@ namespace dwl
 			void Solve(int iIterationCount);
 			void Render(float fGamma, float fBrightness, int iFilterMethod);
 
-			/*vector<vector<vector<int> > >* GetImageTrace() { return m_vPoints; }
-			float GetTraceX() { return m_fTraceX; }
-			float GetTraceY() { return m_fTraceY; }
-			float GetTraceC() { return m_fTraceC; }*/
-
 			// TODO: don't forget, store functions as well!
 			void SaveFunctionCode(string sFileName);
 			void SaveImageTrace(string sFileName);
 
+			void SaveImageData(string sFileName);
+
 			void LoadFunctionCode(string sFileName);
 
 			vector<vector<vector<int> > >* GetImage() { return m_vFinalImage; }
+
+			void SetProgressBarSize(int iSize) { m_iProgressBarSize = iSize; }
 	};
 }
 

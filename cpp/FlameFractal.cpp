@@ -1,7 +1,7 @@
 //*************************************************************
 //  File: FlameFractal.cpp
 //  Date created: 1/28/2017
-//  Date edited: 2/10/2017
+//  Date edited: 2/11/2017
 //  Author: Nathan Martindale
 //  Copyright © 2017 Digital Warrior Labs
 //  Description: 
@@ -45,7 +45,7 @@ namespace dwl
 	{
 		cout << "Preparing plot..." << endl;
 
-		ProgressBar pBar = ProgressBar(3, 50);
+		ProgressBar pBar = ProgressBar(3, m_iProgressBarSize);
 
 		m_vPoints = new vector<vector<vector<float> > >(m_iHeight, vector<vector<float> >(m_iWidth, vector<float>(3, 0)));
 
@@ -58,6 +58,7 @@ namespace dwl
 		m_vFinalImage = new vector<vector<vector<int> > >(m_iHeight, vector<vector<int> >(m_iWidth, vector<int>(3, 0)));
 
 		pBar.Update(3);
+		pBar.Finish();
 	
 		cout << "Plot prepared!" << endl;
 	}
@@ -161,7 +162,7 @@ namespace dwl
 		cout << "]" << endl;
 
 		// run the chaos game!
-		ProgressBar pBar = ProgressBar(iIterationCount, 50);
+		ProgressBar pBar = ProgressBar(iIterationCount, m_iProgressBarSize);
 		for (int iIteration = 0; iIteration <= iIterationCount; iIteration++)
 		{
 			// choose a random function
@@ -205,6 +206,9 @@ namespace dwl
 			pBar.Update(iIteration);
 			//if (iIteration % iDisplayStep == 0) { cout << "Completed iteration " << iIteration << endl; } 
 		}
+		pBar.Finish();
+
+		cout << "Solving complete!" << endl;
 	}
 
 	void FlameFractal::CopyImage(vector<vector<vector<float> > >* m_vInput, vector<vector<vector<float> > >* m_vOutput)
@@ -322,9 +326,12 @@ namespace dwl
 		float fTotalDensity = 0.0f;
 		float fMaxDensity = 0.0f;
 
+		ProgressBar pBar1 = ProgressBar(m_vPoints->size() - 1, m_iProgressBarSize);
+
 		//cout << m_vPoints->size() << endl;
 		for (int y = 0; y < m_vPoints->size(); y++)
 		{
+			pBar1.Update(y);
 			for (int x = 0; x < (*m_vPoints)[y].size(); x++)
 			{
 				float fDensity = (*m_vPoints)[y][x][3];
@@ -336,6 +343,7 @@ namespace dwl
 				}
 			}
 		}
+		pBar1.Finish();
 
 		float fAverageDensity = fTotalDensity / (float) iDensityCounts;
 		cout << "Average density: " << fAverageDensity << endl;
@@ -348,6 +356,7 @@ namespace dwl
 		// SECOND PASS
 		cout << "Second pass... (Resolving colors, applying gamma and brightness corrections)" << endl;
 
+
 		//CopyImage(m_vPoints, m_vImage);
 		for (int y = 0; y < m_vPoints->size(); y++)
 		{
@@ -359,9 +368,12 @@ namespace dwl
 				(*m_vImage)[y][x][3] = (*m_vPoints)[y][x][3];
 			}
 		}			
+		
+		ProgressBar pBar2 = ProgressBar(m_vImage->size() - 1, m_iProgressBarSize);
 
 		for (int y = 0; y < m_vImage->size(); y++)
 		{
+			pBar2.Update(y);
 			for (int x = 0; x < (*m_vImage)[y].size(); x++)
 			{
 				float fDensity = (*m_vImage)[y][x][3];
@@ -396,6 +408,7 @@ namespace dwl
 				//cout << fDensity << endl;
 			}
 		}
+		pBar2.Finish();
 
 		// THIRD PASS
 		
@@ -412,12 +425,15 @@ namespace dwl
 				(*m_vPostProcImage)[y][x][3] = (*m_vImage)[y][x][3];
 			}
 		}			
+
 		
 		if (iFilterMethod > 0)
 		{
+			ProgressBar pBar3 = ProgressBar(m_vPostProcImage->size() - 1, m_iProgressBarSize);
 			for (int y = 0; y < m_vPostProcImage->size(); y++)
 			{
-				cout << "row " << y << endl;
+				pBar3.Update(y);
+				//cout << "row " << y << endl;
 				for (int x = 0; x < (*m_vPostProcImage)[y].size(); x++)
 				{
 					float fR = (*m_vImage)[y][x][0];
@@ -463,14 +479,18 @@ namespace dwl
 					}
 				}
 			}
+			pBar3.Finish();
 		}
 
 
 		// FOURTH PASS
 		cout << "Fourth pass... (final transformations)" << endl;
 
+		ProgressBar pBar4 = ProgressBar(m_vImage->size() - 1, m_iProgressBarSize);
+
 		for (int y = 0; y < m_vImage->size(); y++)
 		{
+			pBar4.Update(y);
 			for (int x = 0; x < (*m_vImage)[y].size(); x++)
 			{
 				/*(*m_vFinalImage)[y][x][0] = (int)((*m_vImage)[y][x][0]);
@@ -492,6 +512,7 @@ namespace dwl
 				}*/
 			}
 		}
+		pBar4.Finish();
 	}
 
 	void FlameFractal::SaveFunctionCode(string sFileName)
@@ -542,7 +563,6 @@ namespace dwl
 	void FlameFractal::SaveImageTrace(string sFileName)
 	{
 		cout << "Saving image trace..." << endl;
-		//SaveFunctionCode(sFileName); // TODO: don't leave this here, leave it to caller to make sure functions are saved separately
 		
 		// store meta
 		string sSaveData = "";
@@ -552,7 +572,7 @@ namespace dwl
 		sSaveData += to_string(m_fTraceY) + "\n";
 		sSaveData += to_string(m_fTraceC) + "\n";
 
-		ProgressBar pBar = ProgressBar(m_vPoints->size(), 50);
+		ProgressBar pBar = ProgressBar(m_vPoints->size() - 1, m_iProgressBarSize);
 		
 		for (int y = 0; y < m_vPoints->size(); y++)
 		{
@@ -567,13 +587,51 @@ namespace dwl
 				sSaveData += to_string(fR) + "," + to_string(fG) + "," + to_string(fB) + "," + to_string(fA) + "\n";
 			}
 		}
+		pBar.Finish();
 
+		cout << "Writing file..." << endl;
 		ofstream pFile;
 		pFile.open((sFileName + "_trace.dat").c_str());
 		pFile << sSaveData << endl;
 		pFile.close();
 
 		cout << "Trace saved successfully!" << endl;
+	}
+
+	void FlameFractal::SaveImageData(string sFileName)
+	{
+		cout << "Saving image data..." << endl;
+
+		ProgressBar pBar = ProgressBar(m_vFinalImage->size() - 1, m_iProgressBarSize);
+
+		string sSaveData = "{\"width\": " + to_string(m_iWidth) + ", \"height\": " + to_string(m_iHeight) + ",";
+		sSaveData += "\"pixels\":[";
+		for (int y = 0; y < m_vFinalImage->size(); y++)
+		{
+			pBar.Update(y);
+			sSaveData += "[";
+			for (int x = 0; x < (*m_vFinalImage)[y].size(); x++)
+			{
+				int r = (*m_vFinalImage)[y][x][0];
+				int g = (*m_vFinalImage)[y][x][1];
+				int b = (*m_vFinalImage)[y][x][2];
+				int a = (*m_vFinalImage)[y][x][3];
+
+				sSaveData += "[" + to_string(r) + "," + to_string(g) + "," + to_string(b) + "," + to_string(a) + "]";
+				if (x < (*m_vFinalImage)[y].size() - 1) { sSaveData += ","; }
+			}
+			sSaveData += "]";
+			if (y < m_vFinalImage->size() - 1) { sSaveData += ","; }
+		}
+		pBar.Finish();
+		sSaveData += "]}";
+
+		cout << "Writing image data to file..." << endl;
+		ofstream fFile;
+		fFile.open(sFileName);
+		fFile << sSaveData;
+		fFile.close();
+		cout << "Saving complete!" << endl;
 	}
 }
 
