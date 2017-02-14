@@ -1,7 +1,7 @@
 //*************************************************************
 //  File: FlameFractal.h
 //  Date created: 1/28/2017
-//  Date edited: 2/11/2017
+//  Date edited: 2/13/2017
 //  Author: Nathan Martindale
 //  Copyright © 2017 Digital Warrior Labs
 //  Description: 
@@ -99,11 +99,12 @@ namespace dwl
 			void SaveFunctionCode(string sFileName);
 			void SaveImageTrace(string sFileName);
 
-			void SaveImageData(string sFileName);
-
+			void LoadImageTrace(string sFileName);
 			void LoadFunctionCode(string sFileName);
 
-			vector<vector<vector<int> > >* GetImage() { return m_vFinalImage; }
+			void SaveImageData(string sFileName);
+
+			vector<vector<vector<int> > >* GetImage() { return m_vFinalImage; } // TODO: not sure if I need this anymore
 
 			void SetProgressBarSize(int iSize) { m_iProgressBarSize = iSize; }
 	};
