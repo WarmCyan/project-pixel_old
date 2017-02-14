@@ -1,7 +1,7 @@
 //*************************************************************
 //  File: FlameFractal.cpp
 //  Date created: 1/28/2017
-//  Date edited: 2/11/2017
+//  Date edited: 2/13/2017
 //  Author: Nathan Martindale
 //  Copyright © 2017 Digital Warrior Labs
 //  Description: 
@@ -596,6 +596,11 @@ namespace dwl
 		pFile.close();
 
 		cout << "Trace saved successfully!" << endl;
+	}
+
+	void FlameFractal::LoadImageTrace(string sFileName)
+	{
+		cout << "Loading image trace..." << endl;
 	}
 
 	void FlameFractal::SaveImageData(string sFileName)
