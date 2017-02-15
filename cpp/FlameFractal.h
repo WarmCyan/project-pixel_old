@@ -1,7 +1,7 @@
 //*************************************************************
 //  File: FlameFractal.h
 //  Date created: 1/28/2017
-//  Date edited: 2/13/2017
+//  Date edited: 2/14/2017
 //  Author: Nathan Martindale
 //  Copyright © 2017 Digital Warrior Labs
 //  Description: 
@@ -16,6 +16,7 @@
 #include <cmath>
 #include <algorithm>
 #include <fstream>
+#include <sstream>
 
 #include "Function.h"
 #include "ProgressBar.h"
@@ -43,6 +44,13 @@ namespace dwl
 
 			float m_fTempX;
 			float m_fTempY;
+
+			// used only for solution start (TODO: break out the solve function
+			// into initialization and actual solving, since solving can be
+			// continued
+			float m_fStartX;
+			float m_fStartY;
+			float m_fStartC;
 
 			float m_fKernelScalar;
 			float m_fKernelExpDenom;
