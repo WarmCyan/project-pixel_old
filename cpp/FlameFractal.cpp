@@ -1,7 +1,7 @@
 //*************************************************************
 //  File: FlameFractal.cpp
 //  Date created: 1/28/2017
-//  Date edited: 2/13/2017
+//  Date edited: 2/14/2017
 //  Author: Nathan Martindale
 //  Copyright © 2017 Digital Warrior Labs
 //  Description: 
@@ -601,6 +601,46 @@ namespace dwl
 	void FlameFractal::LoadImageTrace(string sFileName)
 	{
 		cout << "Loading image trace..." << endl;
+
+		ifstream pFile;
+		pFile.open((sFileName + "_trace.dat").c_str());
+
+		pFile >> m_iWidth;
+		pFile >> m_iHeight;
+		pFile >> m_fStartX;
+		pFile >> m_fStartY;
+		pFile >> m_fStartC;
+
+		int iX = 0;
+		int iY = 0;
+
+		ProgressBar pBar = ProgressBar(m_iHeight, m_iProgressBarSize);
+		
+		while (!pFile.eof())
+		{
+			string sNextLine;
+			pFile >> sNextLine;
+			//cout << sNextLine << endl;
+			
+			// split on comma
+			vector<float>* vPoint = new vector<float>();
+			stringstream ss(sNextLine);
+			float fNum;
+			while (ss >> fNum)
+			{
+				vPoint->push_back(fNum);
+				if (ss.peek() == ',') { ss.ignore(); }
+			}
+
+			(*m_vPoints)[iY][iX] = *vPoint;
+			iX++;
+			if (iX == m_iWidth) { iX = 0; iY++; pBar.Update(iY); }
+			if (iY == m_iHeight) { break; } // TODO: this really shouldn't be necessary, but it is? Double check logic somewhere here!
+		}
+
+		pBar.Finish();
+
+		cout << "Image trace loaded!" << endl;
 	}
 
 	void FlameFractal::SaveImageData(string sFileName)
