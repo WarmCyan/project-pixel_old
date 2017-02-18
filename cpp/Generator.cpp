@@ -1,7 +1,7 @@
 //*************************************************************
 //  File: Generator.cpp
 //  Date created: 1/28/2017
-//  Date edited: 2/14/2017
+//  Date edited: 2/18/2017
 //  Author: Nathan Martindale
 //  Copyright © 2017 Digital Warrior Labs
 //  Description: 
@@ -101,8 +101,8 @@ int main()
 	f4.SetSymmetry(true);*/
 
 
-	//FlameFractal ff = FlameFractal(1000, 1000);
-	FlameFractal ff = FlameFractal(3200, 1600);
+	FlameFractal ff = FlameFractal(1000, 1000);
+	//FlameFractal ff = FlameFractal(3200, 1600);
 	ff.AddFunction(f0);
 	ff.AddFunction(f1);
 	ff.AddFunction(f2);
@@ -111,18 +111,38 @@ int main()
 	ff.AddFunction(f3);
 	//ff.AddFunction(f4);
 
+	int iPart = 2;
 	
-	//ff.LoadFunctionCode("Test");
-	ff.PreparePlot();
-	//ff.Solve(1000000);
+	// part 1
+	if (iPart == 1)
+	{
+		ff.PreparePlot();
+		ff.InitializeSolution();
+		ff.Solve(1000000);
+		ff.Render(2.2, 1.0, 0);
+		ff.SaveImageTrace("Test");
+		ff.SaveImageData("imgdata.json");
+		system("python3 ./saveaspng.py");
+	}
+	
+	// part 2
+	if (iPart == 2)
+	{
+		ff.PreparePlot();
+		ff.LoadImageTrace("Test");
+		ff.Solve(100000000);
+		ff.Render(2.2, 1.0, 0);
+		ff.SaveImageTrace("Test");
+		ff.SaveImageData("imgdata.json");
+		system("python3 ./saveaspng.py");
+	}
+	
 	//ff.SetBaseImage(100.0f, 0.0f, 0.0f, 255.0f);
-	//ff.Render(2.2, 1.0, 0);
-	//ff.SaveImageData("imgdata.json");
+	//ff.LoadFunctionCode("Test");
 	//ff.SaveImageTrace("Test");
-	ff.LoadImageTrace("Test");
+	//ff.LoadImageTrace("Test");
 
 	//SaveImage("imgdata.json", &ff);
-	//system("python3 ./saveaspng.py");
 	
 	
 	/*random_device rd;

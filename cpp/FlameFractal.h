@@ -100,6 +100,7 @@ namespace dwl
 
 			void PreparePlot();
 			void SetBaseImage(float fR, float fG, float fB, float fA);
+			void InitializeSolution();
 			void Solve(int iIterationCount);
 			void Render(float fGamma, float fBrightness, int iFilterMethod);
 
