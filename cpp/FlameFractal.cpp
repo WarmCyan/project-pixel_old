@@ -1,7 +1,7 @@
 //*************************************************************
 //  File: FlameFractal.cpp
 //  Date created: 1/28/2017
-//  Date edited: 2/14/2017
+//  Date edited: 2/18/2017
 //  Author: Nathan Martindale
 //  Copyright © 2017 Digital Warrior Labs
 //  Description: 
@@ -105,15 +105,32 @@ namespace dwl
 
 	void FlameFractal::FinalTransform(float fX, float fY)
 	{
-		//m_fTempX = fX * 400 + 500;
-		//m_fTempY = fY * 400 + 500;
 		/*m_fTempX = fX * 1000;
 		m_fTempY = fY * 1000;*/
-		m_fTempX = fX * 640 + 1600;
-		m_fTempY = fY * 640 + 800;
+		
+		//m_fTempX = fX * 640 + 1600;
+		//m_fTempY = fY * 640 + 800;
+		m_fTempX = fX * 400 + 500;
+		m_fTempY = fY * 400 + 500;
 	}
 
 	float FlameFractal::FinalColorTransform(float fColor) { return fColor; }
+
+	void FlameFractal::InitializeSolution()
+	{
+		cout << "Setting initial solution variables..." << endl;
+			
+		// choose a random starting point
+		//float fX = RandomFloat() * 2 - 1;
+		//float fY = RandomFloat() * 2 - 1;
+
+		m_fStartX = RandomFloat() * 2 - 1;
+		m_fStartY = RandomFloat() * 2 - 1;
+
+		// choose a random starting color
+		//float fC = RandomFloat();
+		m_fStartC = RandomFloat();
+	}
 
 	void FlameFractal::Solve(int iIterationCount)
 	{
@@ -122,16 +139,22 @@ namespace dwl
 		cout << "Solving..." << endl;
 
 		// choose a random starting point
-		float fX = RandomFloat() * 2 - 1;
+		/*float fX = RandomFloat() * 2 - 1;
 		float fY = RandomFloat() * 2 - 1;
 		float fX_f = fX;
 		float fY_f = fY;
 
 		// choose a random starting color
 		float fC = RandomFloat();
-		float fC_f = fC; 
+		float fC_f = fC; */
 
-		int iDisplayStep = (int) (iIterationCount / 100.0f);
+		float fX = m_fStartX;
+		float fY = m_fStartY;
+		float fX_f = fX;
+		float fY_f = fY;
+
+		float fC = m_fStartC;
+		float fC_f = fC;
 		
 		vector<int>* vFunctionCounts = new vector<int>(m_vFunctions.size(), 0);
 			
@@ -204,7 +227,6 @@ namespace dwl
 			}
 
 			pBar.Update(iIteration);
-			//if (iIteration % iDisplayStep == 0) { cout << "Completed iteration " << iIteration << endl; } 
 		}
 		pBar.Finish();
 
