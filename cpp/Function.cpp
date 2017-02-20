@@ -35,6 +35,7 @@ namespace dwl
 
 	void FFFunction::Run(float fX, float fY)
 	{
+		//cout << "running" << endl; // DEBUG
 		//float fResultX = 0.0f;
 		//float fResultY = 0.0f;
 		
