@@ -119,8 +119,18 @@ namespace dwl
 	}
 
 	float FFFunction::Calc_R(float fX, float fY) { return sqrt(pow(fX, 2) + pow(fY, 2)); }
-	float FFFunction::Calc_Theta(float fX, float fY) { return atan(fX/fY); }
-	float FFFunction::Calc_Phi(float fX, float fY) { return atan(fY/fX); }
+	float FFFunction::Calc_Theta(float fX, float fY) 
+	{ 
+		float fDiv = 0.0f;
+		if (fY != 0) { fDiv = fX/fY; }
+		return atan(fDiv); 
+	}
+	float FFFunction::Calc_Phi(float fX, float fY) 
+	{ 
+		float fDiv = 0.0f;
+		if (fX != 0) { fDiv = fY/fX; }
+		return atan(fDiv); 
+	}
 
 	// variations
 	
