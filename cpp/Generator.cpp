@@ -37,7 +37,7 @@ int main()
 	cout << "hello world!" << endl;
 
 	// set up functions
-	/*FFFunction f0 = FFFunction();
+	FFFunction f0 = FFFunction();
 	f0.SetMatrixCoefficients({ 0.9f, 0.0f, 0.0f, 0.0f, 0.9f, 0.0f });
 	f0.SetVariationWeight(FFFunction::VAR_LINEAR, 0.1f);
 	f0.SetVariationWeight(FFFunction::VAR_SINUSOIDAL, 0.1f);
@@ -85,7 +85,7 @@ int main()
 	f3.SetVariationWeight(FFFunction::VAR_SWIRL, 0.2f);
 	f3.SetVariationWeight(FFFunction::VAR_SINUSOIDAL, 0.4f);
 	f3.SetColor(0.7f);
-	f3.SetWeight(5.0f);*/
+	f3.SetWeight(5.0f);
 
 	/*FFFunction f3 = FFFunction();
 	f3.SetMatrixCoefficients({ (float)cos(120*PI/180), (float)sin(120*PI/180), 0.0f, -(float)sin(120*PI/180), (float)cos(120*PI/180), 0.0f });
@@ -115,9 +115,9 @@ int main()
 	ff.AddFunction(f3);*/
 	//ff.AddFunction(f4);
 	
-	int iCollection = 4;
+	int iCollection = 6;
 	
-	FunctionGenerator pGen = FunctionGenerator();
+	/*FunctionGenerator pGen = FunctionGenerator();
 	FFFunction* pF0 = pGen.GenerateFunction();
 	ff.AddFunction(*pF0);
 	FFFunction* pF1 = pGen.GenerateFunction();
@@ -126,14 +126,18 @@ int main()
 	ff.AddFunction(*pF2);
 	FFFunction* pF3 = pGen.GenerateFunction();
 	ff.AddFunction(*pF3);
+
+	FFFunction* pFSym = pGen.GenerateHorizontalSymmetry();
+	pFSym->SetWeight(pF0->GetWeight() + pF1->GetWeight() + pF2->GetWeight() + pF3->GetWeight());
+	ff.AddFunction(*pFSym);*/
 	
 	ff.PreparePlot();
-	ff.InitializeSolution();
-	//ff.LoadFunctionCode("collection/" + to_string(iCollection));
-	//ff.LoadImageTrace("collection/" + to_string(iCollection));
-	ff.SaveFunctionCode("collection/" + to_string(iCollection));
-	ff.Solve(1000000);
-	ff.Render(2.2, 1.0, 0);
+	//ff.InitializeSolution();
+	ff.LoadFunctionCode("collection/" + to_string(iCollection));
+	ff.LoadImageTrace("collection/" + to_string(iCollection));
+	//ff.SaveFunctionCode("collection/" + to_string(iCollection));
+	//ff.Solve(500000000);
+	ff.Render(3.2, 1.5, 0);
 	//ff.SaveImageTrace("collection/" + to_string(iCollection));
 	ff.SaveImageData("imgdata.json");
 	system("python3 ./saveaspng.py");

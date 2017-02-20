@@ -33,7 +33,7 @@ namespace dwl
 		if (RandomFloat() > .5) { fE = RandomFloat() * 4 - 2; }
 		if (RandomFloat() > .5) { fF = RandomFloat() * 4 - 2; }
 		
-		for (int i = 0; i <= 7; i++)
+		for (int i = 0; i <= 8; i++)
 		{
 			if (RandomFloat() > .5)
 			{
@@ -43,6 +43,28 @@ namespace dwl
 
 		pFunction->SetMatrixCoefficients({fA, fB, fC, fD, fE, fF});
 		pFunction->SetWeight(RandomFloat());
+		pFunction->SetColor(RandomFloat());
+
+		return pFunction;
+	}
+	
+	FFFunction* FunctionGenerator::GenerateHorizontalSymmetry()
+	{
+		FFFunction* pFunction = new FFFunction();
+
+		float fA = (float)cos(180*PI/180);
+		float fB = (float)sin(180*PI/180);
+		float fC = 0.0f;
+		float fD = -(float)sin(180*PI/180);
+		float fE = (float)cos(180*PI/180);
+		float fF = 0.0f;
+
+		
+		pFunction->SetVariationWeight(FFFunction::VAR_LINEAR, 1.0f);
+		pFunction->SetMatrixCoefficients({fA, fB, fC, fD, fE, fF});
+		
+		pFunction->SetWeight(RandomFloat());
+		pFunction->SetSymmetry(true);
 		pFunction->SetColor(RandomFloat());
 
 		return pFunction;

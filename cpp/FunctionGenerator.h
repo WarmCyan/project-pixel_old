@@ -12,6 +12,9 @@
 
 #include "Function.h"
 #include <random>
+#include <cmath>
+
+#define PI 3.14159265
 
 namespace dwl
 {
@@ -22,6 +25,7 @@ namespace dwl
 			
 		public:
 			FFFunction* GenerateFunction();
+			FFFunction* GenerateHorizontalSymmetry();
 	};
 }
 
