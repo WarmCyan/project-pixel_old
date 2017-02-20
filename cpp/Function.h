@@ -1,7 +1,7 @@
 //*************************************************************
 //  File: Function.h
 //  Date created: 1/28/2017
-//  Date edited: 2/5/2017
+//  Date edited: 2/19/2017
 //  Author: Nathan Martindale
 //  Copyright © 2017 Digital Warrior Labs
 //  Description: 
@@ -16,6 +16,8 @@
 #include <cmath>
 
 #include "lib/pugixml.hpp"
+
+#define PI 3.14159265
 
 using namespace std;
 using namespace pugi;
@@ -42,12 +44,19 @@ namespace dwl
 			//float* m_vVariationWeights;
 
 			float Calc_R(float fX, float fY);
+			float Calc_Theta(float fX, float fY);
+			float Calc_Phi(float fX, float fY);
 			
 			// variation functions
 			void Var_Linear(float fX, float fY);
 			void Var_Sinusoidal(float fX, float fY);
 			void Var_Spherical(float fX, float fY);
 			void Var_Swirl(float fX, float fY);
+			void Var_Horseshoe(float fX, float fY);
+			void Var_Polar(float fX, float fY);
+			void Var_Handkerchief(float fX, float fY);
+			void Var_Heart(float fX, float fY);
+			void Var_Disc(float fX, float fY);
 			
 		public:
 
@@ -55,7 +64,11 @@ namespace dwl
 			static const int VAR_SINUSOIDAL = 1;
 			static const int VAR_SPHERICAL = 2;
 			static const int VAR_SWIRL = 3;
-			//static const int VAR_HORSESHOE
+			static const int VAR_HORSESHOE = 4;
+			static const int VAR_POLAR = 5;
+			static const int VAR_HANDKERCHIEF = 6;
+			static const int VAR_HEART = 7;
+			static const int VAR_DISC = 8;
 			
 			FFFunction();
 			void Run(float fX, float fY);
