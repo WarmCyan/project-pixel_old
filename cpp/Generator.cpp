@@ -100,19 +100,19 @@ int main()
 
 	
 
-	FlameFractal ff = FlameFractal(1600, 900);
+	FlameFractal ff = FlameFractal(1000, 1000);
 
 	
 	//FlameFractal ff = FlameFractal(3200, 1600);
-	ff.AddFunction(f0);
+	/*ff.AddFunction(f0);
 	ff.AddFunction(f1);
 	ff.AddFunction(f2);
 	ff.AddFunction(f5);
 	ff.AddFunction(f6);
-	ff.AddFunction(f3);
+	ff.AddFunction(f3);*/
 	//ff.AddFunction(f4);
 	
-	int iCollection = 0;
+	int iCollection = 8;
 	
 	/*FunctionGenerator pGen = FunctionGenerator();
 	FFFunction* pF0 = pGen.GenerateFunction();
@@ -124,20 +124,23 @@ int main()
 	FFFunction* pF3 = pGen.GenerateFunction();
 	ff.AddFunction(*pF3);
 
-	FFFunction* pFSym = pGen.GenerateHorizontalSymmetry();
+	FFFunction* pFSym = pGen.GenerateSymmetryFunction(120);
 	pFSym->SetWeight(pF0->GetWeight() + pF1->GetWeight() + pF2->GetWeight() + pF3->GetWeight());
-	ff.AddFunction(*pFSym);*/
+	ff.AddFunction(*pFSym);
+	FFFunction* pFSym2 = pGen.GenerateSymmetryFunction(240);
+	pFSym2->SetWeight(pF0->GetWeight() + pF1->GetWeight() + pF2->GetWeight() + pF3->GetWeight());
+	ff.AddFunction(*pFSym2);*/
 	
 	
 	ff.SetZoom(.4, .4);
 	ff.PreparePlot();
-	//ff.InitializeSolution(); // NOTE: this is where zoom stuff should be set.
+	ff.InitializeSolution(); // NOTE: this is where zoom stuff should be set.
 	//Zoom factors should be stored with trace!
-	//ff.LoadFunctionCode("collection/" + to_string(iCollection));
-	ff.LoadImageTrace("collection/" + to_string(iCollection));
+	ff.LoadFunctionCode("collection/" + to_string(iCollection));
+	//ff.LoadImageTrace("collection/" + to_string(iCollection));
 	//ff.SaveFunctionCode("collection/" + to_string(iCollection));
 	ff.Solve(500000000);
-	ff.Render(3.2, 1.5, 0);
+	ff.Render(3.2, 1.0, 0);
 	ff.SaveImageTrace("collection/" + to_string(iCollection));
 	ff.SaveImageData("imgdata.json");
 	system("python3 ./saveaspng.py");

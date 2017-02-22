@@ -1,7 +1,7 @@
 //*************************************************************
 //  File: FunctionGenerator.cpp
 //  Date created: 2/19/2017
-//  Date edited: 2/19/2017
+//  Date edited: 2/21/2017
 //  Author: Nathan Martindale
 //  Copyright © 2017 Digital Warrior Labs
 //  Description: 
@@ -48,15 +48,15 @@ namespace dwl
 		return pFunction;
 	}
 	
-	FFFunction* FunctionGenerator::GenerateHorizontalSymmetry()
+	FFFunction* FunctionGenerator::GenerateSymmetryFunction(int iDegree)
 	{
 		FFFunction* pFunction = new FFFunction();
 
-		float fA = (float)cos(180*PI/180);
-		float fB = (float)sin(180*PI/180);
+		float fA = (float)cos(iDegree*PI/180);
+		float fB = (float)sin(iDegree*PI/180);
 		float fC = 0.0f;
-		float fD = -(float)sin(180*PI/180);
-		float fE = (float)cos(180*PI/180);
+		float fD = -(float)sin(iDegree*PI/180);
+		float fE = (float)cos(iDegree*PI/180);
 		float fF = 0.0f;
 
 		
