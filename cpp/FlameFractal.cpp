@@ -1,7 +1,7 @@
 //*************************************************************
 //  File: FlameFractal.cpp
 //  Date created: 1/28/2017
-//  Date edited: 2/19/2017
+//  Date edited: 2/21/2017
 //  Author: Nathan Martindale
 //  Copyright © 2017 Digital Warrior Labs
 //  Description: 
@@ -30,6 +30,17 @@ namespace dwl
 
 		m_fTempX = 0.0f;
 		m_fTempY = 0.0f;
+
+		m_fOffsetX = 0.0f;
+		m_fOffsetY = 0.0f;
+		
+		m_fZoomX = 1.0f;
+		m_fZoomY = 1.0f;
+		
+		m_fScalarX = 0.0f; 
+		m_fScalarY = 0.0f; 
+		m_fRawOffsetX = 0.0f; 
+		m_fRawOffsetY = 0.0f;
 	}
 
 	float FlameFractal::RandomFloat()
@@ -98,9 +109,15 @@ namespace dwl
 
 	void FlameFractal::ColorMap(float fColor)
 	{
+		// nice blue!
+		//m_fTempR = 1.0f - fColor;
+		//m_fTempG = 1.0f - (fColor / 2);
+		//m_fTempB = 1.0f;
+		
+		// very green!
 		m_fTempR = 1.0f - fColor;
-		m_fTempG = 1.0f - (fColor / 2);
-		m_fTempB = 1.0f;
+		m_fTempG = 1.0f;
+		m_fTempB = 1.0f - (fColor / 2);
 	}
 
 	void FlameFractal::FinalTransform(float fX, float fY)
@@ -112,8 +129,12 @@ namespace dwl
 		//m_fTempY = fY * 640 + 800;
 		//m_fTempX = fX * 400 + 500;
 		//m_fTempY = fY * 400 + 500;
-		m_fTempX = fX * 300 + 500;
-		m_fTempY = fY * 300 + 500;
+		
+		//m_fTempX = fX * 300 + 500;
+		//m_fTempY = fY * 300 + 500;
+
+		m_fTempX = fX * m_fScalarX + m_fRawOffsetX;
+		m_fTempY = fY * m_fScalarY + m_fRawOffsetY;
 	}
 
 	float FlameFractal::FinalColorTransform(float fColor) { return fColor; }
@@ -132,13 +153,27 @@ namespace dwl
 		// choose a random starting color
 		//float fC = RandomFloat();
 		m_fStartC = RandomFloat();
+
+
+		cout << "Calculating transform variables..." << endl;
+		
+		// determine smallest dimension
+		float fBase = (m_iHeight < m_iWidth) ? (float)m_iHeight : (float)m_iWidth;
+		m_fScalarX = fBase * m_fZoomX;
+		m_fScalarY = fBase * m_fZoomY;
+		m_fRawOffsetX = m_iWidth / 2 + m_fOffsetX;
+		m_fRawOffsetY = m_iHeight / 2 + m_fOffsetY;
+		cout << "Scalar X: " << m_fScalarX << endl;
+		cout << "Scalar Y: " << m_fScalarY << endl;
+		cout << "Offset X: " << m_fRawOffsetX << endl;
+		cout << "Offset Y: " << m_fRawOffsetY << endl;
+		//cout << "Base zoom scalar: " << fBase << endl; // DEBUG
 	}
 
 	void FlameFractal::Solve(int iIterationCount)
 	{
-		//PreparePlot();
-
 		cout << "Solving..." << endl;
+
 
 		// choose a random starting point
 		/*float fX = RandomFloat() * 2 - 1;
@@ -595,6 +630,10 @@ namespace dwl
 		sSaveData += to_string(m_fTraceX) + "\n";
 		sSaveData += to_string(m_fTraceY) + "\n";
 		sSaveData += to_string(m_fTraceC) + "\n";
+		sSaveData += to_string(m_fScalarX) + "\n";
+		sSaveData += to_string(m_fScalarY) + "\n";
+		sSaveData += to_string(m_fRawOffsetX) + "\n";
+		sSaveData += to_string(m_fRawOffsetY) + "\n";
 
 		ProgressBar pBar = ProgressBar(m_vPoints->size() - 1, m_iProgressBarSize);
 		
@@ -634,6 +673,10 @@ namespace dwl
 		pFile >> m_fStartX;
 		pFile >> m_fStartY;
 		pFile >> m_fStartC;
+		pFile >> m_fScalarX;
+		pFile >> m_fScalarY;
+		pFile >> m_fRawOffsetX;
+		pFile >> m_fRawOffsetY;
 
 		int iX = 0;
 		int iY = 0;

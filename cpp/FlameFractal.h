@@ -1,7 +1,7 @@
 //*************************************************************
 //  File: FlameFractal.h
 //  Date created: 1/28/2017
-//  Date edited: 2/14/2017
+//  Date edited: 2/21/2017
 //  Author: Nathan Martindale
 //  Copyright © 2017 Digital Warrior Labs
 //  Description: 
@@ -59,6 +59,19 @@ namespace dwl
 			float m_fTraceY;
 			float m_fTraceC;
 
+			// META
+			float m_fOffsetX;
+			float m_fOffsetY;
+
+			float m_fZoomX;
+			float m_fZoomY;
+
+			float m_fScalarX; // calculated, not set
+			float m_fScalarY; // calculated, not set
+			float m_fRawOffsetX; // calculated, not set
+			float m_fRawOffsetY; // calculated, not set
+
+			// image data stores
 			vector<vector<vector<float> > >* m_vPoints;
 			vector<vector<vector<float> > >* m_vImage;
 			vector<vector<vector<float> > >* m_vPostProcImage;
@@ -97,6 +110,14 @@ namespace dwl
 
 			void AddFunction(FFFunction pFunction) { m_vFunctions.push_back(pFunction); }
 			void ClearFunctions() { m_vFunctions = vector<FFFunction>(); }
+
+			void SetOffsetX(float fOffsetX) { m_fOffsetX = fOffsetX; }
+			void SetOffsetY(float fOffsetY) { m_fOffsetY = fOffsetY; }
+			void SetOffsets(float fOffsetX, float fOffsetY) { m_fOffsetX = fOffsetX; m_fOffsetY = fOffsetY; }
+
+			void SetZoomX(float fZoomX) { m_fZoomX = fZoomX; }
+			void SetZoomY(float fZoomY) { m_fZoomY = fZoomY; }
+			void SetZoom(float fZoomX, float fZoomY) { m_fZoomX = fZoomX; m_fZoomY = fZoomY; }
 
 			void PreparePlot();
 			void SetBaseImage(float fR, float fG, float fB, float fA);

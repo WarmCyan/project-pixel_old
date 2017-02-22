@@ -1,7 +1,7 @@
 //*************************************************************
 //  File: Generator.cpp
 //  Date created: 1/28/2017
-//  Date edited: 2/19/2017
+//  Date edited: 2/21/2017
 //  Author: Nathan Martindale
 //  Copyright © 2017 Digital Warrior Labs
 //  Description: 
@@ -28,9 +28,6 @@
 
 using namespace std;
 using namespace dwl;
-
-void SaveImage(string sFileName, FlameFractal* pFractal);
-
 
 int main()
 {
@@ -103,19 +100,19 @@ int main()
 
 	
 
-	FlameFractal ff = FlameFractal(1000, 1000);
+	FlameFractal ff = FlameFractal(1600, 900);
 
 	
 	//FlameFractal ff = FlameFractal(3200, 1600);
-	/*ff.AddFunction(f0);
+	ff.AddFunction(f0);
 	ff.AddFunction(f1);
 	ff.AddFunction(f2);
 	ff.AddFunction(f5);
 	ff.AddFunction(f6);
-	ff.AddFunction(f3);*/
+	ff.AddFunction(f3);
 	//ff.AddFunction(f4);
 	
-	int iCollection = 6;
+	int iCollection = 0;
 	
 	/*FunctionGenerator pGen = FunctionGenerator();
 	FFFunction* pF0 = pGen.GenerateFunction();
@@ -131,14 +128,17 @@ int main()
 	pFSym->SetWeight(pF0->GetWeight() + pF1->GetWeight() + pF2->GetWeight() + pF3->GetWeight());
 	ff.AddFunction(*pFSym);*/
 	
+	
+	ff.SetZoom(.4, .4);
 	ff.PreparePlot();
-	//ff.InitializeSolution();
-	ff.LoadFunctionCode("collection/" + to_string(iCollection));
+	//ff.InitializeSolution(); // NOTE: this is where zoom stuff should be set.
+	//Zoom factors should be stored with trace!
+	//ff.LoadFunctionCode("collection/" + to_string(iCollection));
 	ff.LoadImageTrace("collection/" + to_string(iCollection));
 	//ff.SaveFunctionCode("collection/" + to_string(iCollection));
-	//ff.Solve(500000000);
+	ff.Solve(500000000);
 	ff.Render(3.2, 1.5, 0);
-	//ff.SaveImageTrace("collection/" + to_string(iCollection));
+	ff.SaveImageTrace("collection/" + to_string(iCollection));
 	ff.SaveImageData("imgdata.json");
 	system("python3 ./saveaspng.py");
 	
@@ -201,44 +201,4 @@ int main()
 
 	
 	return 0;
-}
-
-void SaveImage(string sFileName, FlameFractal* pFractal)
-{
-	vector<vector<vector<int> > >* vImage = pFractal->GetImage();
-	int iWidth = pFractal->GetWidth();
-	int iHeight = pFractal->GetHeight();
-	//cout << iWidth << endl;
-	
-	string sSaveData = "{\"width\": " + to_string(iWidth) + ", \"height\": " + to_string(iHeight) + ",";
-	sSaveData += "\"pixels\":[";
-	for (int y = 0; y < vImage->size(); y++)
-	{
-		sSaveData += "[";
-		for (int x = 0; x  < (*vImage)[y].size(); x++)
-		{
-			int r = (*vImage)[y][x][0];
-			int g = (*vImage)[y][x][1];
-			int b = (*vImage)[y][x][2];
-			int a = (*vImage)[y][x][3];
-			
-			//cout << r << endl;
-			
-			sSaveData += "[" + to_string(r) + "," + to_string(g) + "," + to_string(b) + "," + to_string(a) + "]";
-
-			if (x < (*vImage)[y].size() - 1) { sSaveData += ","; }
-		}
-		sSaveData += "]";
-		if (y < vImage->size() - 1) { sSaveData += ","; }
-	}
-	sSaveData += "]}";
-
-	cout << "Saving image data..." << endl;
-	ofstream fFile;
-	fFile.open(sFileName);
-	fFile << sSaveData;
-	fFile.close();
-	cout << "Saving complete!" << endl;
-	
-	//cout << sSaveData << endl;
 }
