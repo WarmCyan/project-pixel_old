@@ -1,0 +1,81 @@
+<?xml version="1.0"?>
+<Functions>
+	<Function Weight="0.0247505121" Color="0.0635090172" IsSymmetry="false" A="0" B="0" C="0" D="-1.67638171" E="-0.143742204" F="0.410474062">
+		<VariationWeights>
+			<VariationWeight Variation="0" Value="0" />
+			<VariationWeight Variation="1" Value="0" />
+			<VariationWeight Variation="2" Value="0.911465824" />
+			<VariationWeight Variation="3" Value="0" />
+			<VariationWeight Variation="4" Value="0" />
+			<VariationWeight Variation="5" Value="0.095858641" />
+			<VariationWeight Variation="6" Value="0" />
+			<VariationWeight Variation="7" Value="0" />
+			<VariationWeight Variation="8" Value="0.441267133" />
+		</VariationWeights>
+	</Function>
+	<Function Weight="0.205267489" Color="0.0792870894" IsSymmetry="false" A="-0.28620255" B="-1.03134251" C="1.14792323" D="-1.70885348" E="0" F="1.89806819">
+		<VariationWeights>
+			<VariationWeight Variation="0" Value="0.631458461" />
+			<VariationWeight Variation="1" Value="0" />
+			<VariationWeight Variation="2" Value="0.0906704888" />
+			<VariationWeight Variation="3" Value="0" />
+			<VariationWeight Variation="4" Value="0" />
+			<VariationWeight Variation="5" Value="0" />
+			<VariationWeight Variation="6" Value="0" />
+			<VariationWeight Variation="7" Value="0.487899423" />
+			<VariationWeight Variation="8" Value="0" />
+		</VariationWeights>
+	</Function>
+	<Function Weight="0.579241335" Color="0.97976625" IsSymmetry="false" A="1.01132226" B="0" C="-1.70116282" D="0.123844147" E="-0.0578020811" F="0">
+		<VariationWeights>
+			<VariationWeight Variation="0" Value="0" />
+			<VariationWeight Variation="1" Value="0" />
+			<VariationWeight Variation="2" Value="0.798028529" />
+			<VariationWeight Variation="3" Value="0" />
+			<VariationWeight Variation="4" Value="0" />
+			<VariationWeight Variation="5" Value="0" />
+			<VariationWeight Variation="6" Value="0.39039278" />
+			<VariationWeight Variation="7" Value="0.49723807" />
+			<VariationWeight Variation="8" Value="0" />
+		</VariationWeights>
+	</Function>
+	<Function Weight="0.196539208" Color="0.173528239" IsSymmetry="false" A="1.92162848" B="-0.160344243" C="0" D="0" E="0" F="0">
+		<VariationWeights>
+			<VariationWeight Variation="0" Value="0" />
+			<VariationWeight Variation="1" Value="0.0459913947" />
+			<VariationWeight Variation="2" Value="0.772209823" />
+			<VariationWeight Variation="3" Value="0" />
+			<VariationWeight Variation="4" Value="0" />
+			<VariationWeight Variation="5" Value="0.640064716" />
+			<VariationWeight Variation="6" Value="0" />
+			<VariationWeight Variation="7" Value="0.210547194" />
+			<VariationWeight Variation="8" Value="0" />
+		</VariationWeights>
+	</Function>
+	<Function Weight="1.00579858" Color="0.904141366" IsSymmetry="true" A="-0.5" B="0.866025388" C="0" D="-0.866025388" E="-0.5" F="0">
+		<VariationWeights>
+			<VariationWeight Variation="0" Value="1" />
+			<VariationWeight Variation="1" Value="0" />
+			<VariationWeight Variation="2" Value="0" />
+			<VariationWeight Variation="3" Value="0" />
+			<VariationWeight Variation="4" Value="0" />
+			<VariationWeight Variation="5" Value="0" />
+			<VariationWeight Variation="6" Value="0" />
+			<VariationWeight Variation="7" Value="0" />
+			<VariationWeight Variation="8" Value="0" />
+		</VariationWeights>
+	</Function>
+	<Function Weight="1.00579858" Color="0.15610218" IsSymmetry="true" A="-0.5" B="-0.866025388" C="0" D="0.866025388" E="-0.5" F="0">
+		<VariationWeights>
+			<VariationWeight Variation="0" Value="1" />
+			<VariationWeight Variation="1" Value="0" />
+			<VariationWeight Variation="2" Value="0" />
+			<VariationWeight Variation="3" Value="0" />
+			<VariationWeight Variation="4" Value="0" />
+			<VariationWeight Variation="5" Value="0" />
+			<VariationWeight Variation="6" Value="0" />
+			<VariationWeight Variation="7" Value="0" />
+			<VariationWeight Variation="8" Value="0" />
+		</VariationWeights>
+	</Function>
+</Functions>
