@@ -1,7 +1,7 @@
 //*************************************************************
 //  File: FlameFractal.cpp
 //  Date created: 1/28/2017
-//  Date edited: 2/21/2017
+//  Date edited: 2/22/2017
 //  Author: Nathan Martindale
 //  Copyright © 2017 Digital Warrior Labs
 //  Description: 
@@ -115,9 +115,23 @@ namespace dwl
 		//m_fTempB = 1.0f;
 		
 		// very green!
-		m_fTempR = 1.0f - fColor;
-		m_fTempG = 1.0f;
-		m_fTempB = 1.0f - (fColor / 2);
+		//m_fTempR = 1.0f - fColor;
+		//m_fTempG = 1.0f;
+		//m_fTempB = 1.0f - (fColor / 2);
+	
+
+		// get the ramp point AFTER the color
+		int iIndex = 0;
+		while (m_vRampPoints[iIndex] < fColor)
+		{
+			
+		}
+		
+		// find slope between points for each color
+		float fSlopeR = 0.0f;
+		float fSlopeG = 0.0f;
+		float fSlopeB = 0.0f;
+		
 	}
 
 	void FlameFractal::FinalTransform(float fX, float fY)
