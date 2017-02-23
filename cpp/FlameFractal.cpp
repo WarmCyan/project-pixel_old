@@ -51,6 +51,28 @@ namespace dwl
 
 		return fRandom;
 	}
+	
+	void FlameFractal::SetColorRamp(vector<float> vPoints, vector<vector<float> > vValues)
+	{
+		cout << "Setting color ramp..." << endl;
+		m_vRampPoints = new vector<float>(vPoints.size(), 0.0f);
+		m_vRampVals = new vector<vector<float > >(vValues.size(), vector<float>(vValues[0].size(), 0.0f));
+
+		for (int i = 0; i < m_vRampPoints->size(); i++)
+		{
+			(*m_vRampPoints)[i] = vPoints[i];
+		}
+		for (int i = 0; i < m_vRampVals->size(); i++)
+		{
+			for (int j = 0; j < (*m_vRampVals)[i].size(); j++)
+			{
+				(*m_vRampVals)[i][j] = vValues[i][j];
+			}
+		}
+
+		cout << "Successfully set color ramp!" << endl;
+	}
+	
 
 	void FlameFractal::PreparePlot()
 	{
@@ -113,6 +135,7 @@ namespace dwl
 		//m_fTempR = 1.0f - fColor;
 		//m_fTempG = 1.0f - (fColor / 2);
 		//m_fTempB = 1.0f;
+		//return;
 		
 		// very green!
 		//m_fTempR = 1.0f - fColor;
@@ -121,17 +144,21 @@ namespace dwl
 	
 
 		// get the ramp point AFTER the color
-		int iIndex = 0;
-		while (m_vRampPoints[iIndex] < fColor)
-		{
-			
-		}
+		int iIndex = 1; // don't start at 0 (otherwise index problems if the color is 0)
+		while ((*m_vRampPoints)[iIndex] < fColor) { iIndex++; }
+
+		float fRun = (*m_vRampPoints)[iIndex] - (*m_vRampPoints)[iIndex - 1];
+
+		float fDist = fColor - (*m_vRampPoints)[iIndex-1];
 		
 		// find slope between points for each color
-		float fSlopeR = 0.0f;
-		float fSlopeG = 0.0f;
-		float fSlopeB = 0.0f;
-		
+		float fSlopeR = ((*m_vRampVals)[iIndex][0] - (*m_vRampVals)[iIndex - 1][0]) / fRun;
+		float fSlopeG = ((*m_vRampVals)[iIndex][1] - (*m_vRampVals)[iIndex - 1][1]) / fRun;
+		float fSlopeB = ((*m_vRampVals)[iIndex][2] - (*m_vRampVals)[iIndex - 1][2]) / fRun;
+
+		m_fTempR = (*m_vRampVals)[iIndex - 1][0] + fSlopeR*fDist;
+		m_fTempG = (*m_vRampVals)[iIndex - 1][1] + fSlopeG*fDist;
+		m_fTempB = (*m_vRampVals)[iIndex - 1][2] + fSlopeB*fDist;
 	}
 
 	void FlameFractal::FinalTransform(float fX, float fY)

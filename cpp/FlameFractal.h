@@ -73,9 +73,7 @@ namespace dwl
 
 			// COLOR RAMPS
 			vector<float>* m_vRampPoints;
-			vector<float>* m_vRampRVals;
-			vector<float>* m_vRampGVals;
-			vector<float>* m_vRampBVals;
+			vector<vector<float> >* m_vRampVals;
 
 			// image data stores
 			vector<vector<vector<float> > >* m_vPoints;
@@ -124,6 +122,8 @@ namespace dwl
 			void SetZoomX(float fZoomX) { m_fZoomX = fZoomX; }
 			void SetZoomY(float fZoomY) { m_fZoomY = fZoomY; }
 			void SetZoom(float fZoomX, float fZoomY) { m_fZoomX = fZoomX; m_fZoomY = fZoomY; }
+
+			void SetColorRamp(vector<float> vPoints, vector<vector<float> > vValues);
 
 			void PreparePlot();
 			void SetBaseImage(float fR, float fG, float fB, float fA);
