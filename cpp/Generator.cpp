@@ -31,8 +31,6 @@ using namespace dwl;
 
 int main()
 {
-	cout << "hello world!" << endl;
-
 	// set up functions
 	FFFunction f0 = FFFunction();
 	f0.SetMatrixCoefficients({ 0.9f, 0.0f, 0.0f, 0.0f, 0.9f, 0.0f });
@@ -104,12 +102,12 @@ int main()
 
 	
 	//FlameFractal ff = FlameFractal(3200, 1600);
-	/*ff.AddFunction(f0);
+	ff.AddFunction(f0);
 	ff.AddFunction(f1);
 	ff.AddFunction(f2);
 	ff.AddFunction(f5);
 	ff.AddFunction(f6);
-	ff.AddFunction(f3);*/
+	ff.AddFunction(f3);
 	//ff.AddFunction(f4);
 	
 	int iCollection = 8;
@@ -132,16 +130,18 @@ int main()
 	ff.AddFunction(*pFSym2);*/
 	
 	
+	//ff.SetColorRamp({0.0f, 1.0f}, {{1.0f, 1.0f, 1.0f}, {0.0f, 0.5f, 1.0f}}); // nice blue!
+	ff.SetColorRamp({0.0f, 0.5f, 1.0f}, {{1.0f, 1.0f, 0.0f}, {0.5f, 0.5f, 0.5f}, {0.7f, 0.4f, 1.0f}});
 	ff.SetZoom(.4, .4);
 	ff.PreparePlot();
 	ff.InitializeSolution(); // NOTE: this is where zoom stuff should be set.
 	//Zoom factors should be stored with trace!
-	ff.LoadFunctionCode("collection/" + to_string(iCollection));
+	//ff.LoadFunctionCode("collection/" + to_string(iCollection));
 	//ff.LoadImageTrace("collection/" + to_string(iCollection));
 	//ff.SaveFunctionCode("collection/" + to_string(iCollection));
-	ff.Solve(500000000);
-	ff.Render(3.2, 1.0, 0);
-	ff.SaveImageTrace("collection/" + to_string(iCollection));
+	ff.Solve(10000000);
+	ff.Render(2.2, 1.0, 0);
+	//ff.SaveImageTrace("collection/" + to_string(iCollection));
 	ff.SaveImageData("imgdata.json");
 	system("python3 ./saveaspng.py");
 	
