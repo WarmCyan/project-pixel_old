@@ -1,7 +1,7 @@
 //*************************************************************
 //  File: FlameFractal.h
 //  Date created: 1/28/2017
-//  Date edited: 2/21/2017
+//  Date edited: 2/22/2017
 //  Author: Nathan Martindale
 //  Copyright © 2017 Digital Warrior Labs
 //  Description: 
@@ -70,6 +70,12 @@ namespace dwl
 			float m_fScalarY; // calculated, not set
 			float m_fRawOffsetX; // calculated, not set
 			float m_fRawOffsetY; // calculated, not set
+
+			// COLOR RAMPS
+			vector<float>* m_vRampPoints;
+			vector<float>* m_vRampRVals;
+			vector<float>* m_vRampGVals;
+			vector<float>* m_vRampBVals;
 
 			// image data stores
 			vector<vector<vector<float> > >* m_vPoints;
