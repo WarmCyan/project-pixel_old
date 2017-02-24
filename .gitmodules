@@ -1,0 +1,3 @@
+[submodule "cpp/collection"]
+	path = cpp/collection
+	url = https://WildfireXIII@bitbucket.org/WildfireXIII/fractal-collection.git
