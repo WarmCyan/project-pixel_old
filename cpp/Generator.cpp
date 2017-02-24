@@ -112,7 +112,7 @@ int main()
 	
 	int iCollection = 1004;
 	
-	FunctionGenerator pGen = FunctionGenerator();
+	/*FunctionGenerator pGen = FunctionGenerator();
 	FFFunction* pF0 = pGen.GenerateFunction();
 	ff.AddFunction(*pF0);
 	FFFunction* pF1 = pGen.GenerateFunction();
@@ -127,7 +127,7 @@ int main()
 	ff.AddFunction(*pFSym);
 	FFFunction* pFSym2 = pGen.GenerateSymmetryFunction(240);
 	pFSym2->SetWeight(pF0->GetWeight() + pF1->GetWeight() + pF2->GetWeight() + pF3->GetWeight());
-	ff.AddFunction(*pFSym2);
+	ff.AddFunction(*pFSym2);*/
 	
 	
 	//ff.SetColorRamp({0.0f, 1.0f}, {{1.0f, 1.0f, 1.0f}, {0.0f, 0.5f, 1.0f}}); // nice blue!
@@ -137,11 +137,11 @@ int main()
 	ff.PreparePlot();
 	ff.InitializeSolution(); // NOTE: this is where zoom stuff should be set.
 	//Zoom factors should be stored with trace!
-	ff.LoadFunctionCode("collection/" + to_string(iCollection));
+	ff.LoadFunctionCode("collection/old/" + to_string(iCollection));
 	//ff.LoadImageTrace("collection/" + to_string(iCollection));
 	//ff.SaveFunctionCode("collection/" + to_string(iCollection));
-	ff.Solve(500000000);
-	ff.Render(2.8, 1.2, 0);
+	ff.Solve(10000000);
+	ff.Render(2.2, 1.0, 0);
 	ff.SaveImageTrace("collection/" + to_string(iCollection));
 	ff.SaveImageData("imgdata.json");
 	system("python3 ./saveaspng.py");
