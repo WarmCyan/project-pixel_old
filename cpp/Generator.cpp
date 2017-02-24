@@ -135,14 +135,14 @@ int main()
 	//ff.SetColorRamp({0.0f, 0.15f, 0.3f, 0.55f, 0.7f, 1.0f}, {{1.0f, 0.0f, 0.0f}, {1.0f, 0.5f, 0.0f}, {1.0f, 1.0f, 0.0f}, {0.0f, 1.0f, 0.0f}, {0.0f, 0.5f, 1.0f}, {0.8f, 0.2f, 1.0f}});
 	ff.SetZoom(.4, .4);
 	ff.PreparePlot();
-	ff.InitializeSolution(); // NOTE: this is where zoom stuff should be set.
+	//ff.InitializeSolution(); // NOTE: this is where zoom stuff should be set.
 	//Zoom factors should be stored with trace!
 	ff.LoadFunctionCode("collection/old/" + to_string(iCollection));
-	//ff.LoadImageTrace("collection/" + to_string(iCollection));
+	ff.LoadImageTrace("collection/" + to_string(iCollection));
 	//ff.SaveFunctionCode("collection/" + to_string(iCollection));
-	ff.Solve(10000000);
+	ff.Solve(1000);
 	ff.Render(2.2, 1.0, 0);
-	ff.SaveImageTrace("collection/" + to_string(iCollection));
+	//ff.SaveImageTrace("collection/" + to_string(iCollection));
 	ff.SaveImageData("imgdata.json");
 	system("python3 ./saveaspng.py");
 	

@@ -22,5 +22,5 @@ for y in range(0, imgdata["height"]):
         imgarray[y][x][3] = imgdata["pixels"][y][x][3]
 
 print("Saving...")
-scipy.misc.imsave("test.png", imgarray)
+scipy.misc.imsave("render.png", imgarray)
 print("Done!")
