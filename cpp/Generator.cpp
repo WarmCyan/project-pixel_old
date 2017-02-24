@@ -31,89 +31,11 @@ using namespace dwl;
 
 int main()
 {
-	// set up functions
-	FFFunction f0 = FFFunction();
-	f0.SetMatrixCoefficients({ 0.9f, 0.0f, 0.0f, 0.0f, 0.9f, 0.0f });
-	f0.SetVariationWeight(FFFunction::VAR_LINEAR, 0.1f);
-	f0.SetVariationWeight(FFFunction::VAR_SINUSOIDAL, 0.1f);
-	f0.SetVariationWeight(FFFunction::VAR_SPHERICAL, 0.7f);
-	f0.SetVariationWeight(FFFunction::VAR_SWIRL, 0.1f);
-	f0.SetColor(1.0f);
-	f0.SetWeight(1.0f);
-	
-	FFFunction f1 = FFFunction();
-	f1.SetMatrixCoefficients({ 0.5f, 0.0f, 0.5f, 0.0f, 0.5f, 0.0f });
-	f1.SetVariationWeight(FFFunction::VAR_LINEAR, 0.4f);
-	f1.SetVariationWeight(FFFunction::VAR_SINUSOIDAL, 0.6f);
-	f1.SetVariationWeight(FFFunction::VAR_SWIRL, 0.2f);
-	f1.SetColor(0.5f);
-	f1.SetWeight(0.5f);
-
-	FFFunction f2 = FFFunction();
-	f2.SetMatrixCoefficients({ 0.5f, 0.0f, 0.5f, 0.0f, 0.5f, 0.0f });
-	f2.SetVariationWeight(FFFunction::VAR_SINUSOIDAL, 0.5f);
-	f2.SetVariationWeight(FFFunction::VAR_SPHERICAL, 0.3f);
-	f2.SetVariationWeight(FFFunction::VAR_SWIRL, 0.2f);
-	f2.SetColor(0.0f);
-	f2.SetWeight(1.0f);
-	
-	FFFunction f5 = FFFunction();
-	f5.SetMatrixCoefficients({ 1.1f, 0.0f, 0.0f, 0.0f, 1.1f, 0.0f });
-	f5.SetVariationWeight(FFFunction::VAR_SINUSOIDAL, 1.0f);
-	f5.SetVariationWeight(FFFunction::VAR_SPHERICAL, 0.3f);
-	f5.SetVariationWeight(FFFunction::VAR_SWIRL, 0.2f);
-	f5.SetVariationWeight(FFFunction::VAR_LINEAR, 0.5f);
-	f5.SetColor(0.4f);
-	f5.SetWeight(2.0f);
-	
-	FFFunction f6 = FFFunction();
-	//f6.SetMatrixCoefficients({ 0.2f, 0.0f, 0.2f, 0.0f, 0.2f, 0.2f });
-	f6.SetMatrixCoefficients({ 0.4f, 0.2f, 0.2f, 0.2f, 0.4f, 0.2f });
-	f6.SetVariationWeight(FFFunction::VAR_SPHERICAL, 0.3f);
-	f6.SetVariationWeight(FFFunction::VAR_LINEAR, 0.5f);
-	f6.SetColor(0.9f);
-	f6.SetWeight(1.0f);
-	
-	FFFunction f3 = FFFunction();
-	f3.SetMatrixCoefficients({ (float)cos(180*PI/180), (float)sin(180*PI/180), 0.0f, -(float)sin(180*PI/180), (float)cos(120*PI/180), 0.0f });
-	f3.SetVariationWeight(FFFunction::VAR_LINEAR, 0.8f);
-	f3.SetVariationWeight(FFFunction::VAR_SWIRL, 0.2f);
-	f3.SetVariationWeight(FFFunction::VAR_SINUSOIDAL, 0.4f);
-	f3.SetColor(0.7f);
-	f3.SetWeight(5.0f);
-
-	/*FFFunction f3 = FFFunction();
-	f3.SetMatrixCoefficients({ (float)cos(120*PI/180), (float)sin(120*PI/180), 0.0f, -(float)sin(120*PI/180), (float)cos(120*PI/180), 0.0f });
-	f3.SetVariationWeight(FFFunction::VAR_LINEAR, 1.0f);
-	f3.SetColor(0.7f);
-	f3.SetWeight(3.0f);
-	f3.SetSymmetry(true);
-	
-	FFFunction f4 = FFFunction();
-	f4.SetMatrixCoefficients({ (float)cos(240*PI/180), (float)sin(240*PI/180), 0.0f, -(float)sin(240*PI/180), (float)cos(240*PI/180), 0.0f });
-	f4.SetVariationWeight(FFFunction::VAR_LINEAR, 1.0f);
-	f4.SetColor(0.7f);
-	f4.SetWeight(3.0f);
-	f4.SetSymmetry(true);*/
-
-	
-
 	FlameFractal ff = FlameFractal(1000, 1000);
+	
+	int iCollection = 23;
 
-	
-	//FlameFractal ff = FlameFractal(3200, 1600);
-	ff.AddFunction(f0);
-	ff.AddFunction(f1);
-	ff.AddFunction(f2);
-	ff.AddFunction(f5);
-	ff.AddFunction(f6);
-	ff.AddFunction(f3);
-	//ff.AddFunction(f4);
-	
-	//int iCollection = 1004;
-	int iCollection = 0;
-	
-	/*FunctionGenerator pGen = FunctionGenerator();
+	FunctionGenerator pGen = FunctionGenerator();
 	FFFunction* pF0 = pGen.GenerateFunction();
 	ff.AddFunction(*pF0);
 	FFFunction* pF1 = pGen.GenerateFunction();
@@ -128,22 +50,27 @@ int main()
 	ff.AddFunction(*pFSym);
 	FFFunction* pFSym2 = pGen.GenerateSymmetryFunction(240);
 	pFSym2->SetWeight(pF0->GetWeight() + pF1->GetWeight() + pF2->GetWeight() + pF3->GetWeight());
-	ff.AddFunction(*pFSym2);*/
+	ff.AddFunction(*pFSym2);
 	
-	
+	// colors
 	ff.SetColorRamp({0.0f, 1.0f}, {{1.0f, 1.0f, 1.0f}, {0.0f, 0.5f, 1.0f}}); // nice blue!
 	//ff.SetColorRamp({0.0f, 0.5f, 1.0f}, {{1.0f, 1.0f, 0.0f}, {0.5f, 0.5f, 0.5f}, {0.7f, 0.4f, 1.0f}}); // TTU!
 	//ff.SetColorRamp({0.0f, 0.15f, 0.3f, 0.55f, 0.7f, 1.0f}, {{1.0f, 0.0f, 0.0f}, {1.0f, 0.5f, 0.0f}, {1.0f, 1.0f, 0.0f}, {0.0f, 1.0f, 0.0f}, {0.0f, 0.5f, 1.0f}, {0.8f, 0.2f, 1.0f}});
+	
+
 	ff.SetZoom(.4, .4);
 	ff.PreparePlot();
-	ff.InitializeSolution(); // NOTE: this is where zoom stuff should be set.
-	//Zoom factors should be stored with trace!
-	//ff.LoadFunctionCode("collection/old/" + to_string(iCollection));
+	ff.InitializeSolution(); 
+
+	//ff.LoadFunctionCode("collection/" + to_string(iCollection));
 	//ff.LoadImageTrace("collection/" + to_string(iCollection));
 	ff.SaveFunctionCode("collection/" + to_string(iCollection));
+	
 	ff.Solve(10000000);
-	ff.Render(2.2, 1.0, 0);
 	//ff.SaveImageTrace("collection/" + to_string(iCollection));
+	
+	// render
+	ff.Render(2.2, 1.0, 0);
 	ff.SaveImageData("imgdata.json");
 	system("python3 ./saveaspng.py");
 	string sCopyCommand = "cp render.png collection/" + to_string(iCollection) + "_render.png";
