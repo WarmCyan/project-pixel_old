@@ -87,6 +87,7 @@ namespace dwl
 			void PlotPoint(float fX, float fY, float fC);
 
 			void ColorMap(float fColor);
+			void InitializeColorRamp(int iSize);
 
 			void FinalTransform(float fX, float fY);
 			float FinalColorTransform(float cX);

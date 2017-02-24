@@ -55,8 +55,9 @@ namespace dwl
 	void FlameFractal::SetColorRamp(vector<float> vPoints, vector<vector<float> > vValues)
 	{
 		cout << "Setting color ramp..." << endl;
-		m_vRampPoints = new vector<float>(vPoints.size(), 0.0f);
-		m_vRampVals = new vector<vector<float > >(vValues.size(), vector<float>(vValues[0].size(), 0.0f));
+		InitializeColorRamp(vPoints.size());
+		//m_vRampPoints = new vector<float>(vPoints.size(), 0.0f);
+		//m_vRampVals = new vector<vector<float > >(vValues.size(), vector<float>(vValues[0].size(), 0.0f));
 
 		for (int i = 0; i < m_vRampPoints->size(); i++)
 		{
@@ -71,6 +72,12 @@ namespace dwl
 		}
 
 		cout << "Successfully set color ramp!" << endl;
+	}
+
+	void FlameFractal::InitializeColorRamp(int iSize)
+	{
+		m_vRampPoints = new vector<float>(iSize, 0.0f);
+		m_vRampVals = new vector<vector<float > >(iSize, vector<float>(3, 0.0f));
 	}
 	
 
@@ -676,6 +683,16 @@ namespace dwl
 		sSaveData += to_string(m_fRawOffsetX) + "\n";
 		sSaveData += to_string(m_fRawOffsetY) + "\n";
 
+		sSaveData += to_string(m_vRampPoints->size()) + "\n";
+
+		for (int i = 0; i < m_vRampPoints->size(); i++) { sSaveData += to_string((*m_vRampPoints)[i]) + "\n"; }
+		for (int i = 0; i < m_vRampVals->size(); i++)
+		{
+			sSaveData += to_string((*m_vRampVals)[i][0]) + "\n";
+			sSaveData += to_string((*m_vRampVals)[i][1]) + "\n";
+			sSaveData += to_string((*m_vRampVals)[i][2]) + "\n";
+		}
+
 		ProgressBar pBar = ProgressBar(m_vPoints->size() - 1, m_iProgressBarSize);
 		
 		for (int y = 0; y < m_vPoints->size(); y++)
@@ -718,6 +735,21 @@ namespace dwl
 		pFile >> m_fScalarY;
 		pFile >> m_fRawOffsetX;
 		pFile >> m_fRawOffsetY;
+
+
+		int iColorPoints = 0;
+		pFile >> iColorPoints;
+
+		InitializeColorRamp(iColorPoints);
+		
+		for (int i = 0; i < iColorPoints; i++) { pFile >> (*m_vRampPoints)[i]; }
+		for (int i = 0; i < iColorPoints; i++)
+		{
+			pFile >> (*m_vRampVals)[i][0];
+			pFile >> (*m_vRampVals)[i][1];
+			pFile >> (*m_vRampVals)[i][2];
+		}
+		
 
 		int iX = 0;
 		int iY = 0;
