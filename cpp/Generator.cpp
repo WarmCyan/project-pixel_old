@@ -102,15 +102,16 @@ int main()
 
 	
 	//FlameFractal ff = FlameFractal(3200, 1600);
-	/*ff.AddFunction(f0);
+	ff.AddFunction(f0);
 	ff.AddFunction(f1);
 	ff.AddFunction(f2);
 	ff.AddFunction(f5);
 	ff.AddFunction(f6);
-	ff.AddFunction(f3);*/
+	ff.AddFunction(f3);
 	//ff.AddFunction(f4);
 	
-	int iCollection = 1004;
+	//int iCollection = 1004;
+	int iCollection = 0;
 	
 	/*FunctionGenerator pGen = FunctionGenerator();
 	FFFunction* pF0 = pGen.GenerateFunction();
@@ -130,21 +131,23 @@ int main()
 	ff.AddFunction(*pFSym2);*/
 	
 	
-	//ff.SetColorRamp({0.0f, 1.0f}, {{1.0f, 1.0f, 1.0f}, {0.0f, 0.5f, 1.0f}}); // nice blue!
-	ff.SetColorRamp({0.0f, 0.5f, 1.0f}, {{1.0f, 1.0f, 0.0f}, {0.5f, 0.5f, 0.5f}, {0.7f, 0.4f, 1.0f}}); // TTU!
+	ff.SetColorRamp({0.0f, 1.0f}, {{1.0f, 1.0f, 1.0f}, {0.0f, 0.5f, 1.0f}}); // nice blue!
+	//ff.SetColorRamp({0.0f, 0.5f, 1.0f}, {{1.0f, 1.0f, 0.0f}, {0.5f, 0.5f, 0.5f}, {0.7f, 0.4f, 1.0f}}); // TTU!
 	//ff.SetColorRamp({0.0f, 0.15f, 0.3f, 0.55f, 0.7f, 1.0f}, {{1.0f, 0.0f, 0.0f}, {1.0f, 0.5f, 0.0f}, {1.0f, 1.0f, 0.0f}, {0.0f, 1.0f, 0.0f}, {0.0f, 0.5f, 1.0f}, {0.8f, 0.2f, 1.0f}});
 	ff.SetZoom(.4, .4);
 	ff.PreparePlot();
-	//ff.InitializeSolution(); // NOTE: this is where zoom stuff should be set.
+	ff.InitializeSolution(); // NOTE: this is where zoom stuff should be set.
 	//Zoom factors should be stored with trace!
-	ff.LoadFunctionCode("collection/old/" + to_string(iCollection));
-	ff.LoadImageTrace("collection/" + to_string(iCollection));
-	//ff.SaveFunctionCode("collection/" + to_string(iCollection));
-	ff.Solve(1000);
+	//ff.LoadFunctionCode("collection/old/" + to_string(iCollection));
+	//ff.LoadImageTrace("collection/" + to_string(iCollection));
+	ff.SaveFunctionCode("collection/" + to_string(iCollection));
+	ff.Solve(10000000);
 	ff.Render(2.2, 1.0, 0);
 	//ff.SaveImageTrace("collection/" + to_string(iCollection));
 	ff.SaveImageData("imgdata.json");
 	system("python3 ./saveaspng.py");
+	string sCopyCommand = "cp render.png collection/" + to_string(iCollection) + "_render.png";
+	system(sCopyCommand.c_str());
 	
 
 	/*int iPart = 1;
