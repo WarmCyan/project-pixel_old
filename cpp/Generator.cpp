@@ -1,7 +1,7 @@
 //*************************************************************
 //  File: Generator.cpp
 //  Date created: 1/28/2017
-//  Date edited: 2/21/2017
+//  Date edited: 2/23/2017
 //  Author: Nathan Martindale
 //  Copyright © 2017 Digital Warrior Labs
 //  Description: 
@@ -102,17 +102,17 @@ int main()
 
 	
 	//FlameFractal ff = FlameFractal(3200, 1600);
-	ff.AddFunction(f0);
+	/*ff.AddFunction(f0);
 	ff.AddFunction(f1);
 	ff.AddFunction(f2);
 	ff.AddFunction(f5);
 	ff.AddFunction(f6);
-	ff.AddFunction(f3);
+	ff.AddFunction(f3);*/
 	//ff.AddFunction(f4);
 	
-	int iCollection = 8;
+	int iCollection = 1004;
 	
-	/*FunctionGenerator pGen = FunctionGenerator();
+	FunctionGenerator pGen = FunctionGenerator();
 	FFFunction* pF0 = pGen.GenerateFunction();
 	ff.AddFunction(*pF0);
 	FFFunction* pF1 = pGen.GenerateFunction();
@@ -127,21 +127,22 @@ int main()
 	ff.AddFunction(*pFSym);
 	FFFunction* pFSym2 = pGen.GenerateSymmetryFunction(240);
 	pFSym2->SetWeight(pF0->GetWeight() + pF1->GetWeight() + pF2->GetWeight() + pF3->GetWeight());
-	ff.AddFunction(*pFSym2);*/
+	ff.AddFunction(*pFSym2);
 	
 	
 	//ff.SetColorRamp({0.0f, 1.0f}, {{1.0f, 1.0f, 1.0f}, {0.0f, 0.5f, 1.0f}}); // nice blue!
-	ff.SetColorRamp({0.0f, 0.5f, 1.0f}, {{1.0f, 1.0f, 0.0f}, {0.5f, 0.5f, 0.5f}, {0.7f, 0.4f, 1.0f}});
+	ff.SetColorRamp({0.0f, 0.5f, 1.0f}, {{1.0f, 1.0f, 0.0f}, {0.5f, 0.5f, 0.5f}, {0.7f, 0.4f, 1.0f}}); // TTU!
+	//ff.SetColorRamp({0.0f, 0.15f, 0.3f, 0.55f, 0.7f, 1.0f}, {{1.0f, 0.0f, 0.0f}, {1.0f, 0.5f, 0.0f}, {1.0f, 1.0f, 0.0f}, {0.0f, 1.0f, 0.0f}, {0.0f, 0.5f, 1.0f}, {0.8f, 0.2f, 1.0f}});
 	ff.SetZoom(.4, .4);
 	ff.PreparePlot();
 	ff.InitializeSolution(); // NOTE: this is where zoom stuff should be set.
 	//Zoom factors should be stored with trace!
-	//ff.LoadFunctionCode("collection/" + to_string(iCollection));
+	ff.LoadFunctionCode("collection/" + to_string(iCollection));
 	//ff.LoadImageTrace("collection/" + to_string(iCollection));
 	//ff.SaveFunctionCode("collection/" + to_string(iCollection));
-	ff.Solve(10000000);
-	ff.Render(2.2, 1.0, 0);
-	//ff.SaveImageTrace("collection/" + to_string(iCollection));
+	ff.Solve(500000000);
+	ff.Render(2.8, 1.2, 0);
+	ff.SaveImageTrace("collection/" + to_string(iCollection));
 	ff.SaveImageData("imgdata.json");
 	system("python3 ./saveaspng.py");
 	
