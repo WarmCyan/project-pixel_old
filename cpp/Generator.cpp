@@ -1,7 +1,7 @@
 //*************************************************************
 //  File: Generator.cpp
 //  Date created: 1/28/2017
-//  Date edited: 2/23/2017
+//  Date edited: 3/2/2017
 //  Author: Nathan Martindale
 //  Copyright © 2017 Digital Warrior Labs
 //  Description: 
@@ -21,7 +21,7 @@
 
 #include "Function.h"
 #include "FlameFractal.h"
-#include "ProgressBar.h"
+//#include "ProgressBar.h"
 #include "FunctionGenerator.h"
 
 #define PI 3.14159265
@@ -29,8 +29,15 @@
 using namespace std;
 using namespace dwl;
 
+void REPL();
+void HandleCommand(string sCommand);
+
 int main()
 {
+
+	REPL();
+	return 0;
+	
 	FlameFractal ff = FlameFractal(1000, 1000);
 	
 	int iCollection = 22;
@@ -70,14 +77,14 @@ int main()
 	//ff.LoadImageTrace("collection/" + to_string(iCollection));
 	//ff.SaveFunctionCode("collection/" + to_string(iCollection));
 	
-	ff.Solve(500000000);
-	ff.SaveImageTrace("collection/" + to_string(iCollection));
+	ff.Solve(10000000);
+	//ff.SaveImageTrace("collection/" + to_string(iCollection));
 	
 	// render
 	ff.Render(2.8, 1.2, 0);
 	ff.SaveImageData("imgdata.json");
 	system("python3 ./saveaspng.py");
-	string sCopyCommand = "cp render.png collection/" + to_string(iCollection) + "_render.png";
+	string sCopyCommand = "copy \"./render.png\" \"./collection/" + to_string(iCollection) + "_render.png\""; // TODO: make cross platform!!
 	system(sCopyCommand.c_str());
 	
 
@@ -139,4 +146,17 @@ int main()
 
 	
 	return 0;
+}
+
+void REPL()
+{
+	cout << "Pixel> ";
+	string sCommand = "";
+	cin >> sCommand;
+	HandleCommand(sCommand);
+}
+
+void HandleCommand(string sCommand)
+{
+	cout << "Received command: " << sCommand << endl;
 }
