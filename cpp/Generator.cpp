@@ -33,9 +33,9 @@ int main()
 {
 	FlameFractal ff = FlameFractal(1000, 1000);
 	
-	int iCollection = 23;
+	int iCollection = 22;
 
-	FunctionGenerator pGen = FunctionGenerator();
+	/*FunctionGenerator pGen = FunctionGenerator();
 	FFFunction* pF0 = pGen.GenerateFunction();
 	ff.AddFunction(*pF0);
 	FFFunction* pF1 = pGen.GenerateFunction();
@@ -50,27 +50,31 @@ int main()
 	ff.AddFunction(*pFSym);
 	FFFunction* pFSym2 = pGen.GenerateSymmetryFunction(240);
 	pFSym2->SetWeight(pF0->GetWeight() + pF1->GetWeight() + pF2->GetWeight() + pF3->GetWeight());
-	ff.AddFunction(*pFSym2);
+	ff.AddFunction(*pFSym2);*/
 	
 	// colors
-	ff.SetColorRamp({0.0f, 1.0f}, {{1.0f, 1.0f, 1.0f}, {0.0f, 0.5f, 1.0f}}); // nice blue!
+	//ff.SetColorRamp({0.0f, 1.0f}, {{1.0f, 1.0f, 1.0f}, {0.0f, 0.5f, 1.0f}}); // nice blue!
+	//ff.SetColorRamp({0.0f, 1.0f}, {{1.0f, 1.0f, 1.0f}, {0.0f, 1.0f, 0.5f}}); // greeen?
 	//ff.SetColorRamp({0.0f, 0.5f, 1.0f}, {{1.0f, 1.0f, 0.0f}, {0.5f, 0.5f, 0.5f}, {0.7f, 0.4f, 1.0f}}); // TTU!
 	//ff.SetColorRamp({0.0f, 0.15f, 0.3f, 0.55f, 0.7f, 1.0f}, {{1.0f, 0.0f, 0.0f}, {1.0f, 0.5f, 0.0f}, {1.0f, 1.0f, 0.0f}, {0.0f, 1.0f, 0.0f}, {0.0f, 0.5f, 1.0f}, {0.8f, 0.2f, 1.0f}});
+	//ff.SetColorRamp({0.0f, 1.0f}, {{1.0f, 1.0f, 1.0f}, {0.7f, 0.4f, 1.0f}}); // purple
+	//ff.SetColorRamp({0.0f, 1.0f}, {{1.0f, 1.0f, 1.0f}, {0.5f, 0.2f, 0.7f}}); // deep purple
+	ff.SetColorRamp({0.0f, 0.5f, 1.0f}, {{0.0f, 0.5f, 1.0f}, {1.0f, 1.0f, 1.0f}, {0.5f, 0.2f, 0.7f}}); // purple'n blue
 	
 
 	ff.SetZoom(.4, .4);
 	ff.PreparePlot();
 	ff.InitializeSolution(); 
 
-	//ff.LoadFunctionCode("collection/" + to_string(iCollection));
+	ff.LoadFunctionCode("collection/" + to_string(iCollection));
 	//ff.LoadImageTrace("collection/" + to_string(iCollection));
-	ff.SaveFunctionCode("collection/" + to_string(iCollection));
+	//ff.SaveFunctionCode("collection/" + to_string(iCollection));
 	
-	ff.Solve(10000000);
-	//ff.SaveImageTrace("collection/" + to_string(iCollection));
+	ff.Solve(500000000);
+	ff.SaveImageTrace("collection/" + to_string(iCollection));
 	
 	// render
-	ff.Render(2.2, 1.0, 0);
+	ff.Render(2.8, 1.2, 0);
 	ff.SaveImageData("imgdata.json");
 	system("python3 ./saveaspng.py");
 	string sCopyCommand = "cp render.png collection/" + to_string(iCollection) + "_render.png";
