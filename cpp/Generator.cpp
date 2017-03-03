@@ -10,27 +10,24 @@
 
 #include <iostream>
 
-#include <random>
 #include <cmath>
 #include <vector>
 #include <string>
-//#include <cstdlib>
-//#include <ctime>
 
 #include <fstream>
 
-#include "Function.h"
 #include "FlameFractal.h"
-//#include "ProgressBar.h"
 #include "FunctionGenerator.h"
-
-#define PI 3.14159265
 
 using namespace std;
 using namespace dwl;
 
 void REPL();
-void HandleCommand(string sCommand);
+int HandleCommand(string sCommand);
+
+FlameFractal ff = FlameFractal(0,0);
+int iCollection = 22;
+string sErrorMsg = "";
 
 int main()
 {
@@ -150,13 +147,28 @@ int main()
 
 void REPL()
 {
-	cout << "Pixel> ";
-	string sCommand = "";
-	cin >> sCommand;
-	HandleCommand(sCommand);
+	int iResult = 0;
+	while (iResult != 2)
+	{
+		cout << "Pixel> ";
+		string sCommand = "";
+		cin >> sCommand;
+		iResult = HandleCommand(sCommand);
+		if (iResult == 1) { cout << "ERROR: " << sErrorMsg << endl; }
+	}
 }
 
-void HandleCommand(string sCommand)
+// 0 = normal, 1 = error, 2 = exit
+int HandleCommand(string sCommand)
 {
-	cout << "Received command: " << sCommand << endl;
+	cout << "" << sCommand << endl;
+
+	if (sCommand == "exit")
+	{
+		cout << "Have a nice day!" << endl;
+		return 2;
+	}
+	
+	sErrorMsg = "Unrecognized command!";
+	return 1;
 }

@@ -1,7 +1,7 @@
 //*************************************************************
 //  File: FlameFractal.cpp
 //  Date created: 1/28/2017
-//  Date edited: 2/22/2017
+//  Date edited: 3/2/2017
 //  Author: Nathan Martindale
 //  Copyright © 2017 Digital Warrior Labs
 //  Description: 
@@ -17,6 +17,11 @@ using namespace std;
 namespace dwl
 {
 
+	/*FlameFractal::FlameFractal()
+	{
+		FlameFractal(0,0);
+	}*/
+	
 	FlameFractal::FlameFractal(int iWidth, int iHeight)
 	{
 		m_iWidth = iWidth;
