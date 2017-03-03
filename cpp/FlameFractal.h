@@ -1,7 +1,7 @@
 //*************************************************************
 //  File: FlameFractal.h
 //  Date created: 1/28/2017
-//  Date edited: 3/2/2017
+//  Date edited: 3/3/2017
 //  Author: Nathan Martindale
 //  Copyright © 2017 Digital Warrior Labs
 //  Description: 
@@ -83,7 +83,8 @@ namespace dwl
 			vector<vector<vector<float> > >* m_vPostProcImage = NULL;
 			vector<vector<vector<int> > >* m_vFinalImage = NULL;
 			
-			vector<FFFunction> m_vFunctions = NULL;
+			//vector<FFFunction> m_vFunctions = NULL;
+			vector<FFFunction> m_vFunctions;
 
 
 			void PlotPoint(float fX, float fY, float fC);

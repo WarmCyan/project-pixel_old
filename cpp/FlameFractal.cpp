@@ -1,7 +1,7 @@
 //*************************************************************
 //  File: FlameFractal.cpp
 //  Date created: 1/28/2017
-//  Date edited: 3/2/2017
+//  Date edited: 3/3/2017
 //  Author: Nathan Martindale
 //  Copyright © 2017 Digital Warrior Labs
 //  Description: 
@@ -57,7 +57,7 @@ namespace dwl
 		delete m_vFinalImage;
 		delete m_vRampVals;
 		delete m_vRampPoints;
-		m_vFunctions.clear();
+		//m_vFunctions.clear();
 	}
 
 	float FlameFractal::RandomFloat()
