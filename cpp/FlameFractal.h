@@ -1,7 +1,7 @@
 //*************************************************************
 //  File: FlameFractal.h
 //  Date created: 1/28/2017
-//  Date edited: 2/22/2017
+//  Date edited: 3/2/2017
 //  Author: Nathan Martindale
 //  Copyright © 2017 Digital Warrior Labs
 //  Description: 
@@ -72,16 +72,16 @@ namespace dwl
 			float m_fRawOffsetY; // calculated, not set
 
 			// COLOR RAMPS
-			vector<float>* m_vRampPoints;
-			vector<vector<float> >* m_vRampVals;
+			vector<float>* m_vRampPoints = NULL;
+			vector<vector<float> >* m_vRampVals = NULL;
 
 			// image data stores
-			vector<vector<vector<float> > >* m_vPoints;
-			vector<vector<vector<float> > >* m_vImage;
-			vector<vector<vector<float> > >* m_vPostProcImage;
-			vector<vector<vector<int> > >* m_vFinalImage;
+			vector<vector<vector<float> > >* m_vPoints = NULL;
+			vector<vector<vector<float> > >* m_vImage = NULL;
+			vector<vector<vector<float> > >* m_vPostProcImage = NULL;
+			vector<vector<vector<int> > >* m_vFinalImage = NULL;
 			
-			vector<FFFunction> m_vFunctions;
+			vector<FFFunction> m_vFunctions = NULL;
 
 
 			void PlotPoint(float fX, float fY, float fC);
@@ -109,6 +109,7 @@ namespace dwl
 		public:
 
 			FlameFractal(int iWidth, int iHeight);
+			~FlameFractal();
 
 			int GetWidth() { return m_iWidth; }
 			int GetHeight() { return m_iHeight; }

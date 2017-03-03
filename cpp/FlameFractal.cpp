@@ -47,6 +47,16 @@ namespace dwl
 		m_fRawOffsetX = 0.0f; 
 		m_fRawOffsetY = 0.0f;
 	}
+	FlameFractal::~FlameFractal()
+	{
+		delete m_vPoints;
+		delete m_vImage;
+		delete m_vPostProcImage;
+		delete m_vFinalImage;
+		delete m_vRampVals;
+		delete m_vRampPoints;
+		m_vFunctions.clear();
+	}
 
 	float FlameFractal::RandomFloat()
 	{

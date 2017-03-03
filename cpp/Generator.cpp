@@ -15,6 +15,7 @@
 #include <string>
 
 #include <fstream>
+#include <sstream>
 
 #include "FlameFractal.h"
 #include "FunctionGenerator.h"
@@ -25,7 +26,7 @@ using namespace dwl;
 void REPL();
 int HandleCommand(string sCommand);
 
-FlameFractal ff = FlameFractal(0,0);
+FlameFractal* pFractal = new FlameFractal(0,0);
 int iCollection = 22;
 string sErrorMsg = "";
 
@@ -152,7 +153,8 @@ void REPL()
 	{
 		cout << "Pixel> ";
 		string sCommand = "";
-		cin >> sCommand;
+		//cin >> sCommand;
+		getline(cin, sCommand);
 		iResult = HandleCommand(sCommand);
 		if (iResult == 1) { cout << "ERROR: " << sErrorMsg << endl; }
 	}
@@ -163,11 +165,64 @@ int HandleCommand(string sCommand)
 {
 	cout << "" << sCommand << endl;
 
-	if (sCommand == "exit")
+	// split on space (black magic split)
+	stringstream ss(sCommand);
+	istream_iterator<string> begin(ss);
+	istream_iterator<string> end;
+	vector<string> vParts(begin, end);
+	
+	if (vParts[0] == "exit")
 	{
 		cout << "Have a nice day!" << endl;
 		return 2;
 	}
+	else if (vParts[0] == "init")
+	{
+		if (vParts.size() != 3) 
+		{ 
+			sErrorMsg = "Bad arguments!\nFORMAT: init [WIDTH] [HEIGHT]";
+			return 1;
+		}
+		//float fWidth = (float)vParts[1];
+		//float fHeight = (float)vParts[2];
+		int iWidth = stoi(vParts[1]);
+		int iHeight = stoi(vParts[2]);
+		cout << "Parsed " << "[Width: " << iWidth << "] [Height: " << iHeight << "]" << endl;
+		
+		delete pFractal;
+		pFractal = new FlameFractal(iWidth, iHeight);
+		pFractal->PreparePlot();
+		
+		return 0;
+	}
+	else if (vParts[0] == "zoom")
+	{
+		if (vParts.size() != 3) 
+		{ 
+			sErrorMsg = "Bad arguments!\nFORMAT: zoom [XSCALAR] [YSCALAR]";
+			return 1;
+		}
+		//float fWidth = (float)vParts[1];
+		//float fHeight = (float)vParts[2];
+		float fX = stof(vParts[1]);
+		float fY = stof(vParts[2]);
+		cout << "Parsed " << "[X: " << fX << "] [Y: " << fY << "]" << endl;
+		
+		pFractal->SetZoom(fX, fY);
+		
+		return 0;
+	}
+	else if (vParts[0] == "echo") // for debugging use!
+	{
+		cout << endl << "========================================" << endl << endl;
+		for (int i = 1; i < vParts.size(); i++)
+		{
+			cout << vParts[i] << " ";
+		}
+		cout << endl << endl << "========================================" << endl << endl;
+		return 0;
+	}
+
 	
 	sErrorMsg = "Unrecognized command!";
 	return 1;
