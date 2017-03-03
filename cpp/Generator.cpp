@@ -176,11 +176,11 @@ int HandleCommand(string sCommand)
 		cout << "Have a nice day!" << endl;
 		return 2;
 	}
-	else if (vParts[0] == "init")
+	else if (vParts[0] == "create")
 	{
 		if (vParts.size() != 3) 
 		{ 
-			sErrorMsg = "Bad arguments!\nFORMAT: init [WIDTH] [HEIGHT]";
+			sErrorMsg = "Bad arguments!\nFORMAT: create [WIDTH] [HEIGHT]";
 			return 1;
 		}
 		//float fWidth = (float)vParts[1];
@@ -195,6 +195,7 @@ int HandleCommand(string sCommand)
 		
 		return 0;
 	}
+	else if (vParts[0] == "init") { pFractal->InitializeSolution(); return 0; }
 	else if (vParts[0] == "zoom")
 	{
 		if (vParts.size() != 3) 
@@ -212,6 +213,7 @@ int HandleCommand(string sCommand)
 		
 		return 0;
 	}
+
 	else if (vParts[0] == "echo") // for debugging use!
 	{
 		cout << endl << "========================================" << endl << endl;

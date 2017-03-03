@@ -34,6 +34,8 @@ namespace dwl
 	{
 		private:
 			int m_iProgressBarSize = 80;
+
+			bool m_bInitialized = false;
 			
 			int m_iWidth;
 			int m_iHeight;
@@ -127,6 +129,8 @@ namespace dwl
 
 			void SetColorRamp(vector<float> vPoints, vector<vector<float> > vValues);
 
+			bool IsInitialized() { return m_bInitialized; }
+			
 			void PreparePlot();
 			void SetBaseImage(float fR, float fG, float fB, float fA);
 			void InitializeSolution();

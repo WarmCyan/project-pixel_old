@@ -24,6 +24,8 @@ namespace dwl
 	
 	FlameFractal::FlameFractal(int iWidth, int iHeight)
 	{
+		m_bInitialized = false;
+		
 		m_iWidth = iWidth;
 		m_iHeight = iHeight;
 
@@ -231,6 +233,8 @@ namespace dwl
 		cout << "Offset X: " << m_fRawOffsetX << endl;
 		cout << "Offset Y: " << m_fRawOffsetY << endl;
 		//cout << "Base zoom scalar: " << fBase << endl; // DEBUG
+
+		m_bInitialized = true;
 	}
 
 	void FlameFractal::Solve(int iIterationCount)
@@ -795,6 +799,7 @@ namespace dwl
 
 		pBar.Finish();
 
+		m_bInitialized = true;
 		cout << "Image trace loaded!" << endl;
 	}
 
