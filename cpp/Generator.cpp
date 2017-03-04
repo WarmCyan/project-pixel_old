@@ -1,7 +1,7 @@
 //*************************************************************
 //  File: Generator.cpp
 //  Date created: 1/28/2017
-//  Date edited: 3/2/2017
+//  Date edited: 3/3/2017
 //  Author: Nathan Martindale
 //  Copyright © 2017 Digital Warrior Labs
 //  Description: 
@@ -211,6 +211,133 @@ int HandleCommand(string sCommand)
 		
 		pFractal->SetZoom(fX, fY);
 		
+		return 0;
+	}
+
+	else if (vParts[0] == "collection")
+	{
+		if (vParts.size() != 2)
+		{
+			sErrorMsg = "Bad arguments!\nFORMAT: collection [INDEX]";
+			return 1;
+		}
+
+		int iIndex = stoi(vParts[1]);
+		cout << "Parsed " << "[Index: " << iIndex << "]" << endl;
+		iCollection = iIndex;
+		return 0;
+	}
+
+	else if (vParts[0] == "color")
+	{
+		if (vParts.size() != 2)
+		{
+			sErrorMsg = "Bad arguments!\nFORMAT: color [COLORRAMPNAME]";
+			return 1;
+		}
+
+		cout << "Parsed " << "[Color: " << vParts[1] << "]" << endl;
+
+		bool bFound = false;
+		if (vParts[1] == "blue")
+		{
+			pFractal->SetColorRamp({0.0f, 1.0f}, {{1.0f, 1.0f, 1.0f}, {0.0f, 0.5f, 1.0f}}); // nice blue!
+			bFound = true;
+		}
+		else if (vParts[1] == "green")
+		{
+			pFractal->SetColorRamp({0.0f, 1.0f}, {{1.0f, 1.0f, 1.0f}, {0.0f, 1.0f, 0.5f}}); // greeen
+			bFound = true;
+		}
+		else if (vParts[1] == "ttu")
+		{
+			pFractal->SetColorRamp({0.0f, 0.5f, 1.0f}, {{1.0f, 1.0f, 0.0f}, {0.5f, 0.5f, 0.5f}, {0.7f, 0.4f, 1.0f}}); // TTU!
+			bFound = true;
+		}
+		else if (vParts[1] == "purple")
+		{
+			pFractal->SetColorRamp({0.0f, 1.0f}, {{1.0f, 1.0f, 1.0f}, {0.7f, 0.4f, 1.0f}}); // purple
+			bFound = true;
+		}
+		else if (vParts[1] == "purpleblue")
+		{
+			pFractal->SetColorRamp({0.0f, 0.5f, 1.0f}, {{0.0f, 0.5f, 1.0f}, {1.0f, 1.0f, 1.0f}, {0.5f, 0.2f, 0.7f}}); // purple'n blue
+			bFound = true;
+		}
+
+		if (!bFound)
+		{
+			sErrorMsg = "Could not find colorscheme '" + vParts[1] + "'";
+			return 1;
+		}
+		//cout << "Set color ramp!" << endl;
+		return 0;
+	}
+
+	else if (vParts[0] == "load")
+	{
+		if (vParts.size() < 2)
+		{
+			sErrorMsg = "Bad arguments!\nFORMAT: load [functions|trace] {FILE}";
+			return 1;
+		}
+		if (vParts[1] == "functions")
+		{
+			if (vParts.size() == 2)
+			{
+				pFractal->LoadFunctionCode("collection/" + to_string(iCollection));
+				return 0;
+			}
+		}
+	}
+
+	else if (vParts[0] == "solve")
+	{
+		if (vParts.size() != 2)
+		{
+			sErrorMsg = "Bad arguments!\nFORMAT: solve [COUNT]";
+			return 1;
+		}
+
+		int iSamples = stoi(vParts[1]);
+		cout << "Parsed [Samples: " << iSamples << "]" << endl;
+		pFractal->Solve(iSamples);
+		return 0;
+	}
+
+	else if (vParts[0] == "render")
+	{
+		if (vParts.size() != 3)
+		{
+			sErrorMsg = "Bad arguments!\nFORMAT: render [GAMMA] [BRIGHTNESS]";
+			return 1;
+		}
+
+		float fGamma = stof(vParts[1]);
+		float fBrightness = stof(vParts[2]);
+		cout << "Parsed [Gamma: " << fGamma << "] [Brightness: " << fBrightness << "]" << endl;
+		pFractal->Render(fGamma, fBrightness, 0);
+		return 0;
+	}
+
+	else if (vParts[0] == "save")
+	{
+		pFractal->SaveImageData("imgdata.json");
+		system("python3 ./saveaspng.py");
+
+
+		string sFileName = "";
+		
+		if (vParts.size() == 1)
+		{
+			sFileName = "./collection/" + to_string(iCollection) + "_render.png";
+		}
+		
+		string sCopyCommand = "copy \"./render.png\" \"" + sFileName + "\"";
+		
+		cout << "Copying to " << sFileName << "..." << endl;
+
+		system(sCopyCommand.c_str());
 		return 0;
 	}
 
