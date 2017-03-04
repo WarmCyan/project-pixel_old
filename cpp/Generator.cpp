@@ -170,6 +170,8 @@ int HandleCommand(string sCommand)
 	istream_iterator<string> begin(ss);
 	istream_iterator<string> end;
 	vector<string> vParts(begin, end);
+
+	if (vParts.size() == 0) { return 1; cin.ignore(); cin.clear(); }
 	
 	if (vParts[0] == "exit")
 	{
@@ -262,6 +264,11 @@ int HandleCommand(string sCommand)
 		else if (vParts[1] == "purpleblue")
 		{
 			pFractal->SetColorRamp({0.0f, 0.5f, 1.0f}, {{0.0f, 0.5f, 1.0f}, {1.0f, 1.0f, 1.0f}, {0.5f, 0.2f, 0.7f}}); // purple'n blue
+			bFound = true;
+		}
+		else if (vParts[1] == "orange")
+		{
+			pFractal->SetColorRamp({0.0f, 1.0f}, {{1.0f, 1.0f, 1.0f}, {1.0f, 0.5f, 0.0f}});
 			bFound = true;
 		}
 
