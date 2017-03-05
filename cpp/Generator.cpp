@@ -1,7 +1,7 @@
 //*************************************************************
 //  File: Generator.cpp
 //  Date created: 1/28/2017
-//  Date edited: 3/3/2017
+//  Date edited: 3/4/2017
 //  Author: Nathan Martindale
 //  Copyright © 2017 Digital Warrior Labs
 //  Description: 
@@ -290,11 +290,23 @@ int HandleCommand(string sCommand)
 		}
 		if (vParts[1] == "functions")
 		{
-			if (vParts.size() == 2)
-			{
-				pFractal->LoadFunctionCode("collection/" + to_string(iCollection));
-				return 0;
-			}
+			string sFileName = "";
+			
+			if (vParts.size() == 2) { sFileName = "collection/" + to_string(iCollection); }
+			else { sFileName = vParts[2]; }
+
+			pFractal->LoadFunctionCode(sFileName);
+			return 0;
+		}
+		if (vParts[1] == "trace")
+		{
+			string sFileName = "";
+			
+			if (vParts.size() == 2) { sFileName = "collection/" + to_string(iCollection); }
+			else { sFileName = vParts[2]; }
+			
+			pFractal->LoadImageTrace(sFileName);
+			return 0;
 		}
 	}
 
@@ -329,23 +341,49 @@ int HandleCommand(string sCommand)
 
 	else if (vParts[0] == "save")
 	{
-		pFractal->SaveImageData("imgdata.json");
-		system("python3 ./saveaspng.py");
-
-
-		string sFileName = "";
-		
-		if (vParts.size() == 1)
+		if (vParts.size() < 2)
 		{
-			sFileName = "./collection/" + to_string(iCollection) + "_render.png";
+			sErrorMsg = "Bad arguments!\nFORMAT: save [image|functions|trace] {FILE}";
+			return 1;
 		}
-		
-		string sCopyCommand = "copy \"./render.png\" \"" + sFileName + "\"";
-		
-		cout << "Copying to " << sFileName << "..." << endl;
 
-		system(sCopyCommand.c_str());
-		return 0;
+		if (vParts[1] == "image")
+		{
+			pFractal->SaveImageData("imgdata.json");
+			system("python3 ./saveaspng.py");
+
+			string sFileName = "";
+			
+			if (vParts.size() == 2) { sFileName = "./collection/" + to_string(iCollection) + "_render.png"; }
+			else { sFileName = vParts[2]; }
+			
+			string sCopyCommand = "copy \"./render.png\" \"" + sFileName + "\"";
+			
+			cout << "Copying to " << sFileName << "..." << endl;
+
+			system(sCopyCommand.c_str());
+			return 0;
+		}
+		else if (vParts[1] == "functions")
+		{
+			string sFileName = "";
+			
+			if (vParts.size() == 2) { sFileName = "./collection/" + to_string(iCollection); }
+			else { sFileName = vParts[2]; }
+			
+			pFractal->SaveFunctionCode(sFileName);
+			return 0;
+		}
+		else if (vParts[1] == "trace")
+		{
+			string sFileName = "";
+
+			if (vParts.size() == 2) { sFileName = "./collection/" + to_string(iCollection); }
+			else { sFileName = vParts[2]; }
+
+			pFractal->SaveImageTrace(sFileName);
+			return 0;
+		}
 	}
 
 	else if (vParts[0] == "echo") // for debugging use!
