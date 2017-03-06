@@ -1,7 +1,7 @@
 //*************************************************************
 //  File: Generator.cpp
 //  Date created: 1/28/2017
-//  Date edited: 3/4/2017
+//  Date edited: 3/6/2017
 //  Author: Nathan Martindale
 //  Copyright © 2017 Digital Warrior Labs
 //  Description: 
@@ -26,12 +26,17 @@ using namespace dwl;
 void REPL();
 int HandleCommand(string sCommand);
 
+void StoreCollectionNum();
+void LoadCollectionNum();
+
 FlameFractal* pFractal = new FlameFractal(0,0);
-int iCollection = 22;
+int iCollection = 0;
 string sErrorMsg = "";
 
 int main()
 {
+	LoadCollectionNum();
+	cout << "Collection: " << iCollection << endl;
 
 	REPL();
 	return 0;
@@ -146,6 +151,24 @@ int main()
 	return 0;
 }
 
+void StoreCollectionNum()
+{
+	cout << "Storing collection num..." << endl;
+	ofstream fFile;
+	fFile.open("./collection/collection", ios::out);
+	fFile << iCollection;
+	fFile.close();
+}
+
+void LoadCollectionNum()
+{
+	cout << "Loading collection num..." << endl;
+	ifstream fFile;
+	fFile.open("./collection/collection");
+	fFile >> iCollection;
+	fFile.close();
+}
+
 void REPL()
 {
 	int iResult = 0;
@@ -220,8 +243,13 @@ int HandleCommand(string sCommand)
 	{
 		if (vParts.size() != 2)
 		{
-			sErrorMsg = "Bad arguments!\nFORMAT: collection [INDEX]";
+			sErrorMsg = "Bad arguments!\nFORMAT: collection [INDEX|save|load]";
 			return 1;
+		}
+
+		if (vParts[1] == "save")
+		{
+			
 		}
 
 		int iIndex = stoi(vParts[1]);
@@ -308,6 +336,7 @@ int HandleCommand(string sCommand)
 			pFractal->LoadImageTrace(sFileName);
 			return 0;
 		}
+		if (vParts[1] == "collection") { LoadCollectionNum(); return 0; }
 	}
 
 	else if (vParts[0] == "solve")
@@ -343,7 +372,7 @@ int HandleCommand(string sCommand)
 	{
 		if (vParts.size() < 2)
 		{
-			sErrorMsg = "Bad arguments!\nFORMAT: save [image|functions|trace] {FILE}";
+			sErrorMsg = "Bad arguments!\nFORMAT: save [image|functions|trace|collection] {FILE}";
 			return 1;
 		}
 
@@ -384,6 +413,7 @@ int HandleCommand(string sCommand)
 			pFractal->SaveImageTrace(sFileName);
 			return 0;
 		}
+		else if (vParts[1] == "collection") { StoreCollectionNum(); return 0; }
 	}
 
 	else if (vParts[0] == "echo") // for debugging use!
@@ -396,7 +426,6 @@ int HandleCommand(string sCommand)
 		cout << endl << endl << "========================================" << endl << endl;
 		return 0;
 	}
-
 	
 	sErrorMsg = "Unrecognized command!";
 	return 1;
