@@ -194,7 +194,8 @@ int HandleCommand(string sCommand)
 	istream_iterator<string> end;
 	vector<string> vParts(begin, end);
 
-	if (vParts.size() == 0) { return 1; cin.ignore(); cin.clear(); }
+	if (vParts.size() == 0) { return 0; cin.ignore(); cin.clear(); }
+	if (vParts[0][0] == '#') { return 0; }
 	
 	if (vParts[0] == "exit")
 	{

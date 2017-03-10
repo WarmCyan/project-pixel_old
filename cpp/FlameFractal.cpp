@@ -104,15 +104,15 @@ namespace dwl
 
 		ProgressBar pBar = ProgressBar(3, m_iProgressBarSize);
 
-		m_vPoints = new vector<vector<vector<float> > >(m_iHeight, vector<vector<float> >(m_iWidth, vector<float>(3, 0)));
+		m_vPoints = new vector<vector<vector<float> > >(m_iHeight, vector<vector<float> >(m_iWidth, vector<float>(4, 0)));
 
 		pBar.Update(1);
 		
-		m_vImage = new vector<vector<vector<float> > >(m_iHeight, vector<vector<float> >(m_iWidth, vector<float>(3, 0)));
-		m_vPostProcImage = new vector<vector<vector<float> > >(m_iHeight, vector<vector<float> >(m_iWidth, vector<float>(3, 0)));
+		m_vImage = new vector<vector<vector<float> > >(m_iHeight, vector<vector<float> >(m_iWidth, vector<float>(4, 0)));
+		m_vPostProcImage = new vector<vector<vector<float> > >(m_iHeight, vector<vector<float> >(m_iWidth, vector<float>(4, 0)));
 		pBar.Update(2);
 		
-		m_vFinalImage = new vector<vector<vector<int> > >(m_iHeight, vector<vector<int> >(m_iWidth, vector<int>(3, 0)));
+		m_vFinalImage = new vector<vector<vector<int> > >(m_iHeight, vector<vector<int> >(m_iWidth, vector<int>(4, 0)));
 
 		pBar.Update(3);
 		pBar.Finish();
@@ -454,7 +454,6 @@ namespace dwl
 
 		ProgressBar pBar1 = ProgressBar(m_vPoints->size() - 1, m_iProgressBarSize);
 
-		//cout << m_vPoints->size() << endl;
 		for (int y = 0; y < m_vPoints->size(); y++)
 		{
 			pBar1.Update(y);
