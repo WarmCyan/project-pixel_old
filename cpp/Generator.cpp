@@ -1,7 +1,7 @@
 //*************************************************************
 //  File: Generator.cpp
 //  Date created: 1/28/2017
-//  Date edited: 3/6/2017
+//  Date edited: 3/9/2017
 //  Author: Nathan Martindale
 //  Copyright © 2017 Digital Warrior Labs
 //  Description: 
@@ -200,6 +200,32 @@ int HandleCommand(string sCommand)
 	{
 		cout << "Have a nice day!" << endl;
 		return 2;
+	}
+	else if (vParts[0] == "run")
+	{
+		if (vParts.size() != 2)
+		{
+			sErrorMsg = "Bad arguments!nFORMAT: run [SCRIPT]";
+			return 1;
+		}
+
+		ifstream pFile;
+		pFile.open(vParts[1].c_str());
+
+		cout << "Running '" << vParts[1] << "'..." << endl;
+		while (!pFile.eof())
+		{
+			string sLine;
+			//pFile >> sLine;
+			getline(pFile, sLine);
+
+			int iResult = HandleCommand(sLine);
+			if (iResult == 1) { pFile.close(); return 1; }
+		}
+		cout << "'" << vParts[1] << "' finished executing" << endl;
+		
+		pFile.close();
+		return 0;
 	}
 	else if (vParts[0] == "create")
 	{
