@@ -1,7 +1,7 @@
 //*************************************************************
 //  File: Generator.cpp
 //  Date created: 1/28/2017
-//  Date edited: 3/9/2017
+//  Date edited: 3/10/2017
 //  Author: Nathan Martindale
 //  Copyright © 2017 Digital Warrior Labs
 //  Description: 
@@ -333,6 +333,30 @@ int HandleCommand(string sCommand)
 			return 1;
 		}
 		//cout << "Set color ramp!" << endl;
+		return 0;
+	}
+
+	else if (vParts[0] == "generate")
+	{
+		cout << "Generating random functions..." << endl;
+		FunctionGenerator pGen = FunctionGenerator();
+		FFFunction* pF0 = pGen.GenerateFunction();
+		pFractal->AddFunction(*pF0);
+		FFFunction* pF1 = pGen.GenerateFunction();
+		pFractal->AddFunction(*pF1);
+		FFFunction* pF2 = pGen.GenerateFunction();
+		pFractal->AddFunction(*pF2);
+		FFFunction* pF3 = pGen.GenerateFunction();
+		pFractal->AddFunction(*pF3);
+
+		FFFunction* pFSym = pGen.GenerateSymmetryFunction(120);
+		pFSym->SetWeight(pF0->GetWeight() + pF1->GetWeight() + pF2->GetWeight() + pF3->GetWeight());
+		pFractal->AddFunction(*pFSym);
+		FFFunction* pFSym2 = pGen.GenerateSymmetryFunction(240);
+		pFSym2->SetWeight(pF0->GetWeight() + pF1->GetWeight() + pF2->GetWeight() + pF3->GetWeight());
+		pFractal->AddFunction(*pFSym2);
+
+		cout << "Generated!" << endl;
 		return 0;
 	}
 

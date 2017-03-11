@@ -1,0 +1,13 @@
+collection 25
+
+create 1920 1080
+load trace ./render/25_1920x1080
+load functions
+render 2.4 1.1
+save image ./render/25_1920x1080.png
+
+create 3200 1800
+load trace ./render/25_3200x1800
+load functions
+render 2.3 1.1
+save image ./render/25_3200x1800.png
