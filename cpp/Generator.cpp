@@ -326,6 +326,21 @@ int HandleCommand(string sCommand)
 			pFractal->SetColorRamp({0.0f, 1.0f}, {{1.0f, 1.0f, 1.0f}, {1.0f, 0.5f, 0.0f}});
 			bFound = true;
 		}
+		else if (vParts[1] == "yellow")
+		{
+			pFractal->SetColorRamp({0.0f, 1.0f}, {{1.0f, 1.0f, 1.0f}, {1.0f, 1.0f, 0.0f}});
+			bFound = true;
+		}
+		else if (vParts[1] == "red")
+		{
+			pFractal->SetColorRamp({0.0f, 1.0f}, {{1.0f, 1.0f, 1.0f}, {1.0f, 0.0f, 0.0f}});
+			bFound = true;
+		}
+		else if (vParts[1] == "portal")
+		{
+			pFractal->SetColorRamp({0.0f, 0.5f, 1.0f}, {{1.0f, 0.5f, 0.0f}, {1.0f, 1.0f, 1.0f}, {0.0f, 0.5f, 1.0f}});
+			bFound = true;
+		}
 
 		if (!bFound)
 		{
